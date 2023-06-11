@@ -1,4 +1,4 @@
-# VNU-QUANLYHOSO
+# QUANLYHOSO
 
 Developing with Vue 3 in Vite.
 - VueJS 3
