@@ -1,5 +1,5 @@
 <script setup>
-  import Drawer from '../containerComponents/Drawer.vue'
+  // import Drawer from '../containerComponents/Drawer.vue'
   import AppBar from '../containerComponents/AppBar.vue'
   import Footer from '../containerComponents/Footer.vue'
 
@@ -29,7 +29,7 @@
 
 <template>
   <v-app>
-    <Drawer></Drawer>
+    <!-- <Drawer></Drawer> -->
     <AppBar></AppBar>
     <v-main>
       <div class="container wrap-content-page">

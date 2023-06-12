@@ -219,10 +219,10 @@
 					>
 					</v-autocomplete>
 				</v-col>
-				<v-col class="py-2 px-3">
+				<v-col class="py-2 px-3" cols="12">
 					<v-btn
 						size="small"
-						color="success"
+						color="#1E7D30"
 						prepend-icon="mdi-magnify"
 						class="mx-0" style="float: right"
 						@click.stop="submitForm"
