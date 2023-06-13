@@ -3,8 +3,11 @@
   import AppBar from '../containerComponents/AppBar.vue'
   import Footer from '../containerComponents/Footer.vue'
 
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
+  const MenuHoSo = defineAsyncComponent(() =>
+    import('./MenuHoSo.vue')
+  )
   const appStore = useAppStore()
   const showConfirm = function() {
     appStore.SET_SHOWCONFIRM(true)
@@ -33,10 +36,18 @@
     <AppBar></AppBar>
     <v-main>
       <div class="container wrap-content-page">
-        <!-- <v-btn color="success" @click="showConfirm()">Show confirm</v-btn> -->
-        <router-view></router-view>
+        <v-card class="mx-auto pa-3" style="box-shadow: none !important;">
+          <v-row>
+            <v-col cols="2">
+              <MenuHoSo></MenuHoSo>
+            </v-col>
+            <v-col cols="10">
+              <router-view></router-view>
+            </v-col>
+          </v-row>
+        </v-card>
       </div>
-      <Footer></Footer>
+      <!-- <Footer></Footer> -->
     </v-main>
   </v-app>
 </template>

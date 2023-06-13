@@ -5,9 +5,9 @@
   import { useAppStore } from '@/stores/global.js'
   import jsondata from '../stores/mock-data.json'
  
+  const route = useRoute()
   const router = useRouter()
   const routes = router.currentRoute.value
-  console.log('routes', routes)
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const appStore = useAppStore()
   const { cookies } = useCookies()
@@ -170,6 +170,20 @@
     appStore.SET_MENU_SELECTED(menu)
     router.push({ path: menu.to })
   }
+  watch(route, async (val) => {
+    console.log('run watch-routes:', val.name)
+    if (val.name !== 'ThongTinHoSo') {
+      console.log('run watch-routes2:', val.name)
+      if (val && val.params.hasOwnProperty('status') && val.params.status) {
+        let menu = menuItems.find(function (item) {
+          return item.to.split('/')[1] === val.params.status
+        })
+        appStore.SET_MENU_SELECTED(menu)
+      } else {
+        appStore.SET_MENU_SELECTED(menuItems[0])
+      }
+    }
+  })
   onMounted(() => {
 
   })

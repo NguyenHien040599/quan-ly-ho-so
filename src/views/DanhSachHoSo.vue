@@ -1,8 +1,11 @@
 <script setup>
   import { useCookies } from 'vue3-cookies'
+  import { useRouter, useRoute } from 'vue-router'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
+  const route = useRoute()
+  const router = useRouter()
   const Pagination = defineAsyncComponent(() =>
     import('./Pagination.vue')
   )
@@ -16,7 +19,6 @@
   const { cookies } = useCookies()
 
   const menuSelected = computed(() => appStore.getMenuSelected)
-  console.log('menuSelectedDanhSach', menuSelected)
   const validForm = ref(false)
   const rules = reactive({
     required: (value) => (!!value && !Array.isArray(value)) || (Array.isArray(value) && value.length) || "Thông tin bắt buộc"
@@ -25,47 +27,6 @@
   const model2 = ref('')
   const dialog = ref(false)
   const advanceSearch = ref(false)
-  const mauTimKiem = reactive([
-    {
-      "name": "thutuc",
-      "title": "Thủ tục",
-      "type": "select",
-      "multiple": false,
-      "itemText": "tenMuc",
-      "itemValue": "maMuc",
-      "fieldClass": "v-col-xs-12 v-col-6",
-      "placeHolder": "",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": [],
-      "autoEvent": "",
-      "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-      "responseDataApi": "content"
-    },
-    {
-      "name": "ngayTao",
-      "title": "Ngày tạo",
-      "type": "date",
-      "fieldClass": "v-col-xs-12 v-col-6",
-      "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": "",
-      "autoEvent": ""
-    },
-    {
-      "name": "ngayBanHanh",
-      "nameTo": "ngayBanHanhDenNgay",
-      "title": "Ngày ban hành",
-      "type": "daterange",
-      "fieldClass": "v-col-xs-12 v-col-6",
-      "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": "",
-      "autoEvent": ""
-    }
-  ])
   const mauFormCrud = reactive([
     {
       "name": "MaSinhVien",
@@ -154,7 +115,7 @@
     {name: 'Giá trị 3', value: 3}
   ])
   const headers = reactive([])
-  const listStudent = reactive([
+  const dsHoSo = reactive([
     {
         "type": "T_SinhVien",
         "PrimKey": "63fc1960b3bbb7226f56e0a1",
@@ -237,8 +198,8 @@
       loading.value = false
     }, 300)
   }
-  const redirectTo = function (menu) {
-    appStore.SET_MENU_SELECTED(menu)
+  const redirectThongTinHoSo = function (hoso) {
+    router.push({ path: '/thong-tin-ho-so/' + hoso.PrimKey })
   }
   const showAdvanceSearch = function () {
     advanceSearch.value = !advanceSearch.value
@@ -368,7 +329,7 @@
       <v-col cols="12" class="px-0">
         <v-data-table
           :headers="menuSelected.headerTable"
-          :items="listStudent"
+          :items="dsHoSo"
           v-model:items-per-page="itemsPerPage"
           item-value="PrimKey"
           hide-default-footer
@@ -378,7 +339,7 @@
           loading-text="Đang tải... "
         >
           <template v-slot:item="{ item, index }">
-            <tr>
+            <tr @click="redirectThongTinHoSo(item.raw)">
               <td v-for="(itemHeader, indexHeader) in menuSelected.headerTable" :key="indexHeader" :class="itemHeader['class']" :width="itemHeader.hasOwnProperty('width') ? itemHeader.width : ''">
                 <div v-if="itemHeader.type == 'index'">
                   <!-- <div v-if="itemsPerPage" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">{{ (page+1) * itemsPerPage - itemsPerPage + index + 1 }}</div> -->
@@ -431,15 +392,6 @@
           </template>
         </v-data-table>
         <Pagination :pageInput="page" :pageCount="pageCount" :total="total" @changePage="changePage" style="margin-bottom: 50px;"></Pagination>
-      </v-col>
-    </v-row>
-    <v-row class="my-5 mx-0">
-      <v-col class="row-header d-flex align-center justify-start py-0 px-0" style="border: none">
-        <div class="header-content">
-          Thêm mới hồ sơ
-        </div>
-        <div class="triangle-header"></div>
-        <div class="text-sub-header" style="text-transform: uppercase;">THÔNG BÁO THAY ĐỔI NỘI DUNG HỒ SƠ ĐÁNH GIÁ TÁC ĐỘNG XỬ LÝ DỮ LIỆU CÁ NHÂN </div>
       </v-col>
     </v-row>
     <!-- dialog -->

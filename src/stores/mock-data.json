@@ -9,12 +9,13 @@
       "counter": 1,
       "headerTable": [
         {
-            "sortable": false,
-            "title": "STT",
-            "align": "center",
-            "value": "stt",
-            "type": "index",
-            "class": "td-center"
+          "sortable": false,
+          "title": "STT",
+          "align": "center",
+          "value": "stt",
+          "type": "index",
+          "class": "td-center",
+          "width": 50
         },
         {
             "sortable": false,
@@ -23,6 +24,13 @@
             "value": "HoVaTen",
             "class": "td-left",
             "width": 250
+        },
+        {
+          "sortable": false,
+          "title": "Thủ tục",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
         },
         {
             "sortable": false,
@@ -34,20 +42,14 @@
             "width": 250
         },
         {
-            "sortable": false,
-            "title": "Thủ tục",
-            "align": "center",
-            "value": "MaSinhVien",
-            "class": "td-left"
-        },
-        {
-            "sortable": false,
-            "title": "Tình trạng",
-            "align": "center",
-            "value": "GioiTinh",
-            "class": "td-center",
-            "type": "object",
-            "mapping": "TenMuc"
+          "sortable": false,
+          "title": "Tình trạng hồ sơ",
+          "align": "center",
+          "value": "GioiTinh",
+          "class": "td-center",
+          "type": "object",
+          "mapping": "TenMuc",
+          "width": 150
         },
         {
             "sortable": false,
@@ -80,18 +82,6 @@
           "name": "ngayTao",
           "title": "Ngày tạo",
           "type": "date",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        },
-        {
-          "name": "ngayBanHanh",
-          "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày ban hành",
-          "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
           "defaultValue": "",
@@ -115,7 +105,8 @@
             "align": "center",
             "value": "stt",
             "type": "index",
-            "class": "td-center"
+            "class": "td-center",
+            "width": 50
         },
         {
             "sortable": false,
@@ -127,37 +118,29 @@
         },
         {
             "sortable": false,
-            "title": "Ngày tạo",
-            "align": "center",
-            "value": "NgaySinh",
-            "class": "td-left",
-            "type": "date",
-            "width": 250
-        },
-        {
-            "sortable": false,
             "title": "Thủ tục",
             "align": "center",
             "value": "MaSinhVien",
             "class": "td-left"
         },
         {
-            "sortable": false,
-            "title": "Tình trạng",
-            "align": "center",
-            "value": "GioiTinh",
-            "class": "td-center",
-            "type": "object",
-            "mapping": "TenMuc"
+          "sortable": false,
+          "title": "Ngày gửi",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Thao tác",
-            "align": "center",
-            "value": "thaotac",
-            "type": "action",
-            "class": "td-center",
-            "width": 150
+          "sortable": false,
+          "title": "Tình trạng hồ sơ",
+          "align": "center",
+          "value": "GioiTinh",
+          "class": "td-center",
+          "type": "object",
+          "mapping": "TenMuc",
+          "width": 150
         }
       ],
       "formTimKiemNangCao": [
@@ -179,19 +162,7 @@
         },
         {
           "name": "ngayTao",
-          "title": "Ngày tạo",
-          "type": "date",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        },
-        {
-          "name": "ngayBanHanh",
-          "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày ban hành",
+          "title": "Ngày gửi",
           "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
@@ -216,7 +187,8 @@
             "align": "center",
             "value": "stt",
             "type": "index",
-            "class": "td-center"
+            "class": "td-center",
+            "width": 50
         },
         {
             "sortable": false,
@@ -227,29 +199,39 @@
             "width": 250
         },
         {
-            "sortable": false,
-            "title": "Ngày tạo",
-            "align": "center",
-            "value": "NgaySinh",
-            "class": "td-left",
-            "type": "date",
-            "width": 250
+          "sortable": false,
+          "title": "Thủ tục",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
         },
         {
-            "sortable": false,
-            "title": "Thủ tục",
-            "align": "center",
-            "value": "MaSinhVien",
-            "class": "td-left"
+          "sortable": false,
+          "title": "Ngày tiếp nhận",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Tình trạng",
-            "align": "center",
-            "value": "GioiTinh",
-            "class": "td-center",
-            "type": "object",
-            "mapping": "TenMuc"
+          "sortable": false,
+          "title": "Ngày hẹn trả",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
+        },
+        {
+          "sortable": false,
+          "title": "Tình trạng hồ sơ",
+          "align": "center",
+          "value": "GioiTinh",
+          "class": "td-center",
+          "type": "object",
+          "mapping": "TenMuc",
+          "width": 150
         },
         {
             "sortable": false,
@@ -280,8 +262,8 @@
         },
         {
           "name": "ngayTao",
-          "title": "Ngày tạo",
-          "type": "date",
+          "title": "Ngày tiếp nhận",
+          "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
           "defaultValue": "",
@@ -292,7 +274,7 @@
         {
           "name": "ngayBanHanh",
           "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày ban hành",
+          "title": "Ngày hẹn trả",
           "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
@@ -302,7 +284,6 @@
           "autoEvent": ""
         }
       ]
-
     },
     {
       "icon": "mdi:mdi-calendar-outline",
@@ -313,12 +294,13 @@
       "counter": 1,
       "headerTable": [
         {
-            "sortable": false,
-            "title": "STT",
-            "align": "center",
-            "value": "stt",
-            "type": "index",
-            "class": "td-center"
+          "sortable": false,
+          "title": "STT",
+          "align": "center",
+          "value": "stt",
+          "type": "index",
+          "class": "td-center",
+          "width": 50
         },
         {
             "sortable": false,
@@ -329,38 +311,39 @@
             "width": 250
         },
         {
-            "sortable": false,
-            "title": "Ngày tạo",
-            "align": "center",
-            "value": "NgaySinh",
-            "class": "td-left",
-            "type": "date",
-            "width": 250
+          "sortable": false,
+          "title": "Thủ tục",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
         },
         {
-            "sortable": false,
-            "title": "Thủ tục",
-            "align": "center",
-            "value": "MaSinhVien",
-            "class": "td-left"
+          "sortable": false,
+          "title": "Ngày tiếp nhận",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Tình trạng",
-            "align": "center",
-            "value": "GioiTinh",
-            "class": "td-center",
-            "type": "object",
-            "mapping": "TenMuc"
+          "sortable": false,
+          "title": "Ngày hẹn trả",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Thao tác",
-            "align": "center",
-            "value": "thaotac",
-            "type": "action",
-            "class": "td-center",
-            "width": 150
+          "sortable": false,
+          "title": "Tình trạng hồ sơ",
+          "align": "center",
+          "value": "GioiTinh",
+          "class": "td-center",
+          "type": "object",
+          "mapping": "TenMuc",
+          "width": 150
         }
       ],
       "formTimKiemNangCao": [
@@ -382,8 +365,8 @@
         },
         {
           "name": "ngayTao",
-          "title": "Ngày tạo",
-          "type": "date",
+          "title": "Ngày tiếp nhận",
+          "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
           "defaultValue": "",
@@ -394,7 +377,7 @@
         {
           "name": "ngayBanHanh",
           "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày ban hành",
+          "title": "Ngày hẹn trả",
           "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
@@ -414,12 +397,13 @@
       "counter": 7,
       "headerTable": [
         {
-            "sortable": false,
-            "title": "STT",
-            "align": "center",
-            "value": "stt",
-            "type": "index",
-            "class": "td-center"
+          "sortable": false,
+          "title": "STT",
+          "align": "center",
+          "value": "stt",
+          "type": "index",
+          "class": "td-center",
+          "width": 50
         },
         {
             "sortable": false,
@@ -430,38 +414,39 @@
             "width": 250
         },
         {
-            "sortable": false,
-            "title": "Ngày tạo",
-            "align": "center",
-            "value": "NgaySinh",
-            "class": "td-left",
-            "type": "date",
-            "width": 250
+          "sortable": false,
+          "title": "Thủ tục",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
         },
         {
-            "sortable": false,
-            "title": "Thủ tục",
-            "align": "center",
-            "value": "MaSinhVien",
-            "class": "td-left"
+          "sortable": false,
+          "title": "Ngày hoàn thành",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Tình trạng",
-            "align": "center",
-            "value": "GioiTinh",
-            "class": "td-center",
-            "type": "object",
-            "mapping": "TenMuc"
+          "sortable": false,
+          "title": "Ngày hẹn trả",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Thao tác",
-            "align": "center",
-            "value": "thaotac",
-            "type": "action",
-            "class": "td-center",
-            "width": 150
+          "sortable": false,
+          "title": "Tình trạng hồ sơ",
+          "align": "center",
+          "value": "GioiTinh",
+          "class": "td-center",
+          "type": "object",
+          "mapping": "TenMuc",
+          "width": 150
         }
       ],
       "formTimKiemNangCao": [
@@ -483,8 +468,8 @@
         },
         {
           "name": "ngayTao",
-          "title": "Ngày tạo",
-          "type": "date",
+          "title": "Ngày hoàn thành",
+          "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
           "defaultValue": "",
@@ -495,7 +480,7 @@
         {
           "name": "ngayBanHanh",
           "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày ban hành",
+          "title": "Ngày hẹn trả",
           "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
@@ -508,19 +493,20 @@
     },
     {
       "icon": "mdi:mdi-calendar-outline",
-      "title": "Rút, trả hồ sơ",
+      "title": "Rút, trả lại hồ sơ",
       "class": "cancel-menu",
       "id": "cancel",
       "to": "/ho-so-rut",
       "counter": 9,
       "headerTable": [
         {
-            "sortable": false,
-            "title": "STT",
-            "align": "center",
-            "value": "stt",
-            "type": "index",
-            "class": "td-center"
+          "sortable": false,
+          "title": "STT",
+          "align": "center",
+          "value": "stt",
+          "type": "index",
+          "class": "td-center",
+          "width": 50
         },
         {
             "sortable": false,
@@ -531,38 +517,39 @@
             "width": 250
         },
         {
-            "sortable": false,
-            "title": "Ngày tạo",
-            "align": "center",
-            "value": "NgaySinh",
-            "class": "td-left",
-            "type": "date",
-            "width": 250
+          "sortable": false,
+          "title": "Thủ tục",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
         },
         {
-            "sortable": false,
-            "title": "Thủ tục",
-            "align": "center",
-            "value": "MaSinhVien",
-            "class": "td-left"
+          "sortable": false,
+          "title": "Ngày gửi",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Tình trạng",
-            "align": "center",
-            "value": "GioiTinh",
-            "class": "td-center",
-            "type": "object",
-            "mapping": "TenMuc"
+          "sortable": false,
+          "title": "Ngày rút/ trả lại",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Thao tác",
-            "align": "center",
-            "value": "thaotac",
-            "type": "action",
-            "class": "td-center",
-            "width": 150
+          "sortable": false,
+          "title": "Tình trạng hồ sơ",
+          "align": "center",
+          "value": "GioiTinh",
+          "class": "td-center",
+          "type": "object",
+          "mapping": "TenMuc",
+          "width": 150
         }
       ],
       "formTimKiemNangCao": [
@@ -584,8 +571,8 @@
         },
         {
           "name": "ngayTao",
-          "title": "Ngày tạo",
-          "type": "date",
+          "title": "Ngày gửi",
+          "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
           "defaultValue": "",
@@ -596,7 +583,7 @@
         {
           "name": "ngayBanHanh",
           "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày ban hành",
+          "title": "Ngày rút/ trả lại",
           "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
@@ -616,12 +603,13 @@
       "counter": 20,
       "headerTable": [
         {
-            "sortable": false,
-            "title": "STT",
-            "align": "center",
-            "value": "stt",
-            "type": "index",
-            "class": "td-center"
+          "sortable": false,
+          "title": "STT",
+          "align": "center",
+          "value": "stt",
+          "type": "index",
+          "class": "td-center",
+          "width": 50
         },
         {
             "sortable": false,
@@ -632,38 +620,39 @@
             "width": 250
         },
         {
-            "sortable": false,
-            "title": "Ngày tạo",
-            "align": "center",
-            "value": "NgaySinh",
-            "class": "td-left",
-            "type": "date",
-            "width": 250
+          "sortable": false,
+          "title": "Thủ tục",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
         },
         {
-            "sortable": false,
-            "title": "Thủ tục",
-            "align": "center",
-            "value": "MaSinhVien",
-            "class": "td-left"
+          "sortable": false,
+          "title": "Ngày gửi",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Tình trạng",
-            "align": "center",
-            "value": "GioiTinh",
-            "class": "td-center",
-            "type": "object",
-            "mapping": "TenMuc"
+          "sortable": false,
+          "title": "Ngày tiếp nhận",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 250
         },
         {
-            "sortable": false,
-            "title": "Thao tác",
-            "align": "center",
-            "value": "thaotac",
-            "type": "action",
-            "class": "td-center",
-            "width": 150
+          "sortable": false,
+          "title": "Tình trạng hồ sơ",
+          "align": "center",
+          "value": "GioiTinh",
+          "class": "td-center",
+          "type": "object",
+          "mapping": "TenMuc",
+          "width": 150
         }
       ],
       "formTimKiemNangCao": [
@@ -685,8 +674,8 @@
         },
         {
           "name": "ngayTao",
-          "title": "Ngày tạo",
-          "type": "date",
+          "title": "Ngày gửi",
+          "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",
           "defaultValue": "",
@@ -697,7 +686,7 @@
         {
           "name": "ngayBanHanh",
           "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày ban hành",
+          "title": "Ngày tiếp nhận",
           "type": "daterange",
           "fieldClass": "v-col-xs-12 v-col-6",
           "placeHolder": "ddmmyyyy, dd/mm/yyyy",

@@ -663,6 +663,9 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 .v-tabs, .v-tabs .v-slide-group__container {
   height: 30px;
 }
+.thongtinhoso .v-tabs .v-btn::after, .thongtinhoso .v-tabs .v-btn {
+  transition: none !important;
+}
 
 .v-dialog .v-toolbar {
   height: 28px !important;

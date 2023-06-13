@@ -9,9 +9,6 @@
   console.log('routes', router.currentRoute.value)
   const appStore = useAppStore()
   const { cookies } = useCookies()
-  const MenuHoSo = defineAsyncComponent(() =>
-    import('./MenuHoSo.vue')
-  )
   const menuSelected = computed(() => appStore.getMenuSelected)
   const dialog = ref(false)
   const loadingData = ref(false)
@@ -52,38 +49,31 @@
   })
 </script>
 <template>
-  <v-card class="mx-auto pa-3" style="box-shadow: none !important;">
-    <v-row>
-      <v-col cols="2">
-        <MenuHoSo></MenuHoSo>
-      </v-col>
-      <v-col cols="10">
-        <v-tabs
-          v-model="tab"
-          bg-color="#00000000"
-        >
-          <v-tab value="one">Item One</v-tab>
-          <v-tab value="two">Item Two</v-tab>
-          <v-tab value="three">Item Three</v-tab>
-        </v-tabs>
+  <v-card class="mx-auto pa-0 thongtinhoso" style="box-shadow: none !important; overflow: inherit;">
+    <v-tabs
+      v-model="tab"
+      bg-color="#00000000"
+    >
+      <v-tab value="one">Thông tin hồ sơ</v-tab>
+      <v-tab value="two">Nhật ký sửa đổi</v-tab>
+      <v-tab value="three">Tiến trình xử lý</v-tab>
+    </v-tabs>
 
-        <v-card-text>
-          <v-window v-model="tab">
-            <v-window-item value="one">
-              One
-            </v-window-item>
+    <v-card-text>
+      <v-window v-model="tab">
+        <v-window-item value="one">
+          One
+        </v-window-item>
 
-            <v-window-item value="two">
-              Two
-            </v-window-item>
+        <v-window-item value="two">
+          Two
+        </v-window-item>
 
-            <v-window-item value="three">
-              Three
-            </v-window-item>
-          </v-window>
-        </v-card-text>
-      </v-col>
-    </v-row>
+        <v-window-item value="three">
+          Three
+        </v-window-item>
+      </v-window>
+    </v-card-text>
   </v-card>
 </template>
 

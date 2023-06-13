@@ -7,9 +7,6 @@
   const router = useRouter()
   console.log('routes', router.currentRoute.value)
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
-  const MenuHoSo = defineAsyncComponent(() =>
-    import('./MenuHoSo.vue')
-  )
   const DanhSachHoSo = defineAsyncComponent(() =>
     import('./DanhSachHoSo.vue')
   )
@@ -61,16 +58,7 @@
   })
 </script>
 <template>
-  <v-card class="mx-auto pa-3" style="box-shadow: none !important;">
-    <v-row>
-      <v-col cols="2">
-        <MenuHoSo></MenuHoSo>
-      </v-col>
-      <v-col cols="10">
-        <DanhSachHoSo></DanhSachHoSo>
-      </v-col>
-    </v-row>
-  </v-card>
+  <DanhSachHoSo></DanhSachHoSo>
 </template>
 
 <style scoped>

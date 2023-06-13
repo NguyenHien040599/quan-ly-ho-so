@@ -24,7 +24,14 @@
       title: 'Quản lý hồ sơ',
       class: 'baocao-tab',
       id: 'baocao-tab-id',
-      to: '/quan-ly-ho-so'
+      to: '/'
+    },
+    {
+      icon: 'mdi:mdi-chart-box-outline',
+      title: 'Tra cứu hồ sơ',
+      class: 'tra-cuu-tab',
+      id: 'tracuu-tab-id',
+      to: '/tra-cuu-ho-so'
     },
     {
       icon: 'mdi:mdi-bank',
