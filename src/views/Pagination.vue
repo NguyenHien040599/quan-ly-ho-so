@@ -79,7 +79,7 @@
 
     <v-col >
       <div class="flex text-center">
-        <nav role="navigation" aria-label="Pagination Navigation" style="position: relative;">
+        <nav role="navigation" aria-label="Pagination Navigation" style="position: initial;">
           <ul class="v-pagination theme--light">
           <li>
               <button @click="prevPage"  type="button" aria-label="Previous page"  style="width: 32px;height: 32px;"

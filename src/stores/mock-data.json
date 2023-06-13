@@ -1,0 +1,964 @@
+{
+  "menuHoSo": [
+    {
+      "icon": "mdi:mdi-text-box-outline",
+      "title": "Hồ sơ mới",
+      "class": "new-tab",
+      "id": "new",
+      "to": "/ho-so-moi",
+      "counter": 1,
+      "headerTable": [
+        {
+            "sortable": false,
+            "title": "STT",
+            "align": "center",
+            "value": "stt",
+            "type": "index",
+            "class": "td-center"
+        },
+        {
+            "sortable": false,
+            "title": "Mã hồ sơ",
+            "align": "center",
+            "value": "HoVaTen",
+            "class": "td-left",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Ngày tạo",
+            "align": "center",
+            "value": "NgaySinh",
+            "class": "td-left",
+            "type": "date",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Thủ tục",
+            "align": "center",
+            "value": "MaSinhVien",
+            "class": "td-left"
+        },
+        {
+            "sortable": false,
+            "title": "Tình trạng",
+            "align": "center",
+            "value": "GioiTinh",
+            "class": "td-center",
+            "type": "object",
+            "mapping": "TenMuc"
+        },
+        {
+            "sortable": false,
+            "title": "Thao tác",
+            "align": "center",
+            "value": "thaotac",
+            "type": "action",
+            "class": "td-center",
+            "width": 150
+        }
+      ],
+      "formTimKiemNangCao": [
+        {
+          "name": "thutuc",
+          "title": "Thủ tục",
+          "type": "select",
+          "multiple": false,
+          "itemText": "tenMuc",
+          "itemValue": "maMuc",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": [],
+          "autoEvent": "",
+          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
+          "responseDataApi": "content"
+        },
+        {
+          "name": "ngayTao",
+          "title": "Ngày tạo",
+          "type": "date",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        },
+        {
+          "name": "ngayBanHanh",
+          "nameTo": "ngayBanHanhDenNgay",
+          "title": "Ngày ban hành",
+          "type": "daterange",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        }
+      ]
+    },
+    {
+      "icon": "mdi:mdi-calendar-outline",
+      "title": "Chờ tiếp nhận",
+      "class": "receiving-tab",
+      "id": "receiving",
+      "to": "/cho-tiep-nhan",
+      "counter": 3,
+      "headerTable": [
+        {
+            "sortable": false,
+            "title": "STT",
+            "align": "center",
+            "value": "stt",
+            "type": "index",
+            "class": "td-center"
+        },
+        {
+            "sortable": false,
+            "title": "Mã hồ sơ",
+            "align": "center",
+            "value": "HoVaTen",
+            "class": "td-left",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Ngày tạo",
+            "align": "center",
+            "value": "NgaySinh",
+            "class": "td-left",
+            "type": "date",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Thủ tục",
+            "align": "center",
+            "value": "MaSinhVien",
+            "class": "td-left"
+        },
+        {
+            "sortable": false,
+            "title": "Tình trạng",
+            "align": "center",
+            "value": "GioiTinh",
+            "class": "td-center",
+            "type": "object",
+            "mapping": "TenMuc"
+        },
+        {
+            "sortable": false,
+            "title": "Thao tác",
+            "align": "center",
+            "value": "thaotac",
+            "type": "action",
+            "class": "td-center",
+            "width": 150
+        }
+      ],
+      "formTimKiemNangCao": [
+        {
+          "name": "thutuc",
+          "title": "Thủ tục",
+          "type": "select",
+          "multiple": false,
+          "itemText": "tenMuc",
+          "itemValue": "maMuc",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": [],
+          "autoEvent": "",
+          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
+          "responseDataApi": "content"
+        },
+        {
+          "name": "ngayTao",
+          "title": "Ngày tạo",
+          "type": "date",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        },
+        {
+          "name": "ngayBanHanh",
+          "nameTo": "ngayBanHanhDenNgay",
+          "title": "Ngày ban hành",
+          "type": "daterange",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        }
+      ]
+    },
+    {
+      "icon": "mdi:mdi-book-open-page-variant-outline",
+      "title": "Yêu cầu bổ sung",
+      "class": "waiting-tab",
+      "id": "waiting",
+      "to": "/yeu-cau-bo-sung",
+      "counter": 2,
+      "headerTable": [
+        {
+            "sortable": false,
+            "title": "STT",
+            "align": "center",
+            "value": "stt",
+            "type": "index",
+            "class": "td-center"
+        },
+        {
+            "sortable": false,
+            "title": "Mã hồ sơ",
+            "align": "center",
+            "value": "HoVaTen",
+            "class": "td-left",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Ngày tạo",
+            "align": "center",
+            "value": "NgaySinh",
+            "class": "td-left",
+            "type": "date",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Thủ tục",
+            "align": "center",
+            "value": "MaSinhVien",
+            "class": "td-left"
+        },
+        {
+            "sortable": false,
+            "title": "Tình trạng",
+            "align": "center",
+            "value": "GioiTinh",
+            "class": "td-center",
+            "type": "object",
+            "mapping": "TenMuc"
+        },
+        {
+            "sortable": false,
+            "title": "Thao tác",
+            "align": "center",
+            "value": "thaotac",
+            "type": "action",
+            "class": "td-center",
+            "width": 150
+        }
+      ],
+      "formTimKiemNangCao": [
+        {
+          "name": "thutuc",
+          "title": "Thủ tục",
+          "type": "select",
+          "multiple": false,
+          "itemText": "tenMuc",
+          "itemValue": "maMuc",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": [],
+          "autoEvent": "",
+          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
+          "responseDataApi": "content"
+        },
+        {
+          "name": "ngayTao",
+          "title": "Ngày tạo",
+          "type": "date",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        },
+        {
+          "name": "ngayBanHanh",
+          "nameTo": "ngayBanHanhDenNgay",
+          "title": "Ngày ban hành",
+          "type": "daterange",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        }
+      ]
+
+    },
+    {
+      "icon": "mdi:mdi-calendar-outline",
+      "title": "Đang thụ lý",
+      "class": "processing-menu",
+      "id": "processing",
+      "to": "/dang-thu-ly",
+      "counter": 1,
+      "headerTable": [
+        {
+            "sortable": false,
+            "title": "STT",
+            "align": "center",
+            "value": "stt",
+            "type": "index",
+            "class": "td-center"
+        },
+        {
+            "sortable": false,
+            "title": "Mã hồ sơ",
+            "align": "center",
+            "value": "HoVaTen",
+            "class": "td-left",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Ngày tạo",
+            "align": "center",
+            "value": "NgaySinh",
+            "class": "td-left",
+            "type": "date",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Thủ tục",
+            "align": "center",
+            "value": "MaSinhVien",
+            "class": "td-left"
+        },
+        {
+            "sortable": false,
+            "title": "Tình trạng",
+            "align": "center",
+            "value": "GioiTinh",
+            "class": "td-center",
+            "type": "object",
+            "mapping": "TenMuc"
+        },
+        {
+            "sortable": false,
+            "title": "Thao tác",
+            "align": "center",
+            "value": "thaotac",
+            "type": "action",
+            "class": "td-center",
+            "width": 150
+        }
+      ],
+      "formTimKiemNangCao": [
+        {
+          "name": "thutuc",
+          "title": "Thủ tục",
+          "type": "select",
+          "multiple": false,
+          "itemText": "tenMuc",
+          "itemValue": "maMuc",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": [],
+          "autoEvent": "",
+          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
+          "responseDataApi": "content"
+        },
+        {
+          "name": "ngayTao",
+          "title": "Ngày tạo",
+          "type": "date",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        },
+        {
+          "name": "ngayBanHanh",
+          "nameTo": "ngayBanHanhDenNgay",
+          "title": "Ngày ban hành",
+          "type": "daterange",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        }
+      ]
+    },
+    {
+      "icon": "mdi:mdi-shield-check-outline",
+      "title": "Hoàn thành thụ lý",
+      "class": "done-menu",
+      "id": "done",
+      "to": "/hoan-thanh",
+      "counter": 7,
+      "headerTable": [
+        {
+            "sortable": false,
+            "title": "STT",
+            "align": "center",
+            "value": "stt",
+            "type": "index",
+            "class": "td-center"
+        },
+        {
+            "sortable": false,
+            "title": "Mã hồ sơ",
+            "align": "center",
+            "value": "HoVaTen",
+            "class": "td-left",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Ngày tạo",
+            "align": "center",
+            "value": "NgaySinh",
+            "class": "td-left",
+            "type": "date",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Thủ tục",
+            "align": "center",
+            "value": "MaSinhVien",
+            "class": "td-left"
+        },
+        {
+            "sortable": false,
+            "title": "Tình trạng",
+            "align": "center",
+            "value": "GioiTinh",
+            "class": "td-center",
+            "type": "object",
+            "mapping": "TenMuc"
+        },
+        {
+            "sortable": false,
+            "title": "Thao tác",
+            "align": "center",
+            "value": "thaotac",
+            "type": "action",
+            "class": "td-center",
+            "width": 150
+        }
+      ],
+      "formTimKiemNangCao": [
+        {
+          "name": "thutuc",
+          "title": "Thủ tục",
+          "type": "select",
+          "multiple": false,
+          "itemText": "tenMuc",
+          "itemValue": "maMuc",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": [],
+          "autoEvent": "",
+          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
+          "responseDataApi": "content"
+        },
+        {
+          "name": "ngayTao",
+          "title": "Ngày tạo",
+          "type": "date",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        },
+        {
+          "name": "ngayBanHanh",
+          "nameTo": "ngayBanHanhDenNgay",
+          "title": "Ngày ban hành",
+          "type": "daterange",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        }
+      ]
+    },
+    {
+      "icon": "mdi:mdi-calendar-outline",
+      "title": "Rút, trả hồ sơ",
+      "class": "cancel-menu",
+      "id": "cancel",
+      "to": "/ho-so-rut",
+      "counter": 9,
+      "headerTable": [
+        {
+            "sortable": false,
+            "title": "STT",
+            "align": "center",
+            "value": "stt",
+            "type": "index",
+            "class": "td-center"
+        },
+        {
+            "sortable": false,
+            "title": "Mã hồ sơ",
+            "align": "center",
+            "value": "HoVaTen",
+            "class": "td-left",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Ngày tạo",
+            "align": "center",
+            "value": "NgaySinh",
+            "class": "td-left",
+            "type": "date",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Thủ tục",
+            "align": "center",
+            "value": "MaSinhVien",
+            "class": "td-left"
+        },
+        {
+            "sortable": false,
+            "title": "Tình trạng",
+            "align": "center",
+            "value": "GioiTinh",
+            "class": "td-center",
+            "type": "object",
+            "mapping": "TenMuc"
+        },
+        {
+            "sortable": false,
+            "title": "Thao tác",
+            "align": "center",
+            "value": "thaotac",
+            "type": "action",
+            "class": "td-center",
+            "width": 150
+        }
+      ],
+      "formTimKiemNangCao": [
+        {
+          "name": "thutuc",
+          "title": "Thủ tục",
+          "type": "select",
+          "multiple": false,
+          "itemText": "tenMuc",
+          "itemValue": "maMuc",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": [],
+          "autoEvent": "",
+          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
+          "responseDataApi": "content"
+        },
+        {
+          "name": "ngayTao",
+          "title": "Ngày tạo",
+          "type": "date",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        },
+        {
+          "name": "ngayBanHanh",
+          "nameTo": "ngayBanHanhDenNgay",
+          "title": "Ngày ban hành",
+          "type": "daterange",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        }
+      ]
+    },
+    {
+      "icon": "mdi:mdi-text-search-variant",
+      "title": "Tất cả hồ sơ",
+      "class": "all-menu",
+      "id": "all",
+      "to": "/tat-ca",
+      "counter": 20,
+      "headerTable": [
+        {
+            "sortable": false,
+            "title": "STT",
+            "align": "center",
+            "value": "stt",
+            "type": "index",
+            "class": "td-center"
+        },
+        {
+            "sortable": false,
+            "title": "Mã hồ sơ",
+            "align": "center",
+            "value": "HoVaTen",
+            "class": "td-left",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Ngày tạo",
+            "align": "center",
+            "value": "NgaySinh",
+            "class": "td-left",
+            "type": "date",
+            "width": 250
+        },
+        {
+            "sortable": false,
+            "title": "Thủ tục",
+            "align": "center",
+            "value": "MaSinhVien",
+            "class": "td-left"
+        },
+        {
+            "sortable": false,
+            "title": "Tình trạng",
+            "align": "center",
+            "value": "GioiTinh",
+            "class": "td-center",
+            "type": "object",
+            "mapping": "TenMuc"
+        },
+        {
+            "sortable": false,
+            "title": "Thao tác",
+            "align": "center",
+            "value": "thaotac",
+            "type": "action",
+            "class": "td-center",
+            "width": 150
+        }
+      ],
+      "formTimKiemNangCao": [
+        {
+          "name": "thutuc",
+          "title": "Thủ tục",
+          "type": "select",
+          "multiple": false,
+          "itemText": "tenMuc",
+          "itemValue": "maMuc",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": [],
+          "autoEvent": "",
+          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
+          "responseDataApi": "content"
+        },
+        {
+          "name": "ngayTao",
+          "title": "Ngày tạo",
+          "type": "date",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        },
+        {
+          "name": "ngayBanHanh",
+          "nameTo": "ngayBanHanhDenNgay",
+          "title": "Ngày ban hành",
+          "type": "daterange",
+          "fieldClass": "v-col-xs-12 v-col-6",
+          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+          "defaultValue": "",
+          "dataType": "",
+          "dataSource": "",
+          "autoEvent": ""
+        }
+      ]
+    }
+  ],
+  "danhSachBaoCao": [
+    {
+      "maDinhDanh": "231241233",
+      "maBaoCao": "BC-983123",
+      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
+      "quyTrinh": {
+        "@type": "T_QuyTrinh",
+        "maQuyTrinh": "QT-001"
+      },
+      "mauBaoCao": {
+        "@type": "T_MauBaoCao",
+        "maDinhDanh": "",
+        "maMauBaoCao": "MAU_001",
+        "nhapNhieuThanhPhan": 1
+      },
+      "kyBaoCao": {
+        "@type": "C_KyBaoCao",
+        "maMuc": "1",
+        "tenMuc": "Theo tháng"
+      },
+      "hanXuLy": "02-09-2022",
+      "coQuanThucHien": {
+        "@type": "T_CoQuanDonVi",
+        "maHanhChinh": "STNMT",
+        "tenGoi": "Sở Tài nguyên và môi trường"
+      },
+      "tinhTrang": {
+        "@type": "C_TrangThaiXuLy",
+        "tenMuc": "Đang xử lý",
+        "maMuc": "1"
+      },
+      "thoiGianTao": "12-08-2022",
+      "thoiGianCapNhat": "",
+      "nguoiTaoLap": {
+        "@type": "T_DanhTinhDienTu",
+        "tenDinhDanh": "",
+        "maSoID": ""
+      }
+    },
+    {
+      "maDinhDanh": "23123",
+      "maBaoCao": "BC-154312",
+      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
+      "quyTrinh": {
+        "@type": "T_QuyTrinh",
+        "maQuyTrinh": "QT-002"
+      },
+      "mauBaoCao": {
+        "@type": "T_MauBaoCao",
+        "maDinhDanh": "",
+        "maMauBaoCao": "MAU_002",
+        "nhapNhieuThanhPhan": 1
+      },
+      "kyBaoCao": {
+        "@type": "C_KyBaoCao",
+        "maMuc": "1",
+        "tenMuc": "Theo tuần"
+      },
+      "hanXuLy": "08-08-2022",
+      "coQuanThucHien": {
+        "@type": "T_CoQuanDonVi",
+        "maHanhChinh": "STTTT",
+        "tenGoi": "Sở Thông tin và truyền thông"
+      },
+      "tinhTrang": {
+        "@type": "C_TrangThaiXuLy",
+        "tenMuc": "Chờ duyệt",
+        "maMuc": "2"
+      },
+      "thoiGianTao": "01-08-2022",
+      "thoiGianCapNhat": "",
+      "nguoiTaoLap": {
+        "@type": "T_DanhTinhDienTu",
+        "tenDinhDanh": "",
+        "maSoID": ""
+      }
+    }
+  ],
+  "danhSachThanhPhan": [
+    {
+      "maDinhDanh": "231241233",
+      "maBaoCao": "BC-983123",
+      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
+      "quyTrinh": {
+        "@type": "T_QuyTrinh",
+        "maQuyTrinh": "QT-001"
+      },
+      "noiDung": {
+        "loaiVanBan": {
+          "name": "Quyết định",
+          "value": "1"
+        },
+        "hienTrang": [
+          {
+            "name": "Dự thảo",
+            "value": "1"
+          },
+          {
+            "name": "Đã ban hành",
+            "value": "2"
+          }
+        ],
+        "coQuanBanHanh": [
+          {
+            "name": "Sở thông tin và truyền thông",
+            "value": "1"
+          }
+        ],
+        "ngayBanHanh": "2022-11-11T00:00:00.000Z",
+        "tenVanBan": "Tôi là tên văn bản",
+        "tomTatNoiDung": "Tôi là tên tóm tắt nội dung",
+        "tinhTrang": {
+          "tenMuc": "Đang xử lý",
+          "maMuc": "1"
+        }
+      },
+      "mauBaoCao": {
+        "@type": "T_MauBaoCao",
+        "maDinhDanh": "",
+        "maMauBaoCao": "MAU_001",
+        "nhapNhieuThanhPhan": 1
+      },
+      "kyBaoCao": {
+        "@type": "C_KyBaoCao",
+        "maMuc": "1",
+        "tenMuc": "Theo tháng"
+      },
+      "hanXuLy": "02-09-2022",
+      "coQuanThucHien": {
+        "@type": "T_CoQuanDonVi",
+        "maHanhChinh": "STNMT",
+        "tenGoi": "Sở Tài nguyên và môi trường"
+      },
+      "tinhTrang": {
+        "@type": "C_TrangThaiXuLy",
+        "tenMuc": "Đang xử lý",
+        "maMuc": "1"
+      },
+      "thoiGianTao": "12-08-2022",
+      "thoiGianCapNhat": "",
+      "nguoiTaoLap": {
+        "@type": "T_DanhTinhDienTu",
+        "tenDinhDanh": "",
+        "maSoID": ""
+      }
+    },
+    {
+      "maDinhDanh": "23123",
+      "maBaoCao": "BC-154312",
+      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
+      "quyTrinh": {
+        "@type": "T_QuyTrinh",
+        "maQuyTrinh": "QT-002"
+      },
+      "mauBaoCao": {
+        "@type": "T_MauBaoCao",
+        "maDinhDanh": "",
+        "maMauBaoCao": "MAU_002",
+        "nhapNhieuThanhPhan": 1
+      },
+      "noiDung": {
+        "loaiVanBan": {
+          "name": "Quyết định",
+          "value": "1"
+        },
+        "hienTrang": [
+          {
+            "name": "Dự thảo",
+            "value": "1"
+          },
+          {
+            "name": "Đã ban hành",
+            "value": "2"
+          }
+        ],
+        "coQuanBanHanh": [
+          {
+            "name": "Sở thông tin và truyền thông",
+            "value": "1"
+          }
+        ],
+        "ngayBanHanh": "2022-11-11T00:00:00.000Z",
+        "tenVanBan": "Tôi là tên văn bản",
+        "tomTatNoiDung": "Tôi là tên tóm tắt nội dung",
+        "tinhTrang": {
+          "tenMuc": "Đang xử lý",
+          "maMuc": "1"
+        }
+      },
+      "kyBaoCao": {
+        "@type": "C_KyBaoCao",
+        "maMuc": "1",
+        "tenMuc": "Theo tuần"
+      },
+      "hanXuLy": "08-08-2022",
+      "coQuanThucHien": {
+        "@type": "T_CoQuanDonVi",
+        "maHanhChinh": "STTTT",
+        "tenGoi": "Sở Thông tin và truyền thông"
+      },
+      "tinhTrang": {
+        "@type": "C_TrangThaiXuLy",
+        "tenMuc": "Chờ duyệt",
+        "maMuc": "2"
+      },
+      "thoiGianTao": "01-08-2022",
+      "thoiGianCapNhat": "",
+      "nguoiTaoLap": {
+        "@type": "T_DanhTinhDienTu",
+        "tenDinhDanh": "",
+        "maSoID": ""
+      }
+    }
+  ],
+  "chiTietBaoCao" : {
+    "maDinhDanh": "231241233",
+    "maBaoCao": "BC-983123",
+    "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
+    "quyTrinh": {
+      "@type": "T_QuyTrinh",
+      "maQuyTrinh": "QT-001"
+    },
+    "mauBaoCao": {
+      "@type": "T_MauBaoCao",
+      "maDinhDanh": "",
+      "maMauBaoCao": "MAU_001",
+      "nhapNhieuThanhPhan": 1
+    },
+    "kyBaoCao": {
+      "@type": "C_KyBaoCao",
+      "maMuc": "1",
+      "tenMuc": "Theo tháng"
+    },
+    "hanXuLy": "02-09-2022",
+    "coQuanThucHien": {
+      "@type": "T_CoQuanDonVi",
+      "maHanhChinh": "STNMT",
+      "tenGoi": "Sở Tài nguyên và môi trường"
+    },
+    "tinhTrang": {
+      "@type": "C_TrangThaiXuLy",
+      "tenMuc": "Đang xử lý",
+      "maMuc": "1"
+    },
+    "thoiGianTao": "12-08-2022",
+    "thoiGianCapNhat": "",
+    "nguoiTaoLap": {
+      "@type": "T_DanhTinhDienTu",
+      "tenDinhDanh": "",
+      "maSoID": ""
+    }
+  }
+}

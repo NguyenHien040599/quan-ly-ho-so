@@ -3,16 +3,28 @@
   import { useCookies } from 'vue3-cookies'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
+  import jsondata from '../stores/mock-data.json'
  
   const router = useRouter()
-  console.log('routes', router.currentRoute.value)
+  const routes = router.currentRoute.value
+  console.log('routes', routes)
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const appStore = useAppStore()
   const { cookies } = useCookies()
   const FormCRUD = defineAsyncComponent(() =>
     import('./FormCRUD.vue')
   )
+  const menuItems = reactive(jsondata.menuHoSo)
   const menuSelected = computed(() => appStore.getMenuSelected)
+  if (routes && routes.params.hasOwnProperty('status') && routes.params.status) {
+    let menu = menuItems.find(function (item) {
+      return item.to.split('/')[1] === routes.params.status
+    })
+    appStore.SET_MENU_SELECTED(menu)
+  } else {
+    appStore.SET_MENU_SELECTED(menuItems[0])
+  }
+  console.log('menuSelected', menuSelected)
   const loading = ref(false)
   const validForm = ref(false)
   const rules = reactive({
@@ -145,66 +157,6 @@
 		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
 	}
 
-  const menuItems = reactive([
-    {
-      icon: 'mdi:mdi-text-box-outline',
-      title: 'Hồ sơ mới',
-      class: 'new-tab',
-      id: 'new',
-      to: '/quan-ly-ho-so/ho-so-moi',
-      counter: 1
-    },
-    {
-      icon: 'mdi:mdi-calendar-outline',
-      title: 'Chờ tiếp nhận',
-      class: 'receiving-tab',
-      id: 'receiving',
-      to: '/quan-ly-ho-so/cho-tiep-nhan',
-      counter: 3
-    },
-    {
-      icon: 'mdi:mdi-book-open-page-variant-outline',
-      title: 'Yêu cầu bổ sung',
-      class: 'waiting-tab',
-      id: 'waiting',
-      to: '/quan-ly-ho-so/yeu-cau-bo-sung',
-      counter: 2
-    },
-    {
-      icon: 'mdi:mdi-calendar-outline',
-      title: 'Đang thụ lý',
-      class: 'processing-menu',
-      id: 'processing',
-      to: '/quan-ly-ho-so/dang-thu-ly',
-      counter: 1
-    },
-    {
-      icon: 'mdi:mdi-shield-check-outline',
-      title: 'Hoàn thành thụ lý',
-      class: 'done-menu',
-      id: 'done',
-      to: '/quan-ly-ho-so/hoan-thanh',
-      counter: 7
-    },
-    {
-      icon: 'mdi:mdi-calendar-outline',
-      title: 'Rút, trả hồ sơ',
-      class: 'cancel-menu',
-      id: 'cancel',
-      to: '/quan-ly-ho-so/ho-so-rut',
-      counter: 9
-    },
-    {
-      icon: 'mdi:mdi-text-search-variant',
-      title: 'Tất cả hồ sơ',
-      class: 'all-menu',
-      id: 'all',
-      to: '/quan-ly-ho-so/tat-ca',
-      counter: 20
-    }
-  ])
-  
-  appStore.SET_MENU_SELECTED(menuItems[0])
   const eventClick = function () {
     console.log('run callback')
   }

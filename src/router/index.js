@@ -15,13 +15,13 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'quan-ly-ho-so',
+          path: '/',
           name: 'QuanLyHoSo',
           component: () => import('@/views/QuanLyHoSo.vue'),
           props: true
         },
         {
-          path: 'quan-ly-ho-so/:status',
+          path: '/:status',
           name: 'QuanLyHoSoDanhSach',
           component: () => import('@/views/QuanLyHoSo.vue'),
           props: true

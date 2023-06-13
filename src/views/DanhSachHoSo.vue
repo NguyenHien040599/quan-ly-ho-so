@@ -16,6 +16,7 @@
   const { cookies } = useCookies()
 
   const menuSelected = computed(() => appStore.getMenuSelected)
+  console.log('menuSelectedDanhSach', menuSelected)
   const validForm = ref(false)
   const rules = reactive({
     required: (value) => (!!value && !Array.isArray(value)) || (Array.isArray(value) && value.length) || "Thông tin bắt buộc"
@@ -25,7 +26,7 @@
   const dialog = ref(false)
   const advanceSearch = ref(false)
   const mauTimKiem = reactive([
-  {
+    {
       "name": "thutuc",
       "title": "Thủ tục",
       "type": "select",
@@ -42,9 +43,21 @@
       "responseDataApi": "content"
     },
     {
-      "name": "ngayBanHanh",
+      "name": "ngayTao",
       "title": "Ngày tạo",
       "type": "date",
+      "fieldClass": "v-col-xs-12 v-col-6",
+      "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+      "defaultValue": "",
+      "dataType": "",
+      "dataSource": "",
+      "autoEvent": ""
+    },
+    {
+      "name": "ngayBanHanh",
+      "nameTo": "ngayBanHanhDenNgay",
+      "title": "Ngày ban hành",
+      "type": "daterange",
       "fieldClass": "v-col-xs-12 v-col-6",
       "placeHolder": "ddmmyyyy, dd/mm/yyyy",
       "defaultValue": "",
@@ -140,44 +153,7 @@
     {name: 'Giá trị 2', value: 2},
     {name: 'Giá trị 3', value: 3}
   ])
-  const headers = reactive([
-    {
-      sortable: false,
-      title: "STT",
-      align: "center",
-      key: "stt"
-    },
-    {
-      sortable: false,
-      title: "Mã hồ sơ",
-      align: "left",
-      key: "HoVaTen"
-    },
-    {
-      sortable: false,
-      title: "Ngày tạo",
-      align: "left",
-      key: "NgaySinh"
-    },
-    {
-      sortable: false,
-      title: "Thủ tục",
-      align: "left",
-      key: "MaSinhVien"
-    },
-    {
-      sortable: false,
-      title: "Tình trạng",
-      align: "left",
-      key: "GioiTinh"
-    },
-    {
-      sortable: false,
-      title: "Thao tác",
-      align: "center",
-      key: "thaotac"
-    },
-  ])
+  const headers = reactive([])
   const listStudent = reactive([
     {
         "type": "T_SinhVien",
@@ -317,12 +293,44 @@
 		let date = new Date(dateInput)
 		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
 	}
+  const currency = function (value) {
+    if (value) {
+      let moneyCur = (value / 1).toFixed(0).replace('.', ',')
+      return moneyCur.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    }
+    return ''
+  }
+  const dateLocaleTime = function(dateInput) {
+    let date = new Date(dateInput)
+    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  }
+  const convertDataView = function (itemHeader, item) {
+    let output = ''
+    try {
+      let calu = itemHeader['calculator'].replace(/dataInput/g, 'item')
+      output = eval(calu)
+    } catch (error) {
+      output = ''
+    }
+    return output
+  }
+  const convertDataArray = function (itemHeader, array) {
+    let output = ''
+    if (array) {
+      output = Array.from(array, function (item) {
+        return item[itemHeader['mapping']]
+      })
+    }
+    output = output.toString().replace(/,/g, ', ')
+    return output
+  }
+
   onMounted(() => {
 
   })
 </script>
 <template>
-  <v-card class="mx-auto pa-0" style="box-shadow: none !important;">
+  <v-card class="mx-auto pa-0" style="box-shadow: none !important; overflow: inherit;">
     <v-row justify="end" class="mt-0 mb-0 mx-0">
       <v-col class="row-header d-flex align-center justify-start py-0 px-0">
         <div class="header-content">
@@ -331,6 +339,7 @@
         <div class="triangle-header"></div>
         <v-text-field
           append-inner-icon="mdi-magnify"
+          @keyup.enter="eventClick"
           @click:append-inner="eventClick"
           @click:prepend-inner="eventClick"
           placeholder="Tìm kiếm theo từ khóa ..."
@@ -351,14 +360,14 @@
         </v-btn>
       </v-col>
     </v-row>
-    <div v-if="advanceSearch">
-      <TimKiemNangCao ref="advanceSearchReference" :mauNhap="mauTimKiem" :dataInput="dataInputSearch" @submitSearch="submitAdvanceSearch"></TimKiemNangCao>
+    <div v-if="advanceSearch" style="margin-top: 15px">
+      <TimKiemNangCao ref="advanceSearchReference" :mauNhap="menuSelected.formTimKiemNangCao" :dataInput="dataInputSearch" @submitSearch="submitAdvanceSearch"></TimKiemNangCao>
     </div>
     <!-- table -->
     <v-row class="mx-0 mt-3">
       <v-col cols="12" class="px-0">
         <v-data-table
-          :headers="headers"
+          :headers="menuSelected.headerTable"
           :items="listStudent"
           v-model:items-per-page="itemsPerPage"
           item-value="PrimKey"
@@ -370,13 +379,31 @@
         >
           <template v-slot:item="{ item, index }">
             <tr>
-              <td class="align-center" width="70">{{ index + 1 }}</td>
-              <td class="align-left">{{ item.columns.HoVaTen }}</td>
-              <td>{{ dateLocale(item.columns.NgaySinh) }}</td>
-              <td class="align-left">{{ item.columns.MaSinhVien }}</td>
-              <td>{{ item.columns.GioiTinh.TenMuc }}</td>
-              <td class="align-center" width="150">
-                <div>
+              <td v-for="(itemHeader, indexHeader) in menuSelected.headerTable" :key="indexHeader" :class="itemHeader['class']" :width="itemHeader.hasOwnProperty('width') ? itemHeader.width : ''">
+                <div v-if="itemHeader.type == 'index'">
+                  <!-- <div v-if="itemsPerPage" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">{{ (page+1) * itemsPerPage - itemsPerPage + index + 1 }}</div> -->
+                  <div v-if="itemsPerPage" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">{{ index + 1 }}</div>
+                  <div v-else :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">{{ index + 1 }}</div>
+                </div>
+                <div v-else-if="itemHeader.type == 'date'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
+                  {{ item.raw.hasOwnProperty(itemHeader.value) ? dateLocale(item.raw[itemHeader.value]) : '' }}
+                </div>
+                <div v-else-if="itemHeader.type == 'datetime'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
+                  {{ item.raw.hasOwnProperty(itemHeader.value) ? dateLocaleTime(item.raw[itemHeader.value]) : ''}}
+                </div>
+                <div v-else-if="itemHeader.type == 'object'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
+                  {{ item.raw.hasOwnProperty(itemHeader.value) ? item.raw[itemHeader.value][itemHeader.mapping] : '' }}
+                </div>
+                <div v-else-if="itemHeader.type == 'money'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
+                  {{ item.raw.hasOwnProperty(itemHeader.value) ? currency(item.raw[itemHeader.value]) : '' }}
+                </div>
+                <div v-else-if="itemHeader.type == 'array'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
+                  {{ item.raw.hasOwnProperty(itemHeader.value) ? convertDataArray(itemHeader, item.raw[itemHeader.value]) : '' }}
+                </div>
+                <div v-else-if="itemHeader.type == 'calculator'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
+                  {{ convertDataView(itemHeader, item.raw) }}
+                </div>
+                <div v-else-if="itemHeader.type == 'action'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
                   <v-tooltip location="top">
                     <template v-slot:activator="{ props }">
                       <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="showDialog('update', item.columns)">
@@ -395,7 +422,11 @@
                     <span>Xóa</span>
                   </v-tooltip>
                 </div>
+                <div v-else :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
+                  {{ item.raw[itemHeader.value] }}
+                </div>
               </td>
+
             </tr>
           </template>
         </v-data-table>

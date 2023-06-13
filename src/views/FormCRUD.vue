@@ -1,6 +1,8 @@
 <script setup>
   import { ref, reactive} from 'vue'
 	import { useCrudStore } from '@/stores/formcrud.js'
+  import VueDatePicker from '@vuepic/vue-datepicker';
+  import '@vuepic/vue-datepicker/dist/main.css'
 	const crud = useCrudStore()
 	const props = defineProps({
     mauNhap: {
@@ -41,6 +43,25 @@
 		// console.log('dataFormOutput-2', dataOutput)
     return dataOutput
 	}
+  const formatDatePicker = (date) => {
+    try {
+      if (date.getDate()) {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+      } else {
+        
+      }
+    } catch (error) {
+    }
+  }
+  const changeDatePicker = (name) => {
+    console.log('dateInput', data.value[name])
+  }
+  const textInputOptions = ref({
+    format: 'dd/MM/yyyy'
+  })
 	const initForm = function (type) {
 		for (let key in mauNhapForm) {
 			let itemData = mauNhapForm[key]
@@ -186,7 +207,7 @@
             :rules="item.required ? [v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc'] : []"
 					></v-textarea>
 
-					<v-text-field
+					<!-- <v-text-field
 						v-if="item.type === 'date'"
 						class="flex input-form"
 						v-model="data[item.name]"
@@ -200,7 +221,31 @@
 						:clearable="!item['readonly']"
             :required="item.required"
             :rules="item.required ? [v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc'] : []"
-					></v-text-field>
+					></v-text-field> -->
+          <VueDatePicker class="flex" position="left" v-if="item.type === 'date'" select-text="Chọn" cancel-text="Thoát"
+           v-model="data[item.name]" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
+           @blur="changeDatePicker(item.name)"
+           >
+          </VueDatePicker>
+          <v-row v-if="item.type === 'daterange'">
+            <v-col>
+              <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
+              v-model="data[item.name]" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
+              @blur="changeDatePicker(item.name)"
+              >
+              </VueDatePicker>
+            </v-col>
+            <v-col class="px-0" style="width: 20px;max-width: 20px; padding-top: 15px;">
+              <v-icon size="24" color="#1E7D30">mdi-minus</v-icon>
+            </v-col>
+            <v-col>
+              <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
+              v-model="data[item.nameTo]" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
+              @blur="changeDatePicker(item.nameTo)"
+              >
+              </VueDatePicker>
+            </v-col>
+          </v-row>
 					<v-text-field
 						v-if="item.type === 'money'"
 						class="flex input-form"

@@ -1,7 +1,11 @@
 <script setup>
   import { ref, reactive} from 'vue'
 	import { timKiemStore } from '@/stores/timkiemnangcao.js'
+  import VueDatePicker from '@vuepic/vue-datepicker';
+  import '@vuepic/vue-datepicker/dist/main.css'
+
 	const timkiemnangcao = timKiemStore()
+  
 	const props = defineProps({
     mauNhap: {
       type: Object,
@@ -69,6 +73,25 @@
 			}
 		}
 	}
+  const formatDatePicker = (date) => {
+    try {
+      if (date.getDate()) {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+      } else {
+        
+      }
+    } catch (error) {
+    }
+  }
+  const changeDatePicker = (name) => {
+    console.log('dateInput', data.value[name])
+  }
+  const textInputOptions = ref({
+    format: 'dd/MM/yyyy'
+  })
 	const formatBirthDate = function (name) {
 		let lengthDate = String(data.value[name]).trim().length
 		let splitDate = String(data.value[name]).split('/')
@@ -116,16 +139,14 @@
 
 <template>
 	<v-card
-		class="mx-auto"
+		class="mx-auto" style="overflow: initial;position: initial;"
 		flat
 	>
 		<v-form
 			ref="formTimKiem"
 			lazy-validation
-			class="py-2"
-			style="border: 1px solid #025e295e;border-bottom-left-radius: 7px;border-bottom-right-radius: 7px;border-top: 0px;"
 		>
-			<v-row class="mx-0 my-0">
+			<v-row class="my-0">
 				<v-col v-for="(item, index) in mauNhap" v-bind:key="index" :class="item['fieldClass']" class="py-0 mb-2">
 					<label>{{item.title}} </label>
 					<v-text-field
@@ -161,7 +182,7 @@
 						:rows="item.hasOwnProperty('rows') ? item.rows : 3"
 					></v-textarea>
 
-					<v-text-field
+					<!-- <v-text-field
 						v-if="item.type === 'date'"
 						class="flex input-form"
 						v-model="data[item.name]"
@@ -173,7 +194,32 @@
 						dense
 						hide-details="auto"
 						clearable
-					></v-text-field>
+					></v-text-field> -->
+          <VueDatePicker class="flex" position="left" v-if="item.type === 'date'" select-text="Chọn" cancel-text="Thoát"
+           v-model="data[item.name]" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
+           @blur="changeDatePicker(item.name)"
+           >
+          </VueDatePicker>
+          <v-row v-if="item.type === 'daterange'">
+            <v-col>
+              <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
+              v-model="data[item.name]" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
+              @blur="changeDatePicker(item.name)"
+              >
+              </VueDatePicker>
+            </v-col>
+            <v-col class="px-0" style="width: 20px;max-width: 20px; padding-top: 15px;">
+              <v-icon size="24" color="#1E7D30">mdi-minus</v-icon>
+            </v-col>
+            <v-col>
+              <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
+              v-model="data[item.nameTo]" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
+              @blur="changeDatePicker(item.nameTo)"
+              >
+              </VueDatePicker>
+            </v-col>
+          </v-row>
+
 					<v-text-field
 						v-if="item.type === 'money'"
 						class="flex input-form"
