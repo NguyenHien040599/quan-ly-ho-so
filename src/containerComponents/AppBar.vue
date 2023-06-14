@@ -82,8 +82,7 @@
           </div>
           <div class="d-inline-flex py-0">
             <div class="title-banner">
-              <div class="title-banner-vi mb-1">CỔNG THÔNG TIN QUỐC GIA VỀ</div>
-              <div class="title-banner-vi">BẢO VỆ DỮ LIỆU CÁ NHÂN</div>
+              <div class="title-banner-vi mb-1">CỔNG THÔNG TIN QUỐC GIA VỀ BẢO VỆ DỮ LIỆU CÁ NHÂN</div>
             </div>
           </div>
           <v-menu v-if="isSigned && breakpointName !== 'xs' && breakpointName !== 'sm'" transition="scale-transition">
@@ -213,8 +212,9 @@
     font-size: 12px;
   }
   .logo-banner {
-    width: 64px;
+    // width: 64px;
     margin-right: 20px;
+    margin-left: 15px;
   }
   .title-banner {
     display: flex;

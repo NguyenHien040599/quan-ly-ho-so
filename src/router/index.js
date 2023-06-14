@@ -15,12 +15,6 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'tra-cuu-ho-so',
-          name: 'TraCuuHoSo',
-          component: () => import('@/views/TraCuuHoSo.vue'),
-          props: true
-        },
-        {
           path: '/',
           name: 'QuanLyHoSo',
           component: () => import('@/views/QuanLyHoSo.vue'),
@@ -56,6 +50,11 @@ const router = createRouter({
       name: 'Login',
       path: '/login',
       component: () => import('@/views/Login.vue')
+    },
+    {
+      path: '/tra-cuu-ho-so',
+      name: 'TraCuuHoSo',
+      component: () => import('@/views/TraCuuHoSo.vue')
     }
   ]
 })

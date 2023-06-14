@@ -244,30 +244,8 @@
 				<span style="font-size: 16px">Tra cứu</span>
 			</v-btn>
     </v-row>
-		<div v-if="!kqTraCuu">
-			<v-row class="my-0 mx-0">
-				<v-col cols="12" class="px-0 py-0 text-header-ho-so py-2">
-					HỒ SƠ MỚI TIẾP NHẬN
-				</v-col>
-			</v-row>
-			<div>
-				<v-row v-for="(item, index) in dsHoSo" :key="index" class="mx-0 my-0 mt-2" style="align-items: center;">
-					<v-col class="px-0 py-0" style="max-width: 40px">
-						<v-icon size="28" color="#1E7D30" class="mr-2">mdi-file-document-check-outline</v-icon>
-					</v-col>
-					<v-col class="py-0">
-						<div>
-							<span style="font-weight: 600;">{{ item.dossierNo }}</span> - <span>{{ item.dossierName }}</span>
-						</div>
-						<div style="font-style: italic;">
-							<span>(Chủ hồ sơ: </span> <span>{{ item.applicantName }})</span>
-						</div>
-					</v-col>
-				</v-row>
-			</div>
-		</div>
     <!-- table -->
-    <v-row v-else class="mx-0 mt-3">
+    <v-row v-if="kqTraCuu" class="mx-0 mt-3">
       <v-col cols="12" class="px-0">
 				<div class="mb-2" style="font-style: italic;font-weight: 400;font-size: 14px;line-height: 16px;color: #1E7D30;">
 					<span>Kết quả tra cứu: </span>
@@ -296,13 +274,36 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <div class="mt-4">
+			<v-row class="my-0 mx-0">
+				<v-col cols="12" class="px-0 py-0 text-header-ho-so py-2">
+					HỒ SƠ MỚI TIẾP NHẬN
+				</v-col>
+			</v-row>
+			<div>
+				<v-row v-for="(item, index) in dsHoSo" :key="index" class="mx-0 my-0 mt-2" style="align-items: center;">
+					<v-col class="px-0 py-0" style="max-width: 40px">
+						<v-icon size="28" color="#1E7D30" class="mr-2">mdi-file-document-check-outline</v-icon>
+					</v-col>
+					<v-col class="py-0">
+						<div>
+							<span style="font-weight: 600;">{{ item.dossierNo }}</span> - <span>{{ item.dossierName }}</span>
+						</div>
+						<div style="font-style: italic;">
+							<span>(Chủ hồ sơ: </span> <span>{{ item.applicantName }})</span>
+						</div>
+					</v-col>
+				</v-row>
+			</div>
+		</div>
   </v-card>
 </template>
 
 <style scoped>
 	.wrap-c-tracuu {
 		box-shadow: none !important;
-		max-width: 1000px;
+    width: 100%;
+		max-width: 1200px;
 		background: #FFFFFF;
 		border: 1px solid #DADADA;
 		padding: 25px 57px;
@@ -311,7 +312,7 @@
 		font-family: 'Roboto';
 		font-style: normal;
 		font-weight: 700;
-		font-size: 16px;
+		font-size: 22px;
 		line-height: 19px;
 		color: #1E7D30;
 		text-align: center;

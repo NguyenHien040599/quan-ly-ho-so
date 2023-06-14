@@ -3,6 +3,7 @@
   import { useCookies } from 'vue3-cookies'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
+  import jsondata from '../stores/mock-data.json'
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
 
   const router = useRouter()
@@ -14,6 +15,8 @@
   const loadingData = ref(false)
   const loading = ref(false)
   const tab = ref(null)
+  const thongTinHoSo = reactive(jsondata.thongTinHoSo)
+  const mauHienThi = reactive(jsondata.thuTucHanhChinh[0]['mauHienThi'])
   const eventClick = function () {
     console.log('run callback')
   }
@@ -44,6 +47,37 @@
 		let date = new Date(dateInput)
 		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
 	}
+  const currency = function (value) {
+    if (value) {
+      let moneyCur = (value / 1).toFixed(0).replace('.', ',')
+      return moneyCur.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    }
+    return ''
+  }
+  const dateLocaleTime = function(dateInput) {
+    let date = new Date(dateInput)
+    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  }
+  const convertDataView = function (itemHeader, item) {
+    let output = ''
+    try {
+      let calu = itemHeader['calculator'].replace(/dataInput/g, 'item')
+      output = eval(calu)
+    } catch (error) {
+      output = ''
+    }
+    return output
+  }
+  const convertDataArray = function (itemHeader, array) {
+    let output = ''
+    if (array) {
+      output = Array.from(array, function (item) {
+        return item[itemHeader['mapping']]
+      })
+    }
+    output = output.toString().replace(/,/g, ', ')
+    return output
+  }
   onMounted(() => {
 
   })
@@ -54,22 +88,82 @@
       v-model="tab"
       bg-color="#00000000"
     >
-      <v-tab value="one">Thông tin hồ sơ</v-tab>
-      <v-tab value="two">Nhật ký sửa đổi</v-tab>
-      <v-tab value="three">Tiến trình xử lý</v-tab>
+      <v-tab value="thongtin">Thông tin hồ sơ</v-tab>
+      <v-tab value="nhatky">Nhật ký sửa đổi</v-tab>
+      <v-tab value="tientrinh">Tiến trình xử lý</v-tab>
     </v-tabs>
 
-    <v-card-text>
+    <v-card-text class="px-0 py-0" style="margin-top: -15px;">
       <v-window v-model="tab">
-        <v-window-item value="one">
-          One
+        <v-window-item value="thongtin" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px">
+          <v-row class="thongtinchung mx-0 my-0">
+            <v-col v-for="(item, index) in mauHienThi" v-bind:key="index" :class="item['class']">
+              <v-row v-if="item.hasOwnProperty('group') && item.group" class="mx-0">
+                <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
+                  <div class="sub-header-content">
+                    <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
+                  </div>
+                  <div class="triangle-header"></div>
+                  <div class="text-sub-header">{{ item.title }}</div>
+                </v-col>
+                <v-col v-for="(itemChild, indexChild) in item.content" v-bind:key="indexChild" :class="item['class']">
+                  <span class="label-text">{{itemChild.title}}: </span>
+                  <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                    {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocale(thongTinHoSo[itemChild.value]) : '' }}
+                  </span>
+                  <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                    {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinHoSo[itemChild.value]) : ''}}
+                  </span>
+                  <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                    {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? thongTinHoSo[itemChild.value][itemChild.mapping] : '' }}
+                  </span>
+                  <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                    {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? currency(thongTinHoSo[itemChild.value]) : '' }}
+                  </span>
+                  <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                    {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinHoSo[itemChild.value]) : '' }}
+                  </span>
+                  <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                    {{ convertDataView(itemChild, thongTinHoSo) }}
+                  </span>
+                  <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                    {{ thongTinHoSo[itemChild.value] }}
+                  </span>
+                </v-col>
+              </v-row>
+              <div v-else>
+                <span class="label-text">{{item.title}}: </span>
+                <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                  {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocale(thongTinHoSo[itemChild.value]) : '' }}
+                </span>
+                <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                  {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinHoSo[itemChild.value]) : ''}}
+                </span>
+                <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                  {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? thongTinHoSo[itemChild.value][itemChild.mapping] : '' }}
+                </span>
+                <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                  {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? currency(thongTinHoSo[itemChild.value]) : '' }}
+                </span>
+                <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                  {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinHoSo[itemChild.value]) : '' }}
+                </span>
+                <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                  {{ convertDataView(itemChild, thongTinHoSo) }}
+                </span>
+                <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+                  {{ thongTinHoSo[itemChild.value] }}
+                </span>
+              </div>
+            </v-col>
+          </v-row>
         </v-window-item>
 
-        <v-window-item value="two">
+        <v-window-item value="nhatky">
           Two
         </v-window-item>
 
-        <v-window-item value="three">
+        <v-window-item value="tientrinh">
           Three
         </v-window-item>
       </v-window>
@@ -117,6 +211,24 @@
     line-height: 20px;
     font-size: 12px;
     text-align: center;
+  }
+  .thongtinchung .label-text {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
+    color: #000000;
+  }
+  .thongtinchung .content-text {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 14px;
+    line-height: 18px;
+    color: #000000;
+  }
+  .thongtinhoso .v-tabs {
+    transition: none !important;
   }
 @media (min-width: 1024px) {
   .about {
