@@ -33,6 +33,12 @@ const router = createRouter({
           props: true
         },
         {
+          path: '/nop-ho-so/:id',
+          name: 'BieuMauDienTu',
+          component: () => import('@/views/BieuMauDienTu.vue'),
+          props: true
+        },
+        {
           path: 'hoi-dap',
           name: 'HoiDap',
           component: () => import('@/views/HoiDap.vue'),

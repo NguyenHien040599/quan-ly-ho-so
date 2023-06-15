@@ -212,7 +212,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -221,7 +221,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -324,7 +324,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -333,7 +333,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -427,7 +427,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -436,7 +436,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -530,7 +530,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -539,7 +539,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -633,7 +633,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -642,7 +642,7 @@
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
@@ -1301,7 +1301,7 @@
       {
         "@type": "string",
         "IDGiayTo": "string",
-        "TenGiayTo": "string",
+        "TenGiayTo": "Thông báo gửi hồ sơ đánh giá tác động xử lý dữ liệu cá nhân",
         "SoBanGiay": 0,
         "HinhThucGiayTo": {
           "primKey": "string",
@@ -1339,14 +1339,24 @@
           "MaDinhDanh": "string",
           "TenGiayTo": "string"
         },
-        "TepDuLieu": {
-          "@type": "string",
-          "MaDinhDanh": "string",
-          "TenTep": "string",
-          "DinhDangTep": "string",
-          "KichThuocTep": 0,
-          "DuongDanURL": "string"
-        },
+        "TepDuLieu": [
+          {
+            "@type": "string",
+            "MaDinhDanh": "string",
+            "TenTep": "Thongbaovipham_dinhkem",
+            "DinhDangTep": "pdf",
+            "KichThuocTep": 0,
+            "DuongDanURL": "string"
+          },
+          {
+            "@type": "string",
+            "MaDinhDanh": "string",
+            "TenTep": "Ảnh vi phạm",
+            "DinhDangTep": "png",
+            "KichThuocTep": 0,
+            "DuongDanURL": "string"
+          }
+        ],
         "BieuMauDienTu": {
           "@type": "string",
           "MaMuc": "string",

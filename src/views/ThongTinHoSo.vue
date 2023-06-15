@@ -5,7 +5,9 @@
   import { useAppStore } from '@/stores/global.js'
   import jsondata from '../stores/mock-data.json'
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
-
+  const ThanhPhanHoSo = defineAsyncComponent(() =>
+    import('./ThanhPhanHoSo.vue')
+  )
   const router = useRouter()
   console.log('routes', router.currentRoute.value)
   const appStore = useAppStore()
@@ -87,18 +89,19 @@
     <v-tabs
       v-model="tab"
       bg-color="#00000000"
+      :hide-slider="true"
     >
-      <v-tab value="thongtin">Thông tin hồ sơ</v-tab>
-      <v-tab value="nhatky">Nhật ký sửa đổi</v-tab>
-      <v-tab value="tientrinh">Tiến trình xử lý</v-tab>
+      <v-tab :hide-slider="true" value="thongtin">Thông tin hồ sơ</v-tab>
+      <v-tab :hide-slider="true" value="nhatky">Nhật ký sửa đổi</v-tab>
+      <v-tab :hide-slider="true" value="tientrinh">Tiến trình xử lý</v-tab>
     </v-tabs>
 
-    <v-card-text class="px-0 py-0" style="margin-top: -15px;">
+    <v-card-text class="px-0 py-0" style="margin-top: -20px;">
       <v-window v-model="tab">
         <v-window-item value="thongtin" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px">
           <v-row class="thongtinchung mx-0 my-0">
             <v-col v-for="(item, index) in mauHienThi" v-bind:key="index" :class="item['class']">
-              <v-row v-if="item.hasOwnProperty('group') && item.group" class="mx-0">
+              <v-row v-if="item.hasOwnProperty('group') && item.group" class="mx-0 my-0">
                 <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
                   <div class="sub-header-content">
                     <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
@@ -156,6 +159,28 @@
                 </span>
               </div>
             </v-col>
+          </v-row>
+          <v-row class="mx-0 my-0 mt-2">
+            <ThanhPhanHoSo></ThanhPhanHoSo>
+          </v-row>
+          <v-row class="mx-0 my-0 mt-3">
+            <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0">
+              <div class="sub-header-content">
+                <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
+              </div>
+              <div class="triangle-header"></div>
+              <div class="text-sub-header">Cam kết</div>
+            </v-col>
+            <v-col cols="12" class="px-0">
+              <p class="" style="font-family: 'Roboto';
+                font-style: normal;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 18px;">
+                (Tên cơ quan, tổ chức, doanh nghiệp) xin cam kết: Chịu trách nhiệm trước pháp luật về tính chính xác và tính hợp pháp thông tin cung cấp và tài liệu kèm theo
+              </p>
+            </v-col>
+            
           </v-row>
         </v-window-item>
 

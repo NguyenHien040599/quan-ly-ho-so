@@ -2,7 +2,9 @@
 html {
   font-size: 14px;
 }
-
+.mb-10 {
+  margin-bottom: 10px !important;
+}
 // .v-btn.v-size--default,
 // .v-btn.v-size--large {
 //   &:not(.v-btn--icon):not(.v-btn--fab) {
@@ -73,10 +75,8 @@ table th,
 table td {
   padding-left: 8px !important;
   padding-right: 8px !important;
-  height: 46px !important;
-}
-.theme--light.v-label {
-  color: rgb(0 0 0);
+  height: 46px;
+  min-height: 46px;
 }
 .input-header-search, .input-header-search .v-field {
   border: none;
@@ -100,6 +100,7 @@ table td {
   font-size: 14px;
   line-height: 16px;
   color: #000000;
+  margin-bottom: 5px;
 }
 .title-required {
   color: red
@@ -725,7 +726,30 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 .dp__today {
   border: 1px solid #1E7D30 !important;
 }
-// 
+//
+.v-radio .v-label, .v-checkbox-btn .v-label{
+  color: rgb(0 0 0);
+  opacity: 0.8
+} 
+.v-input--error .v-messages__message {
+  color: red !important
+}
+
+.table-select .v-checkbox-btn, .table-select .v-checkbox {
+  min-height: 0;
+  height: 36px;
+  max-width: 50px;
+}
+.table-select td.selected {
+  width: 60px;
+}
+.table-select td, .table-select tr {
+  height: 36px !important;
+}
+.table-select .v-checkbox-btn, .table-select .v-checkbox .v-selection-control {
+  min-height: 36px !important;
+}
+
 
 
 

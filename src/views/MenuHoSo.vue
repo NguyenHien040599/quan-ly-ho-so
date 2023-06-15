@@ -156,7 +156,9 @@
 		let date = new Date(dateInput)
 		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
 	}
-
+  const themMoiHoSo = function () {
+    router.push({ path: '/nop-ho-so/1' })
+  }
   const eventClick = function () {
     console.log('run callback')
   }
@@ -195,7 +197,7 @@
         size="small"
         :color="baseColor"
         prepend-icon="mdi-plus"
-        @click.stop="showDialog" class="mx-0 btn-nophoso"
+        @click.stop="themMoiHoSo" class="mx-0 btn-nophoso"
       >
         Thêm mới hồ sơ
       </v-btn>

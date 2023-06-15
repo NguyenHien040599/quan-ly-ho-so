@@ -59,16 +59,146 @@
             "tenDinhDanh": "",
             "maSoID": ""
         },
-        "MaSinhVien": "2",
+        "MaSinhVien": "Thông báo vi phạm",
         "SoHoSo": "2",
         "SoBaoDanh": "2",
         "MaNhapHoc": "2",
-        "HoVaTen": "Nguyễn Test",
+        "HoVaTen": "A2931-123412",
         "NgaySinh": "1999-04-27T17:00:00",
         "GioiTinh": {
             "type": "C_GioiTinh",
             "MaMuc": "1",
-            "TenMuc": "Nam"
+            "TenMuc": "Mới"
+        },
+        "DanToc": {
+            "type": "C_DanToc",
+            "MaMuc": "",
+            "TenMuc": ""
+        },
+        "TonGiao": {
+            "type": "C_TonGiao",
+            "MaMuc": "",
+            "TenMuc": ""
+        },
+        "QuocTich": {
+            "type": "C_QuocGia",
+            "MaMuc": "",
+            "TenMuc": ""
+        },
+        "GiayToTuyThan": [],
+        "DanhBaLienLac": {
+            "type": "S_DanhBaLienLac",
+            "ThuDienTu": "",
+            "SoDienThoai": "0355620860",
+            "SoFax": ""
+        },
+        "DanhTinhDienTu": [],
+        "EmailVNU": "zxt@gmail.com",
+        "ChungMinhThu": "012345678",
+        "MainImage": {
+            "type": "T_Attachment",
+            "Id": null,
+            "FileName": null,
+            "FileUrl": null
+        },
+        "MaLopKhoaHoc": null,
+        "TenLopKhoaHoc": null
+    },
+    {
+        "type": "T_SinhVien",
+        "PrimKey": "63fc1960b3bbb7226f56e0a1",
+        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
+        "ThoiGianTao": "2023-02-27T02:45:52",
+        "ThoiGianCapNhat": "2023-02-27T07:40:45",
+        "TimeCreate": 1677465952701,
+        "TimeUpdate": 1677483645662,
+        "NguoiTaoLap": {
+            "type": "T_DanhTinhDienTu",
+            "maDinhDanh": "",
+            "tenDinhDanh": "",
+            "maSoID": ""
+        },
+        "NguoiCapNhat": {
+            "type": "T_DanhTinhDienTu",
+            "maDinhDanh": "",
+            "tenDinhDanh": "",
+            "maSoID": ""
+        },
+        "MaSinhVien": "Thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu",
+        "SoHoSo": "2",
+        "SoBaoDanh": "2",
+        "MaNhapHoc": "2",
+        "HoVaTen": "A2931-123412",
+        "NgaySinh": "1999-04-27T17:00:00",
+        "GioiTinh": {
+            "type": "C_GioiTinh",
+            "MaMuc": "1",
+            "TenMuc": "Đang xử lý"
+        },
+        "DanToc": {
+            "type": "C_DanToc",
+            "MaMuc": "",
+            "TenMuc": ""
+        },
+        "TonGiao": {
+            "type": "C_TonGiao",
+            "MaMuc": "",
+            "TenMuc": ""
+        },
+        "QuocTich": {
+            "type": "C_QuocGia",
+            "MaMuc": "",
+            "TenMuc": ""
+        },
+        "GiayToTuyThan": [],
+        "DanhBaLienLac": {
+            "type": "S_DanhBaLienLac",
+            "ThuDienTu": "",
+            "SoDienThoai": "0355620860",
+            "SoFax": ""
+        },
+        "DanhTinhDienTu": [],
+        "EmailVNU": "zxt@gmail.com",
+        "ChungMinhThu": "012345678",
+        "MainImage": {
+            "type": "T_Attachment",
+            "Id": null,
+            "FileName": null,
+            "FileUrl": null
+        },
+        "MaLopKhoaHoc": null,
+        "TenLopKhoaHoc": null
+    },
+    {
+        "type": "T_SinhVien",
+        "PrimKey": "63fc1960b3bbb7226f56e0a1",
+        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
+        "ThoiGianTao": "2023-02-27T02:45:52",
+        "ThoiGianCapNhat": "2023-02-27T07:40:45",
+        "TimeCreate": 1677465952701,
+        "TimeUpdate": 1677483645662,
+        "NguoiTaoLap": {
+            "type": "T_DanhTinhDienTu",
+            "maDinhDanh": "",
+            "tenDinhDanh": "",
+            "maSoID": ""
+        },
+        "NguoiCapNhat": {
+            "type": "T_DanhTinhDienTu",
+            "maDinhDanh": "",
+            "tenDinhDanh": "",
+            "maSoID": ""
+        },
+        "MaSinhVien": "Thay đổi nội dung hồ sơ chuyển dữ liệu cá nhân ra nước ngoài",
+        "SoHoSo": "2",
+        "SoBaoDanh": "2",
+        "MaNhapHoc": "2",
+        "HoVaTen": "A2931-123412",
+        "NgaySinh": "1999-04-27T17:00:00",
+        "GioiTinh": {
+            "type": "C_GioiTinh",
+            "MaMuc": "1",
+            "TenMuc": "Hoàn thành"
         },
         "DanToc": {
             "type": "C_DanToc",
