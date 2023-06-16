@@ -7,9 +7,6 @@
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
-  const TepTinDinhKem = defineAsyncComponent(() =>
-    import('./TepTinDinhKem.vue')
-  )
   const ThongTinDoanhNghiepToChuc = defineAsyncComponent(() =>
     import('./ThongTinDoanhNghiepToChuc.vue')
   )
@@ -18,6 +15,12 @@
   )
   const TableSelect = defineAsyncComponent(() =>
     import('./TableSelect.vue')
+  )
+  const TepTinDinhKem = defineAsyncComponent(() =>
+    import('./TepTinDinhKem.vue')
+  )
+  const ThongTinBieuMau = defineAsyncComponent(() =>
+    import('./ThongTinBieuMau.vue')
   )
   const router = useRouter()
   console.log('routes', router.currentRoute.value)
@@ -67,6 +70,13 @@
       }
     }
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
+  }
+  const changeTab = function (currentTab) {
+    tab.value = currentTab
+    document.getElementById("top-menu").scrollIntoView()
+    // $('html, body').animate({
+    //   scrollTop: $("#top-menu").offset().top
+    // }, 500);
   }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
@@ -152,23 +162,28 @@
 </script>
 <template>
   <!-- file-document-edit-outline; list-status; paperclip-plus; file-document-check-outline -->
-  <v-card class="mx-auto pa-0 thongtinhoso" style="box-shadow: none !important; overflow: inherit;">
+  <v-card class="mx-auto pa-0 biemau" style="box-shadow: none !important; overflow: inherit;">
     <v-tabs
       v-model="tab"
       bg-color="#00000000"
       :hide-slider="true"
     >
-      <v-tab :hide-slider="true" value="nhapdon">Nhập đơn, thông báo</v-tab>
-      <v-tab :hide-slider="true" value="noidung">Nội dung đánh giá</v-tab>
-      <v-tab :hide-slider="true" value="dinhkem">Tệp tin đính kèm</v-tab>
-      <v-tab :hide-slider="true" value="xemlai">Xem lại hồ sơ trước khi nộp</v-tab>
+      <v-tab :hide-slider="true" disabled value="nhapdon" id="top-menu">
+        <span style="font-size: 18px;">1.</span> Nhập đơn, thông báo
+      </v-tab>
+      <v-tab :hide-slider="true" disabled value="noidung"><span style="font-size: 18px;">2.</span> Nội dung đánh giá</v-tab>
+      <v-tab :hide-slider="true" disabled value="dinhkem"><span style="font-size: 18px;">3.</span> Tệp tin đính kèm</v-tab>
+      <v-tab :hide-slider="true" disabled value="xemlai"><span style="font-size: 18px;">4.</span> Xem lại hồ sơ trước khi nộp</v-tab>
     </v-tabs>
 
-    <v-card-text class="px-0 py-0" style="margin-top: -20px;">
-      <v-window v-model="tab">
-        <v-window-item value="nhapdon" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px">
+    <v-card-text class="px-0 py-0">
+      <v-window v-model="tab" >
+        <v-window-item :transition="false" value="nhapdon" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+          <v-row justify="center" class="mx-0 my-0 title-ten-ho-so pb-4">
+            {{ menuSelected.dossierName }}
+          </v-row>
           <v-row class="thongtinchung mx-0 my-0">
-            <v-col cols="12" md="6" class="py-0">
+            <v-col cols="12" md="4" class="py-0">
               <div class="text-label">Chọn đối tượng thực hiện <span style="color: red">(*)</span></div>
               <v-radio-group v-model="dataForm['loaiDoiTuongThucHien']">
                 <v-radio label="Cá nhân" value="citizen" color="#1E7D30"></v-radio>
@@ -176,7 +191,7 @@
                 <v-radio label="Cơ quan nhà nước" value="organization" color="#1E7D30"></v-radio>
               </v-radio-group>
             </v-col>
-            <v-col cols="12" md="6" class="py-0">
+            <v-col cols="12" md="4" class="py-0">
               <div class="text-label">Đối tượng bảo vệ DLCN <span style="color: red">(*)</span></div>
               <v-radio-group v-model="dataForm['loaiDoiTuongBaoVeDLCN']">
                 <v-radio label="Bên kiểm soát dữ liệu cá nhân" value="ks" color="#1E7D30"></v-radio>
@@ -210,7 +225,7 @@
               size="small"
               color="#1E7D30"
               class="mx-0"
-              @click.stop=""
+              @click.stop="changeTab('noidung')"
               height="32px" width="130px"
             >
               <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
@@ -219,8 +234,8 @@
           </v-row>
         </v-window-item>
 
-        <v-window-item value="noidung" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px">
-          <v-row class="mx-0 my-0" v-if="dataForm['loaiDoiTuongThucHien'] !== 'citizen'">
+        <v-window-item :transition="false" value="noidung" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+          <v-row class="mx-0 my-0">
             <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 mb-3">
               <div class="sub-header-content">
                 <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
@@ -365,11 +380,64 @@
               size="small"
               variant="outlined"
               color="#1E7D30"
-              @click.stop=""
-              height="32px" width="120px"
+              @click.stop="changeTab('nhapdon')"
+              height="32px" width="150px"
             >
               <v-icon size="22" color="#1E7D30" class="mr-2">mdi-reply-all-outline</v-icon>
-              <span style="font-size: 16px; text-transform: none;">Quay lại</span>
+              <span style="font-size: 16px; text-transform: none;">Bước trước</span>
+            </v-btn>
+            <v-btn
+              size="small"
+              color="#1E7D30"
+              class="mx-0"
+              @click.stop="changeTab('dinhkem')"
+              height="32px" width="130px"
+            >
+              <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
+              <span style="font-size: 16px">Tiếp tục</span>
+            </v-btn>
+          </v-row>
+        </v-window-item>
+
+        <v-window-item :transition="false" value="dinhkem" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+          <TepTinDinhKem></TepTinDinhKem>
+          <v-row class="mx-0 mb-3 mt-5" justify="center">
+            <v-btn
+              class="mr-3"
+              size="small"
+              variant="outlined"
+              color="#1E7D30"
+              @click.stop="changeTab('noidung')"
+              height="32px" width="150px"
+            >
+              <v-icon size="22" color="#1E7D30" class="mr-2">mdi-reply-all-outline</v-icon>
+              <span style="font-size: 16px; text-transform: none;">Bước trước</span>
+            </v-btn>
+            <v-btn
+              size="small"
+              color="#1E7D30"
+              class="mx-0"
+              @click.stop="changeTab('xemlai')"
+              height="32px" width="130px"
+            >
+              <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
+              <span style="font-size: 16px">Tiếp tục</span>
+            </v-btn>
+          </v-row>
+        </v-window-item>
+        <v-window-item :transition="false" value="xemlai" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;margin-top: -5px">
+          <ThongTinBieuMau></ThongTinBieuMau>
+          <v-row class="mx-0 my-2" justify="center">
+            <v-btn
+              class="mr-3"
+              size="small"
+              variant="outlined"
+              color="#1E7D30"
+              @click.stop="changeTab('dinhkem')"
+              height="32px" width="150px"
+            >
+              <v-icon size="22" color="#1E7D30" class="mr-2">mdi-reply-all-outline</v-icon>
+              <span style="font-size: 16px; text-transform: none;">Bước trước</span>
             </v-btn>
             <v-btn
               size="small"
@@ -379,16 +447,9 @@
               height="32px" width="130px"
             >
               <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
-              <span style="font-size: 16px">Tiếp tục</span>
+              <span style="font-size: 16px">Nộp hồ sơ</span>
             </v-btn>
           </v-row>
-        </v-window-item>
-
-        <v-window-item value="dinhkem" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px">
-          <TepTinDinhKem></TepTinDinhKem>
-        </v-window-item>
-        <v-window-item value="xemlai">
-          Three
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -396,6 +457,12 @@
 </template>
 
 <style scoped>
+  .title-ten-ho-so {
+    text-transform: uppercase;
+    font-size: 18px;
+    color: #1E7D30;
+    font-weight: 700;
+  }
   .btn-nophoso {
     width: 100%;
     border-radius: 0px;

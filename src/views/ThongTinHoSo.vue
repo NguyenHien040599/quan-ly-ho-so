@@ -18,7 +18,7 @@
   const loading = ref(false)
   const tab = ref(null)
   const thongTinHoSo = reactive(jsondata.thongTinHoSo)
-  const mauHienThi = reactive(jsondata.thuTucHanhChinh[0]['mauHienThi'])
+  const mauHienThi = reactive(jsondata.thuTucHanhChinh[1]['mauHienThiHoSo'])
   const eventClick = function () {
     console.log('run callback')
   }

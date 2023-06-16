@@ -38,10 +38,10 @@
       <div class="container wrap-content-page">
         <v-card class="mx-auto pa-3" style="box-shadow: none !important;">
           <v-row>
-            <v-col cols="2">
+            <v-col style="max-width: 300px !important;flex: 0 0 300px;">
               <MenuHoSo></MenuHoSo>
             </v-col>
-            <v-col cols="10">
+            <v-col style="max-width: calc(100% - 300px) !important;flex: 0 0 calc(100% - 300px);">
               <router-view></router-view>
             </v-col>
           </v-row>

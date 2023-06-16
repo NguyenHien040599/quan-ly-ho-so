@@ -27,93 +27,10 @@
   const model2 = ref('')
   const dialog = ref(false)
   const advanceSearch = ref(false)
-  const mauFormCrud = reactive([
-    {
-      "name": "MaSinhVien",
-      "title": "Mã sinh viên",
-      "type": "textfield",
-      "fieldClass": "v-col-xs-12 v-col-6",
-      "placeHolder": "",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": "",
-      "autoEvent": "",
-      "required": true,
-      "rules": [],
-      "readonly": false
-    },
-    {
-      "name": "HoVaTen",
-      "title": "Họ tên",
-      "type": "textfield",
-      "fieldClass": "v-col-xs-12 v-col-6",
-      "placeHolder": "",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": "",
-      "autoEvent": "",
-      "required": true,
-      "rules": [],
-      "readonly": false
-    },
-    {
-      "name": "GioiTinh",
-      "title": "Giới tính",
-      "type": "select",
-      "multiple": false,
-      "itemText": "TenMuc",
-      "itemValue": "MaMuc",
-      "fieldClass": "v-col-xs-12 v-col-6",
-      "placeHolder": "",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": [],
-      "autoEvent": "",
-      "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=GIOITINH",
-      "responseDataApi": "content",
-      "required": true,
-      "rules": [],
-      "readonly": false
-    },
-    {
-      "name": "NgaySinh",
-      "title": "Ngày sinh",
-      "type": "date",
-      "fieldClass": "v-col-xs-12 v-col-6",
-      "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": "",
-      "autoEvent": "",
-      "required": true,
-      "rules": [],
-      "readonly": false
-    },
-    {
-      "name": "tomTat",
-      "title": "Tóm tắt nội dung",
-      "type": "textarea",
-      "fieldClass": "v-col-12",
-      "placeHolder": "",
-      "defaultValue": "",
-      "dataType": "",
-      "dataSource": "",
-      "autoEvent": "",
-      "rows": 3,
-      "required": true,
-      "rules": [],
-      "readonly": false
-    }
-  ])
   const advanceSearchReference = ref(null)
   const crudFormReference = ref(null)
   const dataInputSearch = reactive({})
   const dataInputCrud = ref({})
-  const dataSource = reactive([
-    {name: 'Giá trị 1', value: 1},
-    {name: 'Giá trị 2', value: 2},
-    {name: 'Giá trị 3', value: 3}
-  ])
   const headers = reactive([])
   const dsHoSo = reactive([
     {
@@ -142,8 +59,8 @@
         "MaNhapHoc": "2",
         "HoVaTen": "A2931-123412",
         "NgaySinh": "1999-04-27T17:00:00",
-        "GioiTinh": {
-            "type": "C_GioiTinh",
+        "TinhTrang": {
+            "type": "C_TinhTrang",
             "MaMuc": "1",
             "TenMuc": "Mới"
         },
@@ -207,9 +124,9 @@
         "MaNhapHoc": "2",
         "HoVaTen": "A2931-123412",
         "NgaySinh": "1999-04-27T17:00:00",
-        "GioiTinh": {
-            "type": "C_GioiTinh",
-            "MaMuc": "1",
+        "TinhTrang": {
+            "type": "C_TinhTrang",
+            "MaMuc": "2",
             "TenMuc": "Đang xử lý"
         },
         "DanToc": {
@@ -272,9 +189,9 @@
         "MaNhapHoc": "2",
         "HoVaTen": "A2931-123412",
         "NgaySinh": "1999-04-27T17:00:00",
-        "GioiTinh": {
-            "type": "C_GioiTinh",
-            "MaMuc": "1",
+        "TinhTrang": {
+            "type": "C_TinhTrang",
+            "MaMuc": "3",
             "TenMuc": "Hoàn thành"
         },
         "DanToc": {
@@ -330,6 +247,9 @@
   }
   const redirectThongTinHoSo = function (hoso) {
     router.push({ path: '/thong-tin-ho-so/' + hoso.PrimKey })
+  }
+  const lapHoSoThayDoi = function (item) {
+    router.push({ path: '/nop-ho-so' + menuSelected.value.to + '?id_update=' + item.PrimKey })
   }
   const showAdvanceSearch = function () {
     advanceSearch.value = !advanceSearch.value
@@ -422,57 +342,9 @@
 </script>
 <template>
   <v-card class="mx-auto pa-0" style="box-shadow: none !important; overflow: inherit;">
-    <v-row justify="end" class="mt-0 mb-0 mx-0">
-      <v-col class="row-header d-flex align-center justify-start py-0 px-0">
-        <div class="header-content">
-          DANH SÁCH <span style="text-transform: uppercase"> {{ menuSelected['title'] }}</span>
-        </div>
-        <div class="triangle-header"></div>
-        <!-- <v-text-field
-          append-inner-icon="mdi-magnify"
-          @keyup.enter="eventClick"
-          @click:append-inner="eventClick"
-          @click:prepend-inner="eventClick"
-          placeholder="Tìm kiếm theo từ khóa ..."
-          dense
-          hide-details="auto"
-          class="input-form input-header-search"
-          clearable
-        ></v-text-field> -->
-        <v-text-field
-          @keyup.enter="eventClick"
-          placeholder="Tìm kiếm theo từ khóa ..."
-          dense
-          hide-details="auto"
-          class="input-form input-header-search"
-          clearable
-        ></v-text-field>
-      </v-col>
-      <v-col class="py-0 px-0" style="max-width: 110px;margin-left: -2px;">
-        <!-- <v-btn
-          size="small"
-          :color="baseColor"
-          :prepend-icon="!advanceSearch ? 'mdi-filter-variant-plus' : 'mdi-filter-variant'"
-          @click.stop="showAdvanceSearch" class="mx-0 white--text" style="float: right;border-top-left-radius: 0;border-bottom-left-radius: 0;"
-        >
-          Tìm kiếm nâng cao
-        </v-btn> -->
-        <v-btn
-          size="small"
-          :color="baseColor"
-          prepend-icon="mdi-magnify"
-          @click.stop="eventClick" class="mx-0 white--text" style="float: right;border-top-left-radius: 0;border-bottom-left-radius: 0;"
-        >
-          Tìm kiếm
-        </v-btn>
-      </v-col>
-    </v-row>
-    <!-- <div v-if="advanceSearch" style="margin-top: 15px">
-      <TimKiemNangCao ref="advanceSearchReference" :mauNhap="menuSelected.formTimKiemNangCao" :dataInput="dataInputSearch" @submitSearch="submitAdvanceSearch"></TimKiemNangCao>
-    </div> -->
     <!-- table -->
-    <v-row class="mx-0 mt-3">
-      <v-col cols="12" class="px-0">
+    <v-row class="mx-0 my-0">
+      <v-col cols="12" class="px-0 py-0">
         <v-data-table
           :headers="menuSelected.headerTable"
           :items="dsHoSo"
@@ -511,7 +383,7 @@
                   {{ convertDataView(itemHeader, item.raw) }}
                 </div>
                 <div v-else-if="itemHeader.type == 'action'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  <v-tooltip location="top">
+                  <v-tooltip location="top" v-if="item.raw.TinhTrang.MaMuc == '1'">
                     <template v-slot:activator="{ props }">
                       <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="showDialog('update', item.columns)">
                         <v-icon size="24" :color="baseColor">mdi-playlist-edit</v-icon>
@@ -520,7 +392,7 @@
                     <span>Sửa</span>
                   </v-tooltip>
 
-                  <v-tooltip location="top">
+                  <v-tooltip location="top" v-if="item.raw.TinhTrang.MaMuc == '1'">
                     <template v-slot:activator="{ props }">
                       <v-btn icon variant="flat" size="small" v-bind="props" @click.stop="showConfirm">
                         <v-icon size="22" color="#FF0000">mdi-close</v-icon>
@@ -528,6 +400,11 @@
                     </template>
                     <span>Xóa</span>
                   </v-tooltip>
+
+                  <v-btn v-if="item.raw.TinhTrang.MaMuc == '3' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')" color="#1E7D30" class="mx-0" size="small" @click.stop="lapHoSoThayDoi(item.raw)">
+                    <v-icon size="20" color="#FFFFFF" class="mr-2">mdi-file-document-plus-outline</v-icon>
+                    <span>Lập hồ sơ thay đổi</span>
+                  </v-btn>
                 </div>
                 <div v-else :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
                   {{ item.raw[itemHeader.value] }}
@@ -567,7 +444,6 @@
         </v-toolbar>
         <v-card-text class="mt-2 px-3">
           <!-- Content dialog -->
-          <FormCRUD ref="crudFormReference" :mauNhap="mauFormCrud" :dataInput="dataInputCrud"></FormCRUD>
         </v-card-text>
         <v-card-actions class="justify-center pb-3 px-3">
           <v-btn

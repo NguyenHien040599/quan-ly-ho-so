@@ -5,6 +5,13 @@
   import { useAppStore } from '@/stores/global.js'
   import jsondata from '../stores/mock-data.json'
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
+  const props = defineProps({
+    permission: {
+      type: Boolean,
+      default: false
+    }
+  })
+  const editTep = reactive(props.permission)
 
   const router = useRouter()
   const appStore = useAppStore()
@@ -27,15 +34,17 @@
       "align": "center",
       "value": "tepDinhKem",
       "class": "td-left"
-    },
-    {
+    }
+  ])
+  if (editTep) {
+    headers.push({
       "sortable": false,
       "title": "Thao tác",
       "align": "center",
       "value": "action",
       "class": "td-center"
-    }
-  ])
+    })
+  }
   const viewFileUpload = function () {
 
   }
@@ -154,32 +163,32 @@
           <tr>
             <td class="align-left">{{ item.raw.TenGiayTo }}</td>
             <td class="align-left" width="350">
-              <div class="" @click="viewFileUpload()" v-for="(itemTep, indexTep) in item.raw.TepDuLieu" v-bind:key="indexTep">
+              <div class="py-1" @click="viewFileUpload()" v-for="(itemTep, indexTep) in item.raw.TepDuLieu" v-bind:key="indexTep">
                 <v-icon size="18" color="green" v-if="itemTep.DinhDangTep === 'xls' || itemTep.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
                 <v-icon size="18" color="blue" v-else-if="itemTep.DinhDangTep === 'doc' || itemTep.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
                 <v-icon size="18" color="red" v-else-if="itemTep.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
                 <v-icon size="18" color="blue" v-else-if="itemTep.DinhDangTep === 'png' || itemTep.DinhDangTep === 'jpg' || itemTep.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
                 <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
                 <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{itemTep.TenTep}}</a>
-                  <v-tooltip location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(itemTep, indexTep)">
-                        <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Tải xuống</span>
-                  </v-tooltip>
-                  <v-tooltip location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(itemTep, indexTep)">
-                        <v-icon size="18" color="red">mdi-close</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Xóa</span>
-                  </v-tooltip>
+                <v-tooltip location="top" v-if="editTep">
+                  <template v-slot:activator="{ props }">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(itemTep, indexTep)">
+                      <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Tải xuống</span>
+                </v-tooltip>
+                <v-tooltip location="top" v-if="editTep">
+                  <template v-slot:activator="{ props }">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(itemTep, indexTep)">
+                      <v-icon size="18" color="red">mdi-close</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Xóa</span>
+                </v-tooltip>
               </div>
             </td>
-            <td class="align-center" width="200">
+            <td class="align-center" width="200" v-if="editTep">
               <v-btn
                 class="mx-0"
                 size="small"

@@ -1,11 +1,11 @@
 {
   "menuHoSo": [
     {
-      "icon": "mdi:mdi-text-box-outline",
-      "title": "Hồ sơ mới",
-      "class": "new-tab",
-      "id": "new",
-      "to": "/ho-so-moi",
+      "icon": "mdi:mdi-message-badge-outline",
+      "title": "Thông báo vi phạm",
+      "class": "thong-bao-tab",
+      "id": "thongbaovipham",
+      "to": "/thong-bao-vi-pham",
       "counter": 1,
       "headerTable": [
         {
@@ -18,16 +18,8 @@
           "width": 50
         },
         {
-            "sortable": false,
-            "title": "Mã hồ sơ",
-            "align": "center",
-            "value": "HoVaTen",
-            "class": "td-left",
-            "width": 250
-        },
-        {
           "sortable": false,
-          "title": "Thủ tục",
+          "title": "Hồ sơ",
           "align": "center",
           "value": "MaSinhVien",
           "class": "td-left"
@@ -39,13 +31,13 @@
             "value": "NgaySinh",
             "class": "td-left",
             "type": "date",
-            "width": 250
+            "width": 150
         },
         {
           "sortable": false,
           "title": "Tình trạng hồ sơ",
           "align": "center",
-          "value": "GioiTinh",
+          "value": "TinhTrang",
           "class": "td-center",
           "type": "object",
           "mapping": "TenMuc",
@@ -61,42 +53,14 @@
             "width": 150
         }
       ],
-      "formTimKiemNangCao": [
-        {
-          "name": "thutuc",
-          "title": "Thủ tục",
-          "type": "select",
-          "multiple": false,
-          "itemText": "tenMuc",
-          "itemValue": "maMuc",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": [],
-          "autoEvent": "",
-          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-          "responseDataApi": "content"
-        },
-        {
-          "name": "ngayTao",
-          "title": "Ngày tạo",
-          "type": "date",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        }
-      ]
+      "dossierName": "Hồ sơ thông báo vi phạm"
     },
     {
-      "icon": "mdi:mdi-calendar-outline",
-      "title": "Chờ tiếp nhận",
-      "class": "receiving-tab",
-      "id": "receiving",
-      "to": "/cho-tiep-nhan",
+      "icon": "mdi:mdi-badge-account-horizontal-outline",
+      "title": "Xử lý dữ liệu cá nhân",
+      "class": "xu-ly-tab",
+      "id": "xulydulieu",
+      "to": "/xu-ly-du-lieu",
       "counter": 3,
       "headerTable": [
         {
@@ -110,75 +74,48 @@
         },
         {
             "sortable": false,
-            "title": "Mã hồ sơ",
-            "align": "center",
-            "value": "HoVaTen",
-            "class": "td-left",
-            "width": 250
-        },
-        {
-            "sortable": false,
-            "title": "Thủ tục",
+            "title": "Hồ sơ",
             "align": "center",
             "value": "MaSinhVien",
             "class": "td-left"
         },
         {
           "sortable": false,
-          "title": "Ngày gửi",
+          "title": "Ngày tạo",
           "align": "center",
           "value": "NgaySinh",
           "class": "td-left",
           "type": "date",
-          "width": 250
+          "width": 150
         },
         {
           "sortable": false,
           "title": "Tình trạng hồ sơ",
           "align": "center",
-          "value": "GioiTinh",
+          "value": "TinhTrang",
           "class": "td-center",
           "type": "object",
           "mapping": "TenMuc",
           "width": 150
-        }
-      ],
-      "formTimKiemNangCao": [
-        {
-          "name": "thutuc",
-          "title": "Thủ tục",
-          "type": "select",
-          "multiple": false,
-          "itemText": "tenMuc",
-          "itemValue": "maMuc",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": [],
-          "autoEvent": "",
-          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-          "responseDataApi": "content"
         },
         {
-          "name": "ngayTao",
-          "title": "Ngày gửi",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
+          "sortable": false,
+          "title": "Thao tác",
+          "align": "center",
+          "value": "thaotac",
+          "type": "action",
+          "class": "td-center",
+          "width": 150
         }
-      ]
+      ],
+      "dossierName": "Hồ sơ đánh giá tác động xử lý dữ liệu cá nhân"
     },
     {
-      "icon": "mdi:mdi-book-open-page-variant-outline",
-      "title": "Yêu cầu bổ sung",
-      "class": "waiting-tab",
-      "id": "waiting",
-      "to": "/yeu-cau-bo-sung",
+      "icon": "mdi:mdi-ballot-recount-outline",
+      "title": "Chuyển dữ liệu cá nhân ra nước ngoài",
+      "class": "chuyen-du-lieu-tab",
+      "id": "chuyendulieu",
+      "to": "/chuyen-du-lieu",
       "counter": 2,
       "headerTable": [
         {
@@ -191,32 +128,15 @@
             "width": 50
         },
         {
-            "sortable": false,
-            "title": "Mã hồ sơ",
-            "align": "center",
-            "value": "HoVaTen",
-            "class": "td-left",
-            "width": 250
-        },
-        {
           "sortable": false,
-          "title": "Thủ tục",
+          "title": "Hồ sơ",
           "align": "center",
           "value": "MaSinhVien",
           "class": "td-left"
         },
         {
           "sortable": false,
-          "title": "Ngày tiếp nhận",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Ngày hẹn trả",
+          "title": "Ngày tạo",
           "align": "center",
           "value": "NgaySinh",
           "class": "td-left",
@@ -227,7 +147,7 @@
           "sortable": false,
           "title": "Tình trạng hồ sơ",
           "align": "center",
-          "value": "GioiTinh",
+          "value": "TinhTrang",
           "class": "td-center",
           "type": "object",
           "mapping": "TenMuc",
@@ -243,459 +163,7 @@
             "width": 150
         }
       ],
-      "formTimKiemNangCao": [
-        {
-          "name": "thutuc",
-          "title": "Thủ tục",
-          "type": "select",
-          "multiple": false,
-          "itemText": "tenMuc",
-          "itemValue": "maMuc",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": [],
-          "autoEvent": "",
-          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-          "responseDataApi": "content"
-        },
-        {
-          "name": "ngayTao",
-          "title": "Ngày tiếp nhận",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        },
-        {
-          "name": "ngayBanHanh",
-          "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày hẹn trả",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        }
-      ]
-    },
-    {
-      "icon": "mdi:mdi-calendar-outline",
-      "title": "Đang thụ lý",
-      "class": "processing-menu",
-      "id": "processing",
-      "to": "/dang-thu-ly",
-      "counter": 1,
-      "headerTable": [
-        {
-          "sortable": false,
-          "title": "STT",
-          "align": "center",
-          "value": "stt",
-          "type": "index",
-          "class": "td-center",
-          "width": 50
-        },
-        {
-            "sortable": false,
-            "title": "Mã hồ sơ",
-            "align": "center",
-            "value": "HoVaTen",
-            "class": "td-left",
-            "width": 250
-        },
-        {
-          "sortable": false,
-          "title": "Thủ tục",
-          "align": "center",
-          "value": "MaSinhVien",
-          "class": "td-left"
-        },
-        {
-          "sortable": false,
-          "title": "Ngày tiếp nhận",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Ngày hẹn trả",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Tình trạng hồ sơ",
-          "align": "center",
-          "value": "GioiTinh",
-          "class": "td-center",
-          "type": "object",
-          "mapping": "TenMuc",
-          "width": 150
-        }
-      ],
-      "formTimKiemNangCao": [
-        {
-          "name": "thutuc",
-          "title": "Thủ tục",
-          "type": "select",
-          "multiple": false,
-          "itemText": "tenMuc",
-          "itemValue": "maMuc",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": [],
-          "autoEvent": "",
-          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-          "responseDataApi": "content"
-        },
-        {
-          "name": "ngayTao",
-          "title": "Ngày tiếp nhận",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        },
-        {
-          "name": "ngayBanHanh",
-          "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày hẹn trả",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        }
-      ]
-    },
-    {
-      "icon": "mdi:mdi-shield-check-outline",
-      "title": "Hoàn thành thụ lý",
-      "class": "done-menu",
-      "id": "done",
-      "to": "/hoan-thanh",
-      "counter": 7,
-      "headerTable": [
-        {
-          "sortable": false,
-          "title": "STT",
-          "align": "center",
-          "value": "stt",
-          "type": "index",
-          "class": "td-center",
-          "width": 50
-        },
-        {
-            "sortable": false,
-            "title": "Mã hồ sơ",
-            "align": "center",
-            "value": "HoVaTen",
-            "class": "td-left",
-            "width": 250
-        },
-        {
-          "sortable": false,
-          "title": "Thủ tục",
-          "align": "center",
-          "value": "MaSinhVien",
-          "class": "td-left"
-        },
-        {
-          "sortable": false,
-          "title": "Ngày hoàn thành",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Ngày hẹn trả",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Tình trạng hồ sơ",
-          "align": "center",
-          "value": "GioiTinh",
-          "class": "td-center",
-          "type": "object",
-          "mapping": "TenMuc",
-          "width": 150
-        }
-      ],
-      "formTimKiemNangCao": [
-        {
-          "name": "thutuc",
-          "title": "Thủ tục",
-          "type": "select",
-          "multiple": false,
-          "itemText": "tenMuc",
-          "itemValue": "maMuc",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": [],
-          "autoEvent": "",
-          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-          "responseDataApi": "content"
-        },
-        {
-          "name": "ngayTao",
-          "title": "Ngày hoàn thành",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        },
-        {
-          "name": "ngayBanHanh",
-          "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày hẹn trả",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        }
-      ]
-    },
-    {
-      "icon": "mdi:mdi-calendar-outline",
-      "title": "Rút, trả lại hồ sơ",
-      "class": "cancel-menu",
-      "id": "cancel",
-      "to": "/ho-so-rut",
-      "counter": 9,
-      "headerTable": [
-        {
-          "sortable": false,
-          "title": "STT",
-          "align": "center",
-          "value": "stt",
-          "type": "index",
-          "class": "td-center",
-          "width": 50
-        },
-        {
-            "sortable": false,
-            "title": "Mã hồ sơ",
-            "align": "center",
-            "value": "HoVaTen",
-            "class": "td-left",
-            "width": 250
-        },
-        {
-          "sortable": false,
-          "title": "Thủ tục",
-          "align": "center",
-          "value": "MaSinhVien",
-          "class": "td-left"
-        },
-        {
-          "sortable": false,
-          "title": "Ngày gửi",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Ngày rút/ trả lại",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Tình trạng hồ sơ",
-          "align": "center",
-          "value": "GioiTinh",
-          "class": "td-center",
-          "type": "object",
-          "mapping": "TenMuc",
-          "width": 150
-        }
-      ],
-      "formTimKiemNangCao": [
-        {
-          "name": "thutuc",
-          "title": "Thủ tục",
-          "type": "select",
-          "multiple": false,
-          "itemText": "tenMuc",
-          "itemValue": "maMuc",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": [],
-          "autoEvent": "",
-          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-          "responseDataApi": "content"
-        },
-        {
-          "name": "ngayTao",
-          "title": "Ngày gửi",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        },
-        {
-          "name": "ngayBanHanh",
-          "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày rút/ trả lại",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        }
-      ]
-    },
-    {
-      "icon": "mdi:mdi-text-search-variant",
-      "title": "Tất cả hồ sơ",
-      "class": "all-menu",
-      "id": "all",
-      "to": "/tat-ca",
-      "counter": 20,
-      "headerTable": [
-        {
-          "sortable": false,
-          "title": "STT",
-          "align": "center",
-          "value": "stt",
-          "type": "index",
-          "class": "td-center",
-          "width": 50
-        },
-        {
-            "sortable": false,
-            "title": "Mã hồ sơ",
-            "align": "center",
-            "value": "HoVaTen",
-            "class": "td-left",
-            "width": 250
-        },
-        {
-          "sortable": false,
-          "title": "Thủ tục",
-          "align": "center",
-          "value": "MaSinhVien",
-          "class": "td-left"
-        },
-        {
-          "sortable": false,
-          "title": "Ngày gửi",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Ngày tiếp nhận",
-          "align": "center",
-          "value": "NgaySinh",
-          "class": "td-left",
-          "type": "date",
-          "width": 150
-        },
-        {
-          "sortable": false,
-          "title": "Tình trạng hồ sơ",
-          "align": "center",
-          "value": "GioiTinh",
-          "class": "td-center",
-          "type": "object",
-          "mapping": "TenMuc",
-          "width": 150
-        }
-      ],
-      "formTimKiemNangCao": [
-        {
-          "name": "thutuc",
-          "title": "Thủ tục",
-          "type": "select",
-          "multiple": false,
-          "itemText": "tenMuc",
-          "itemValue": "maMuc",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": [],
-          "autoEvent": "",
-          "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=HIENTRANGVANBAN",
-          "responseDataApi": "content"
-        },
-        {
-          "name": "ngayTao",
-          "title": "Ngày gửi",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        },
-        {
-          "name": "ngayBanHanh",
-          "nameTo": "ngayBanHanhDenNgay",
-          "title": "Ngày tiếp nhận",
-          "type": "daterange",
-          "fieldClass": "v-col-xs-12 v-col-6",
-          "placeHolder": "ddmmyyyy, dd/mm/yyyy",
-          "defaultValue": "",
-          "dataType": "",
-          "dataSource": "",
-          "autoEvent": ""
-        }
-      ]
+      "dossierName": "Hồ sơ chuyển dữ liệu cá nhân ra nước ngoài"
     }
   ],
   "thuTucHanhChinh": [
@@ -703,7 +171,13 @@
       "maThuTuc": "thongbaovipham",
       "tenThuTuc": "Thông báo vi phạm quy định bảo vệ dữ liệu cá nhân",
       "mauEform": "",
-      "mauHienThi": [
+      "mauHienThi": []
+    },
+    {
+      "maThuTuc": "danhgiatacdongxulydulieu",
+      "tenThuTuc": "Hồ sơ đánh giá tác động xử lý dữ liệu",
+      "mauEform": "",
+      "mauHienThiHoSo": [
         {
           "group": true,
           "title": "Thông tin chung hồ sơ",
@@ -926,14 +400,201 @@
           ],
           "class": "v-col-12 py-0 px-0 pt-2"
         }
-      ]
-    },
-    {
-      "maThuTuc": "danhgiatacdongxulydulieu",
-      "tenThuTuc": "Hồ sơ đánh giá tác động xử lý dữ liệu",
-      "mauEform": "",
-      "mauHienThi": [
-        {}
+      ],
+      "mauHienThiBieuMau": [
+        {
+          "group": true,
+          "title": "Thông tin tổ chức, doanh nghiệp đánh giá tác động dữ liệu cá nhân",
+          "content": [
+            {
+              "title": "Tên tổ chức, doanh nghiệp",
+              "value": "ChuHoSo",
+              "mapping": "TenGoi",
+              "type": "object",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Tên cơ quan, tổ chức chủ quản (nếu có)",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Địa chỉ trụ sở chính",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Tỉnh/ thành phố",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Quận/ huyện",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Phường/ xã",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Địa chỉ trụ sở giao dịch",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Số điện thoại",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Thư điện tử",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Quyết định thành lập/Giấy chứng nhận đăng ký doanh nghiệp/Giấy chứng nhận đăng ký kinh doanh/Giấy chứng nhận đầu tư số",
+              "value": "DonViXuLy",
+              "type": "object",
+              "mapping": "TenMuc",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Cơ quan cấp",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Ngày cấp",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Nơi cấp",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Nhân sự chịu trách nhiệm bảo vệ dữ liệu cá nhân",
+              "value": "",
+              "class": "v-col-12 py-0 pt-2 px-0",
+              "type": ""
+            },
+            {
+              "title": "Họ và tên",
+              "value": "DonViXuLy",
+              "type": "object",
+              "mapping": "TenMuc",
+              "class": "v-col-12 v-col-md-3 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Chức danh",
+              "value": "DonViXuLy",
+              "type": "object",
+              "mapping": "TenMuc",
+              "class": "v-col-12 v-col-md-3 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Số điện thoại",
+              "value": "DonViXuLy",
+              "type": "object",
+              "mapping": "TenMuc",
+              "class": "v-col-12 v-col-md-3 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Email",
+              "value": "DonViXuLy",
+              "type": "object",
+              "mapping": "TenMuc",
+              "class": "v-col-12 v-col-md-3 py-0 pt-2 px-0"
+            }
+          ],
+          "class": "v-col-12 py-0 px-0 pt-2"
+        },
+        {
+          "group": true,
+          "title": "Nội dung đánh giá tác động xử lý dữ liệu cá nhân",
+          "content": [
+            {
+              "title": "Tên nhiệm vụ xử lý dữ liệu cá nhân",
+              "value": "ChuHoSo",
+              "mapping": "TenGoi",
+              "type": "object",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Điều kiện cho phép việc thu thập, xử lý DLCN",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "object",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Phạm vi xử lý các loại dữ liệu cá nhân cơ bản",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "danhmuc",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Phạm vi xử lý các loại dữ liệu cá nhân nhạy cảm",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "danhmuc",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Thời gian xử lý dữ liệu",
+              "value": "ThoiGianXuLy",
+              "type": "date",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Thời gian xóa/hủy dữ liệu (nếu có)",
+              "value": "ThoiGianHuyXoa",
+              "type": "date",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Biện pháp bảo vệ dữ liệu cá nhân được áp dụng",
+              "value": "DiaChi",
+              "mapping": "SoNhaChiTiet",
+              "type": "danhmuc",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "Nguy cơ rủi ro, thiệt hại có thể xảy ra",
+              "value": "DonViXuLy",
+              "type": "danhmuc",
+              "mapping": "TenMuc",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            }
+          ],
+          "class": "v-col-12 py-0 px-0 pt-2"
+        }
       ]
     },
     {
@@ -959,220 +620,6 @@
       "mauHienThi": [
         {}
       ]
-    }
-  ],
-  "danhSachBaoCao": [
-    {
-      "maDinhDanh": "231241233",
-      "maBaoCao": "BC-983123",
-      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
-      "quyTrinh": {
-        "@type": "T_QuyTrinh",
-        "maQuyTrinh": "QT-001"
-      },
-      "mauBaoCao": {
-        "@type": "T_MauBaoCao",
-        "maDinhDanh": "",
-        "maMauBaoCao": "MAU_001",
-        "nhapNhieuThanhPhan": 1
-      },
-      "kyBaoCao": {
-        "@type": "C_KyBaoCao",
-        "maMuc": "1",
-        "tenMuc": "Theo tháng"
-      },
-      "hanXuLy": "02-09-2022",
-      "coQuanThucHien": {
-        "@type": "T_CoQuanDonVi",
-        "maHanhChinh": "STNMT",
-        "tenGoi": "Sở Tài nguyên và môi trường"
-      },
-      "tinhTrang": {
-        "@type": "C_TrangThaiXuLy",
-        "tenMuc": "Đang xử lý",
-        "maMuc": "1"
-      },
-      "thoiGianTao": "12-08-2022",
-      "thoiGianCapNhat": "",
-      "nguoiTaoLap": {
-        "@type": "T_DanhTinhDienTu",
-        "tenDinhDanh": "",
-        "maSoID": ""
-      }
-    },
-    {
-      "maDinhDanh": "23123",
-      "maBaoCao": "BC-154312",
-      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
-      "quyTrinh": {
-        "@type": "T_QuyTrinh",
-        "maQuyTrinh": "QT-002"
-      },
-      "mauBaoCao": {
-        "@type": "T_MauBaoCao",
-        "maDinhDanh": "",
-        "maMauBaoCao": "MAU_002",
-        "nhapNhieuThanhPhan": 1
-      },
-      "kyBaoCao": {
-        "@type": "C_KyBaoCao",
-        "maMuc": "1",
-        "tenMuc": "Theo tuần"
-      },
-      "hanXuLy": "08-08-2022",
-      "coQuanThucHien": {
-        "@type": "T_CoQuanDonVi",
-        "maHanhChinh": "STTTT",
-        "tenGoi": "Sở Thông tin và truyền thông"
-      },
-      "tinhTrang": {
-        "@type": "C_TrangThaiXuLy",
-        "tenMuc": "Chờ duyệt",
-        "maMuc": "2"
-      },
-      "thoiGianTao": "01-08-2022",
-      "thoiGianCapNhat": "",
-      "nguoiTaoLap": {
-        "@type": "T_DanhTinhDienTu",
-        "tenDinhDanh": "",
-        "maSoID": ""
-      }
-    }
-  ],
-  "danhSachThanhPhan": [
-    {
-      "maDinhDanh": "231241233",
-      "maBaoCao": "BC-983123",
-      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
-      "quyTrinh": {
-        "@type": "T_QuyTrinh",
-        "maQuyTrinh": "QT-001"
-      },
-      "noiDung": {
-        "loaiVanBan": {
-          "name": "Quyết định",
-          "value": "1"
-        },
-        "hienTrang": [
-          {
-            "name": "Dự thảo",
-            "value": "1"
-          },
-          {
-            "name": "Đã ban hành",
-            "value": "2"
-          }
-        ],
-        "coQuanBanHanh": [
-          {
-            "name": "Sở thông tin và truyền thông",
-            "value": "1"
-          }
-        ],
-        "ngayBanHanh": "2022-11-11T00:00:00.000Z",
-        "tenVanBan": "Tôi là tên văn bản",
-        "tomTatNoiDung": "Tôi là tên tóm tắt nội dung",
-        "tinhTrang": {
-          "tenMuc": "Đang xử lý",
-          "maMuc": "1"
-        }
-      },
-      "mauBaoCao": {
-        "@type": "T_MauBaoCao",
-        "maDinhDanh": "",
-        "maMauBaoCao": "MAU_001",
-        "nhapNhieuThanhPhan": 1
-      },
-      "kyBaoCao": {
-        "@type": "C_KyBaoCao",
-        "maMuc": "1",
-        "tenMuc": "Theo tháng"
-      },
-      "hanXuLy": "02-09-2022",
-      "coQuanThucHien": {
-        "@type": "T_CoQuanDonVi",
-        "maHanhChinh": "STNMT",
-        "tenGoi": "Sở Tài nguyên và môi trường"
-      },
-      "tinhTrang": {
-        "@type": "C_TrangThaiXuLy",
-        "tenMuc": "Đang xử lý",
-        "maMuc": "1"
-      },
-      "thoiGianTao": "12-08-2022",
-      "thoiGianCapNhat": "",
-      "nguoiTaoLap": {
-        "@type": "T_DanhTinhDienTu",
-        "tenDinhDanh": "",
-        "maSoID": ""
-      }
-    },
-    {
-      "maDinhDanh": "23123",
-      "maBaoCao": "BC-154312",
-      "tenBaoCao": "Số lượng văn bản quy phạm pháp luật liên quan đến thích ứng biển đổi khí hậu được xây dựng và ban hành",
-      "quyTrinh": {
-        "@type": "T_QuyTrinh",
-        "maQuyTrinh": "QT-002"
-      },
-      "mauBaoCao": {
-        "@type": "T_MauBaoCao",
-        "maDinhDanh": "",
-        "maMauBaoCao": "MAU_002",
-        "nhapNhieuThanhPhan": 1
-      },
-      "noiDung": {
-        "loaiVanBan": {
-          "name": "Quyết định",
-          "value": "1"
-        },
-        "hienTrang": [
-          {
-            "name": "Dự thảo",
-            "value": "1"
-          },
-          {
-            "name": "Đã ban hành",
-            "value": "2"
-          }
-        ],
-        "coQuanBanHanh": [
-          {
-            "name": "Sở thông tin và truyền thông",
-            "value": "1"
-          }
-        ],
-        "ngayBanHanh": "2022-11-11T00:00:00.000Z",
-        "tenVanBan": "Tôi là tên văn bản",
-        "tomTatNoiDung": "Tôi là tên tóm tắt nội dung",
-        "tinhTrang": {
-          "tenMuc": "Đang xử lý",
-          "maMuc": "1"
-        }
-      },
-      "kyBaoCao": {
-        "@type": "C_KyBaoCao",
-        "maMuc": "1",
-        "tenMuc": "Theo tuần"
-      },
-      "hanXuLy": "08-08-2022",
-      "coQuanThucHien": {
-        "@type": "T_CoQuanDonVi",
-        "maHanhChinh": "STTTT",
-        "tenGoi": "Sở Thông tin và truyền thông"
-      },
-      "tinhTrang": {
-        "@type": "C_TrangThaiXuLy",
-        "tenMuc": "Chờ duyệt",
-        "maMuc": "2"
-      },
-      "thoiGianTao": "01-08-2022",
-      "thoiGianCapNhat": "",
-      "nguoiTaoLap": {
-        "@type": "T_DanhTinhDienTu",
-        "tenDinhDanh": "",
-        "maSoID": ""
-      }
     }
   ],
   "thongTinHoSo" : {
@@ -1492,6 +939,10 @@
         "NgayBatDau": "2023-06-14T01:43:48.577Z",
         "NgayKetThucTheoQuyDinh": "2023-06-14T01:43:48.577Z"
       }
-    ]
+    ],
+
+
+    "ThoiGianXuLy": "2023-06-14T01:43:48.577Z",
+    "ThoiGianHuyXoa": "2023-06-14T01:43:48.577Z"
   }
 }

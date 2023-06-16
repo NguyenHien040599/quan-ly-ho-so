@@ -11,7 +11,9 @@
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const appStore = useAppStore()
   const { cookies } = useCookies()
-
+  const FormCRUD = defineAsyncComponent(() =>
+    import('./FormCRUD.vue')
+  )
   const menuItems = reactive(jsondata.menuHoSo)
   const menuSelected = computed(() => appStore.getMenuSelected)
   if (routes && routes.params.hasOwnProperty('status') && routes.params.status) {
@@ -29,6 +31,84 @@
     required: (value) => (!!value && !Array.isArray(value)) || (Array.isArray(value) && value.length) || "Thông tin bắt buộc"
   })
   const dialog = ref(false)
+  const mauFormCrud = reactive([
+    {
+      "name": "MaSinhVien",
+      "title": "Mã sinh viên",
+      "type": "textfield",
+      "fieldClass": "v-col-xs-12 v-col-6",
+      "placeHolder": "",
+      "defaultValue": "",
+      "dataType": "",
+      "dataSource": "",
+      "autoEvent": "",
+      "required": true,
+      "rules": [],
+      "readonly": false
+    },
+    {
+      "name": "HoVaTen",
+      "title": "Họ tên",
+      "type": "textfield",
+      "fieldClass": "v-col-xs-12 v-col-6",
+      "placeHolder": "",
+      "defaultValue": "",
+      "dataType": "",
+      "dataSource": "",
+      "autoEvent": "",
+      "required": true,
+      "rules": [],
+      "readonly": false
+    },
+    {
+      "name": "GioiTinh",
+      "title": "Giới tính",
+      "type": "select",
+      "multiple": false,
+      "itemText": "TenMuc",
+      "itemValue": "MaMuc",
+      "fieldClass": "v-col-xs-12 v-col-6",
+      "placeHolder": "",
+      "defaultValue": "",
+      "dataType": "",
+      "dataSource": [],
+      "autoEvent": "",
+      "api": "/v1/datasharing/dulieudanhmuc/filter?page=0&size=10000&danhMuc_maDanhMuc=GIOITINH",
+      "responseDataApi": "content",
+      "required": true,
+      "rules": [],
+      "readonly": false
+    },
+    {
+      "name": "NgaySinh",
+      "title": "Ngày sinh",
+      "type": "date",
+      "fieldClass": "v-col-xs-12 v-col-6",
+      "placeHolder": "ddmmyyyy, dd/mm/yyyy",
+      "defaultValue": "",
+      "dataType": "",
+      "dataSource": "",
+      "autoEvent": "",
+      "required": true,
+      "rules": [],
+      "readonly": false
+    },
+    {
+      "name": "tomTat",
+      "title": "Tóm tắt nội dung",
+      "type": "textarea",
+      "fieldClass": "v-col-12",
+      "placeHolder": "",
+      "defaultValue": "",
+      "dataType": "",
+      "dataSource": "",
+      "autoEvent": "",
+      "rows": 3,
+      "required": true,
+      "rules": [],
+      "readonly": false
+    }
+  ])
   const crudFormReference = ref(null)
   const dataInputSearch = reactive({})
   const dataInputCrud = ref({})
@@ -77,7 +157,7 @@
 		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
 	}
   const themMoiHoSo = function () {
-    router.push({ path: '/nop-ho-so' + menuSelected.value.to })
+    router.push({ path: '/nop-ho-so/1' })
   }
   const eventClick = function () {
     console.log('run callback')
@@ -94,7 +174,7 @@
   }
   watch(route, async (val) => {
     console.log('run watch-routes:', val.name)
-    if (val.name !== 'ThongTinHoSo' && val.name !== 'BieuMauDienTu') {
+    if (val.name !== 'ThongTinHoSo') {
       console.log('run watch-routes2:', val.name)
       if (val && val.params.hasOwnProperty('status') && val.params.status) {
         let menu = menuItems.find(function (item) {
@@ -116,10 +196,10 @@
       <v-btn
         size="small"
         :color="baseColor"
+        prepend-icon="mdi-plus"
         @click.stop="themMoiHoSo" class="mx-0 btn-nophoso"
       >
-      <v-icon size="20" class="mr-2">mdi-plus</v-icon>
-        <span style="padding-top: 2px;">Thêm mới hồ sơ</span>
+        Thêm mới hồ sơ
       </v-btn>
     </div>
     <v-divider></v-divider>
@@ -133,7 +213,7 @@
               <v-icon
                 v-bind="props"
                 class="icon-draw"
-                style="font-size: 26px !important"
+                style="font-size: 24px !important"
                 :icon="menu.icon"
                 ></v-icon>
             </template>
@@ -177,6 +257,7 @@
         </v-toolbar>
         <v-card-text class="mt-2 px-3">
           <!-- Content dialog -->
+          <FormCRUD ref="crudFormReference" :mauNhap="mauFormCrud" :dataInput="dataInputCrud"></FormCRUD>
         </v-card-text>
         <v-card-actions class="justify-center pb-3 px-3">
           <v-btn
@@ -221,8 +302,7 @@
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
-    line-height: 18px;
-    white-space: pre-wrap;
+    line-height: 16px;
   }
   .v-list-item__prepend > .v-icon {
     margin-inline-end: 15px !important;
@@ -236,7 +316,7 @@
     color: #1E7D30 !important
   }
   .menu-drawer .list-menu {
-    min-height: 48px !important;
+    min-height: 36px !important;
   }
   .menu-drawer .label-counter {
     height: 20px; 

@@ -1,7 +1,5 @@
 
-html {
-  font-size: 14px;
-}
+
 .mb-10 {
   margin-bottom: 10px !important;
 }
@@ -581,7 +579,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 }
 .v-tabs button {
   background-color: #E3E3E3;
-  height: 30px !important;
+  height: 30px;
   color: #707070;
   margin-right: 7px;
   font-family: 'Roboto';
@@ -590,61 +588,6 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   font-size: 14px;
   line-height: 16px;
   text-transform: none;
-}
-.v-tabs .v-tab--selected::after {
-  content: "";
-  position: absolute;
-  left: 100%;
-  top: 0px;
-  width: 0;
-  height: 0;
-  border: none;
-  border-bottom: 30px solid #1E7D30;
-  border-right: 20px solid transparent;
-  border-radius: 0px !important;
-  opacity: 1;
-  margin-right: 20px;
-}
-.v-tab--selected:not(.v-tab:first-child)::before {
-  content: "";
-  position: absolute;
-  right: 100%;
-  top: 0px;
-  width: 0;
-  height: 0;
-  border: none;
-  border-top: 30px solid #1E7D30;
-  border-left: 20px solid transparent;
-  opacity: 1;
-}
-.v-tab:not(.v-tab--selected)::after {
-  content: "";
-  position: absolute;
-  left: 100%;
-  top: 0px;
-  width: 0;
-  height: 0;
-  border: none;
-  border-bottom: 30px solid #E3E3E3;
-  border-right: 20px solid transparent;
-  opacity: 1;
-  margin-right: 5px;
-}
-
-.v-tab:not(.v-tab--selected):not(:first-child) {
-  margin-left: 20px;
-}
-.v-tab:not(.v-tab--selected):not(:first-child)::before {
-  content: "";
-  position: absolute;
-  right: 100%;
-  top: 0px;
-  width: 0;
-  height: 0;
-  border: none;
-  border-top: 30px solid #E3E3E3;
-  border-left: 20px solid transparent;
-  opacity: 1;
 }
 .v-tabs .v-tab--selected {
   background-color: #1E7D30;
@@ -667,6 +610,134 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 .thongtinhoso .v-tabs .v-btn::after, .thongtinhoso .v-tabs .v-btn {
   transition: none !important;
 }
+// 
+.thongtinhoso .v-tabs .v-tab--selected::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 0px;
+  width: 0;
+  height: 0;
+  border: none;
+  border-bottom: 30px solid #1E7D30;
+  border-right: 20px solid transparent;
+  border-radius: 0px !important;
+  opacity: 1;
+  margin-right: 20px;
+}
+.thongtinhoso .v-tab--selected:not(.v-tab:first-child)::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 0px;
+  width: 0;
+  height: 0;
+  border: none;
+  border-top: 30px solid #1E7D30;
+  border-left: 20px solid transparent;
+  opacity: 1;
+}
+.thongtinhoso .v-tab:not(.v-tab--selected)::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 0px;
+  width: 0;
+  height: 0;
+  border: none;
+  border-bottom: 30px solid #E3E3E3;
+  border-right: 20px solid transparent;
+  opacity: 1;
+  margin-right: 5px;
+}
+
+.thongtinhoso .v-tab:not(.v-tab--selected):not(:first-child) {
+  margin-left: 20px;
+}
+.thongtinhoso .v-tab:not(.v-tab--selected):not(:first-child)::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 0px;
+  width: 0;
+  height: 0;
+  border: none;
+  border-top: 30px solid #E3E3E3;
+  border-left: 20px solid transparent;
+  opacity: 1;
+}
+.thongtinhoso button {
+  height: 30px !important;
+}
+
+// 
+.biemau .v-tab {
+  margin-right: 0px;
+  opacity: 1;
+}
+.biemau .v-tabs {
+  border-top: 1px solid #DADADA;
+  border-bottom: 1px solid #DADADA;
+  border-right: 1px solid #DADADA;
+}
+.biemau .v-tab:not(:first-child) {
+  margin-left: 20px;
+}
+.biemau .v-tabs button, .biemau .v-tabs .v-slide-group__container {
+  height: 48px;
+}
+.biemau .v-tab:not(:first-child) {
+  padding-left: 30px;
+}
+.biemau .v-tabs .v-tab--selected:not(.v-tab:first-child):after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid #FFFFFF;
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+  opacity: 1;
+  border-right: 0;
+}
+.biemau .v-tabs .v-tab--selected:before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid #1E7D30;
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+}
+.biemau .v-tabs .v-tab:not(.v-tab--selected):not(:first-child):after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid #FFFFFF;
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+  opacity: 1;
+  border-right: 0;
+}
+.biemau .v-tabs .v-tab:not(.v-tab--selected):before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid #E3E3E3;
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+}
+// 
 
 .v-dialog .v-toolbar {
   height: 28px !important;

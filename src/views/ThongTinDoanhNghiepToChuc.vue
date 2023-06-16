@@ -258,6 +258,8 @@
         dense
         hide-details="auto"
         clearable
+        required
+        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="4" class="py-0 mb-10">
@@ -363,6 +365,8 @@
         dense
         hide-details="auto"
         clearable
+        required
+        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="6" class="py-0 mb-10">
@@ -374,6 +378,8 @@
         dense
         hide-details="auto"
         clearable
+        required
+        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="6" class="py-0 mb-10">
@@ -385,6 +391,8 @@
         dense
         hide-details="auto"
         clearable
+        required
+        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="6" class="py-0 mb-10">
@@ -396,6 +404,8 @@
         dense
         hide-details="auto"
         clearable
+        required
+        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
     <v-col cols="12" class="py-0 mb-10">
@@ -410,6 +420,8 @@
         dense
         hide-details="auto"
         clearable
+        required
+        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="3" class="py-0 mb-10">
@@ -443,6 +455,8 @@
         dense
         hide-details="auto"
         clearable
+        required
+        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
   </v-row>

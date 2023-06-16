@@ -81,7 +81,7 @@
           <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
         </div>
         <div class="triangle-header"></div>
-        <div class="text-sub-header">Tải lên tệp tin đính kèm</div>
+        <div class="text-sub-header">Tệp tin đính kèm</div>
       </v-col>
     </v-row>
     <v-row class="mx-0 my-0 mt-2">
