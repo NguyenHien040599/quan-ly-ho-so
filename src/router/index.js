@@ -39,12 +39,6 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'hoi-dap',
-          name: 'HoiDap',
-          component: () => import('@/views/HoiDap.vue'),
-          props: true
-        },
-        {
           path: 'components',
           name: 'Components',
           component: () => import('@/views/Component.vue'),

@@ -25,5 +25,20 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       let data = await $.ajax(settings)
       return data
     },
+    async getDanhMucCmon (filter) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/cmonmgt/internal/${filter.maDanhMuc}/1.0/filter`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('params') ? filter.params : {},
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
   },
 })

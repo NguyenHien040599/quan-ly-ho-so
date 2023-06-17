@@ -15,7 +15,27 @@ export const useAppStore = defineStore('appStore', {
     breakpointName: 'lg',
     drawer: false,
     isSigned: false,
-    menuSelected: {}
+    menuSelected: {},
+    dataFormBieuMauXldl: {
+      loaiDoiTuongThucHien: 'T_DonViKinhDoanh',
+
+      DoiTuongThucHien: null,
+      LoaiDoiTuongBVDLCN: null,
+      CaNhanPhuTrachBVDLCN: null,
+      TenDuAnDanhGia: '',
+      DieuKienXuLyDLCN: null,
+      MucDichHoatDong: '',
+      LoaiDLCNCoBan: [],
+      LoaiDLCNNhayCam: [],
+      ChuyenDLCNRaNuocNgoai: false,
+      ThoiGianXuLy: '',
+      ThoiGianHuyXoa: '',
+      LoaiBienPhapBVDLCN: [],
+      LoaiNguyCoRuiRo: [],
+      MaHoSoThayDoi: '',
+      NoiDungThayDoi: '',
+      LyDoThayDoi: ''
+    }
   }),
   getters: {
     getDialogConfirm: (state) => state.dialogConfirm,
@@ -24,7 +44,8 @@ export const useAppStore = defineStore('appStore', {
     getDrawer: (state) => state.drawer,
     getIsSigned: (state) => state.isSigned,
     getUserLogin: (state) => state.userInfo,
-    getMenuSelected: (state) => state.menuSelected
+    getMenuSelected: (state) => state.menuSelected,
+    getDataFormBieuMauXldl: (state) => state.dataFormBieuMauXldl
   },
   actions: {
     SET_USERINFO (val) {
@@ -44,6 +65,9 @@ export const useAppStore = defineStore('appStore', {
     },
     SET_MENU_SELECTED (val) {
       this.menuSelected = val
+    },
+    SET_DATA_FORM_BIEUMAU_XLDL (val) {
+      this.dataFormBieuMauXldl = val
     },
     SET_ISSIGNED (val) {
       this.isSigned = val

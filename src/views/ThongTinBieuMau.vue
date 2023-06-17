@@ -167,19 +167,6 @@
       </v-col>
       <TepTinDinhKem></TepTinDinhKem>
     </v-row>
-    <v-row class="mx-0 my-0">
-      <v-col cols="12" class="px-0">
-        <span class="text-sub-header">Cam kết:</span>
-        <v-checkbox
-          label="Chịu trách nhiệm trước pháp luật về tính chính xác, tính hợp pháp của hồ sơ đánh giá tác động xử lý dữ liệu cá nhân và tài liệu đính kèm"
-          color="#1E7D30"
-          hide-details
-          :v-model="true"
-          readonly
-        ></v-checkbox>
-      </v-col>
-      
-    </v-row>
   </v-card>
 </template>
 

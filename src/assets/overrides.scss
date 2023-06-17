@@ -766,6 +766,9 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   display: flex;
 }
 // style date-picker
+.dp__input_wrap input {
+  height: 32px
+}
 .dp__menu_inner + div {
   display: none;
 }

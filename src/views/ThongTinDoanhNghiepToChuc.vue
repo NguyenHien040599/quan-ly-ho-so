@@ -1,28 +1,20 @@
 <script setup>
-  import { ref, reactive} from 'vue'
-	import { useCrudStore } from '@/stores/formcrud.js'
+  import { ref, reactive, watch} from 'vue'
+	import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
-	const crud = useCrudStore()
+
 	const props = defineProps({
-    mauNhap: {
-      type: Object,
-      default: {}
-    },
     dataInput: {
       type: Object,
       default: {}
     }
   })
-	const mauNhapForm = reactive(props.mauNhap)
+  const hosoDvcStore = useHosoDvcStore()
   const dataInputForm = reactive(props.dataInput)
-	const data = ref({})
-  const thongTinDoanhNghiepToChuc = ref(
+  const doiTuongThucHien = reactive(
     {
-      "MaSoThue": "",
       "TenGoi": "",
-      "TenTiengAnh": "",
-      "TenVietTat": "",
       "DiaChiHoatDong": {
         "SoNhaChiTiet": "",
         "TinhThanh": {
@@ -38,83 +30,57 @@
           "TenMuc": ""
         }
       },
-      "LoaiDonViKinhDoanh": {
-        "MaMuc": "",
-        "TenMuc": ""
+      "DiaChiGiaoDich": {
+        "SoNhaChiTiet": "",
+        "TinhThanh": {
+          "MaMuc": "",
+          "TenMuc": ""
+        },
+        "HuyenQuan": {
+          "MaMuc": "",
+          "TenMuc": ""
+        },
+        "XaPhuong": {
+          "MaMuc": "",
+          "TenMuc": ""
+        }
       },
       "GiayDangKyKinhDoanh": {
         "SoGiay": "",
         "NgayCap": "",
-        "NoiCap": {
-          "MaDinhDanh": "",
-          "TenGoi": ""
-        }
+        "NoiCap": ""
       },
-      "NganhNgheKinhDoanh": [
-        {
-          "MaMuc": "",
-          "TenMuc": ""
-        }
-      ],
-      "HinhThucSoHuu": {
-        "MaMuc": "",
-        "TenMuc": ""
-      },
-      "NguoiDaiDien": [
-        {
-          "HoVaTen": "",
-          "DiaChiThuongTru": ""
-        }
-      ],
-      "DanhBaLienLac": [
-        {
-          "NguoiLienHe": "",
-          "ThuDienTu": "",
-          "SoDienThoai": "",
-          "SoFax": ""
-        }
-      ],
-      "TinhTrangToChuc": {
-        "MaMuc": "",
-        "TenMuc": ""
-      },
-      "NgayGiaiTheSapNhap": "",
-      "ToChucCapTren": {
-        "MaDinhDanh": "",
-        "TenGoi": ""
-      },
-      "TrangThaiDuLieu": {
-        "MaMuc": "",
-        "TenMuc": ""
-      }
+      "SoDienThoai": "",
+      "Website": "",
+      "TenCoQuanChuQuan": ""
     }
   )
+  const caNhanPhuTrachBVDLCN = reactive(
+    {
+      "TenGoi": "",
+      "ChucDanh": "",
+      "SoDienThoai": "",
+      "Email": ""
+    }
+  )
+  const dsTinhThanh = ref([])
+  const dsQuanHuyen = ref([])
+  const dsXaPhuong = ref([])
+  const dsQuanHuyenGiaoDich = ref([])
+  const dsXaPhuongGiaoDich = ref([])
   const validForm = ref(false)
   const emit = defineEmits(['submitForm'])
-	const submit = function (type) {
-		let dataOutput = Object.assign({}, data.value)
-		for (let key in mauNhapForm) {
-			let itemConfig = mauNhapForm[key]
-			if (itemConfig.type == 'date' && dataOutput[itemConfig['name']]) {
-				dataOutput[itemConfig['name']] = convertDate(dataOutput[itemConfig['name']])
-			}
-			if (itemConfig.type == 'money' && dataOutput[itemConfig['name']]) {
-				dataOutput[itemConfig['name']] = Number(dataOutput[itemConfig['name']].toString().replace(/\./g, ''))
-			}
-			if (itemConfig.type == 'select' && dataOutput[itemConfig['name']]) {
-				let dataCv = Array.isArray(dataOutput[itemConfig['name']]) ? dataOutput[itemConfig['name']] : [dataOutput[itemConfig['name']]]
-				let dataArray = Array.from(dataCv, function (item) {
-					let itemGet = {}
-					itemGet[itemConfig['itemText']] = item[itemConfig['itemText']]
-					itemGet[itemConfig['itemValue']] = item[itemConfig['itemValue']]
-					return itemGet
-				})
-				dataOutput[itemConfig['name']] = dataArray
-			}
-		}
-		// console.log('dataFormOutput-2', dataOutput)
-    return dataOutput
+  // 
+  const initForm = function (type) {
+    let filter = {
+      maDanhMuc: 'tinhthanh'
+    }
+    hosoDvcStore.getDanhMucCmon(filter).then(function(result) {
+      dsTinhThanh.value = result.content
+    }).catch(function(){})
 	}
+	initForm()
+  // 
   const formatDatePicker = (date) => {
     try {
       if (date.getDate()) {
@@ -128,60 +94,23 @@
     } catch (error) {
     }
   }
-  const changeDatePicker = (name) => {
-    console.log('dateInput', data.value[name])
+  const changeDatePicker = (data) => {
+    console.log('dateInput', data)
   }
   const textInputOptions = ref({
     format: 'dd/MM/yyyy'
   })
-	const initForm = function (type) {
-		for (let key in mauNhapForm) {
-			let itemData = mauNhapForm[key]
-			if (itemData['type'] === 'select' && itemData.hasOwnProperty('api') && itemData['api'] 
-				&& (!mauNhapForm[key]['dataSource'] || mauNhapForm[key]['dataSource'].length == 0)
-			) {
-				crud.loadDataSource(itemData).then(function(result) {
-					let resultData = itemData['responseDataApi'] ? result[itemData['responseDataApi']] : result
-					mauNhapForm[key]['dataSource'] = resultData
-				}).catch(function(){})
-			}
-		}
-		if (type === 'update' && dataInputForm) {
-      
-			data.value = Object.assign({}, dataInputForm)
-      console.log('dataInputForm', data.value)
-			for (let key in data.value) {
-				let filter = mauNhapForm.find(function (item) {
-					return item.name == key
-				})
-				if (filter && filter.type === 'date') {
-					data.value[key] = dateLocale(data.value[key])
-				}
-				if (filter && filter.type === 'money') {
-					data.value[key] = currency(data.value[key])
-				}
-				if (filter && filter.type === 'select' && !filter['multiple']) {
-					data.value[key] = Array.isArray(data.value[key]) ? data.value[key][0] : data.value[key]
-				}
-			}
-			this.$refs.formCrud.resetValidation()
-		} else {
-      console.log('mauNhapForm', mauNhapForm)
-			this.$refs.formCrud.reset()
-			this.$refs.formCrud.resetValidation()
-		}
-	}
 	const formatBirthDate = function (name) {
-		let lengthDate = String(data.value[name]).trim().length
-		let splitDate = String(data.value[name]).split('/')
-		let splitDate2 = String(data.value[name]).split('-')
+		let lengthDate = String(thongTinDoanhNghiepToChuc[name]).trim().length
+		let splitDate = String(thongTinDoanhNghiepToChuc[name]).split('/')
+		let splitDate2 = String(thongTinDoanhNghiepToChuc[name]).split('-')
 		if (lengthDate && lengthDate > 4 && splitDate.length === 3 && splitDate[2]) {
-			data.value[name] = translateDate(data.value[name])
+			thongTinDoanhNghiepToChuc[name] = translateDate(thongTinDoanhNghiepToChuc[name])
 		} else if (lengthDate && lengthDate === 8) {
-			let date = String(data.value[name])
-			data.value[name] = date.slice(0,2) + '/' + date.slice(2,4) + '/' + date.slice(4,8)
+			let date = String(thongTinDoanhNghiepToChuc[name])
+			thongTinDoanhNghiepToChuc[name] = date.slice(0,2) + '/' + date.slice(2,4) + '/' + date.slice(4,8)
 		} else if (splitDate2[1]) {
-			data.value[name] = dateLocale(data.value[name])
+			thongTinDoanhNghiepToChuc[name] = dateLocale(thongTinDoanhNghiepToChuc[name])
 		} else {
 			// data[name] = ''
 		}
@@ -202,23 +131,91 @@
 		let ddd = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 		return (new Date(ddd)).getTime()
 	}
-	const resetForm = function () {
-		this.$refs.formCrud.reset()
-		this.$refs.formCrud.resetValidation()
-	}
-  const resetFormValidation = function () {
-		this.$refs.formCrud.resetValidation()
-	}
-  const validateForm = async function () {
-    const { valid } = await this.$refs.formCrud.validate()
-    return valid
-  }
-	const goBack = function () {
-		window.history.back()
-	}
-
+  // 
+  watch(
+    () => doiTuongThucHien.DiaChiHoatDong.TinhThanh,
+    (newValue, oldValue) => {
+      console.log('newValue', newValue.MaMuc)
+      if (newValue.MaMuc) {
+        let filter = {
+          maDanhMuc: 'huyenquan',
+          params: {
+            thamChieu_maMuc: newValue.MaMuc
+          }
+        }
+        hosoDvcStore.getDanhMucCmon(filter).then(function(result) {
+          dsQuanHuyen.value = result.content
+        }).catch(function(){})
+      } else {
+        dsQuanHuyen.value = []
+      }
+    },
+    { deep: true }
+  )
+  watch(
+    () => doiTuongThucHien.DiaChiHoatDong.HuyenQuan,
+    (newValue, oldValue) => {
+      console.log('newValue', newValue.MaMuc)
+      if (newValue.MaMuc) {
+        let filter = {
+          maDanhMuc: 'xaphuong',
+          params: {
+            thamChieu_maMuc: newValue.MaMuc
+          }
+        }
+        hosoDvcStore.getDanhMucCmon(filter).then(function(result) {
+          dsXaPhuong.value = result.content
+        }).catch(function(){})
+      } else {
+        dsXaPhuong.value = []
+      }
+    },
+    { deep: true }
+  )
+  watch(
+    () => doiTuongThucHien.DiaChiGiaoDich.TinhThanh,
+    (newValue, oldValue) => {
+      console.log('newValue', newValue.MaMuc)
+      if (newValue.MaMuc) {
+        let filter = {
+          maDanhMuc: 'huyenquan',
+          params: {
+            thamChieu_maMuc: newValue.MaMuc
+          }
+        }
+        hosoDvcStore.getDanhMucCmon(filter).then(function(result) {
+          dsQuanHuyenGiaoDich.value = result.content
+        }).catch(function(){})
+      } else {
+        dsQuanHuyenGiaoDich.value = []
+      }
+    },
+    { deep: true }
+  )
+  watch(
+    () => doiTuongThucHien.DiaChiGiaoDich.HuyenQuan,
+    (newValue, oldValue) => {
+      console.log('newValue', newValue.MaMuc)
+      if (newValue.MaMuc) {
+        let filter = {
+          maDanhMuc: 'xaphuong',
+          params: {
+            thamChieu_maMuc: newValue.MaMuc
+          }
+        }
+        hosoDvcStore.getDanhMucCmon(filter).then(function(result) {
+          dsXaPhuongGiaoDich.value = result.content
+        }).catch(function(){})
+      } else {
+        dsXaPhuongGiaoDich.value = []
+      }
+    },
+    { deep: true }
+  )
+  
+  // 
 	defineExpose({
-		initForm, resetForm, resetFormValidation, validateForm, submit, data
+		initForm, doiTuongThucHien, caNhanPhuTrachBVDLCN
 	})
 </script>
 
@@ -228,7 +225,7 @@
       <div class="text-label">Tên tổ chức, doanh nghiệp <span style="color: red">(*)</span></div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['TenGoi']"
+        v-model="doiTuongThucHien['TenGoi']"
         solo
         dense
         hide-details="auto"
@@ -241,7 +238,7 @@
       <div class="text-label">Tên cơ quan tổ chức chủ quản (nếu có)</div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['ToChucCapTren']['TenGoi']"
+        v-model="doiTuongThucHien['TenCoQuanChuQuan']"
         solo
         dense
         hide-details="auto"
@@ -253,7 +250,7 @@
       <v-text-field
         class="flex input-form"
         placeholder=""
-        v-model="thongTinDoanhNghiepToChuc['DiaChiHoatDong']['SoNhaChiTiet']"
+        v-model="doiTuongThucHien['DiaChiHoatDong']['SoNhaChiTiet']"
         solo
         dense
         hide-details="auto"
@@ -267,8 +264,8 @@
       <v-autocomplete
         class="flex input-form"
         hide-no-data
-        v-model="thongTinDoanhNghiepToChuc['DiaChiHoatDong']['TinhThanh']"
-        :items="[]"
+        v-model="doiTuongThucHien['DiaChiHoatDong']['TinhThanh']"
+        :items="dsTinhThanh"
         item-title="TenMuc"
         item-value="MaMuc"
         dense
@@ -285,8 +282,8 @@
       <v-autocomplete
         class="flex input-form"
         hide-no-data
-        v-model="thongTinDoanhNghiepToChuc['DiaChiHoatDong']['HuyenQuan']"
-        :items="[]"
+        v-model="doiTuongThucHien['DiaChiHoatDong']['HuyenQuan']"
+        :items="dsQuanHuyen"
         item-title="TenMuc"
         item-value="MaMuc"
         dense
@@ -303,8 +300,8 @@
       <v-autocomplete
         class="flex input-form"
         hide-no-data
-        v-model="thongTinDoanhNghiepToChuc['DiaChiHoatDong']['XaPhuong']"
-        :items="[]"
+        v-model="doiTuongThucHien['DiaChiHoatDong']['XaPhuong']"
+        :items="dsXaPhuong"
         item-title="TenMuc"
         item-value="MaMuc"
         dense
@@ -316,11 +313,70 @@
       >
       </v-autocomplete>
     </v-col>
-    <v-col cols="12" md="6" class="py-0 mb-10">
-      <div class="text-label">Địa chỉ trụ sở giao dịch <span style="color: red">(*)</span></div>
+    <v-col cols="12" class="py-0 mb-10">
+      <div class="text-label">Địa chỉ giao dịch</div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DiaChiGiaoDich']"
+        v-model="doiTuongThucHien['DiaChiGiaoDich']['SoNhaChiTiet']"
+        solo
+        dense
+        hide-details="auto"
+        clearable
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" md="4" class="py-0 mb-10">
+      <div class="text-label">Tỉnh/ thành phố </div>
+      <v-autocomplete
+        class="flex input-form"
+        hide-no-data
+        v-model="doiTuongThucHien['DiaChiGiaoDich']['TinhThanh']"
+        :items="dsTinhThanh"
+        item-title="TenMuc"
+        item-value="MaMuc"
+        dense
+        solo
+        hide-details="auto"
+        return-object
+      >
+      </v-autocomplete>
+    </v-col>
+    <v-col cols="12" md="4" class="py-0 mb-10">
+      <div class="text-label">Quận/ huyện/ thị xã </div>
+      <v-autocomplete
+        class="flex input-form"
+        hide-no-data
+        v-model="doiTuongThucHien['DiaChiGiaoDich']['HuyenQuan']"
+        :items="dsQuanHuyenGiaoDich"
+        item-title="TenMuc"
+        item-value="MaMuc"
+        dense
+        solo
+        hide-details="auto"
+        return-object
+      >
+      </v-autocomplete>
+    </v-col>
+    <v-col cols="12" md="4" class="py-0 mb-10">
+      <div class="text-label">Xã/phường/thị trấn </div>
+      <v-autocomplete
+        class="flex input-form"
+        hide-no-data
+        v-model="doiTuongThucHien['DiaChiGiaoDich']['XaPhuong']"
+        :items="dsXaPhuongGiaoDich"
+        item-title="TenMuc"
+        item-value="MaMuc"
+        dense
+        solo
+        hide-details="auto"
+        return-object
+      >
+      </v-autocomplete>
+    </v-col>
+    <v-col cols="12" md="4" class="py-0 mb-10">
+      <div class="text-label">Số điện thoại <span style="color: red">(*)</span></div>
+      <v-text-field
+        class="flex input-form"
+        v-model="doiTuongThucHien['SoDienThoai']"
         solo
         dense
         hide-details="auto"
@@ -329,24 +385,11 @@
         :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
-    <v-col cols="12" md="3" class="py-0 mb-10">
-      <div class="text-label">Điện thoại <span style="color: red">(*)</span></div>
-      <v-text-field
-        class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['SoDienThoai']"
-        solo
-        dense
-        hide-details="auto"
-        clearable
-        required
-        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
-      ></v-text-field>
-    </v-col>
-    <v-col cols="12" md="3" class="py-0 mb-10">
+    <v-col cols="12" md="4" class="py-0 mb-10">
       <div class="text-label">Địa chỉ website</div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
+        v-model="doiTuongThucHien['Website']"
         solo
         dense
         hide-details="auto"
@@ -356,11 +399,11 @@
     <v-col cols="12" class="py-0 mb-10">
       <div class="text-label" style="color: #1E7D30;font-weight: 600;">Quyết định thành lập/ Giấy chứng nhận đăng ký doanh nghiệp/ Giấy chứng nhận đăng ký kinh doanh/ Giấy chứng nhận đầu tư</div>
     </v-col>
-    <v-col cols="12" md="6" class="py-0 mb-10">
+    <v-col cols="12" md="4" class="py-0 mb-10">
       <div class="text-label">Số chứng nhận <span style="color: red">(*)</span></div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
+        v-model="doiTuongThucHien['GiayDangKyKinhDoanh']['SoGiay']"
         solo
         dense
         hide-details="auto"
@@ -369,37 +412,19 @@
         :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
       ></v-text-field>
     </v-col>
-    <v-col cols="12" md="6" class="py-0 mb-10">
-      <div class="text-label">Cơ quan cấp <span style="color: red">(*)</span></div>
-      <v-text-field
-        class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
-        solo
-        dense
-        hide-details="auto"
-        clearable
-        required
-        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
-      ></v-text-field>
-    </v-col>
-    <v-col cols="12" md="6" class="py-0 mb-10">
+    <v-col cols="12" md="4" class="py-0 mb-10">
       <div class="text-label">Ngày cấp <span style="color: red">(*)</span></div>
-      <v-text-field
-        class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
-        solo
-        dense
-        hide-details="auto"
-        clearable
-        required
-        :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
-      ></v-text-field>
+      <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
+        v-model="doiTuongThucHien['GiayDangKyKinhDoanh']['NgayCap']" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
+        @blur="changeDatePicker(doiTuongThucHien['GiayDangKyKinhDoanh']['NgayCap'])"
+        >
+      </VueDatePicker>
     </v-col>
-    <v-col cols="12" md="6" class="py-0 mb-10">
+    <v-col cols="12" md="4" class="py-0 mb-10">
       <div class="text-label">Nơi cấp <span style="color: red">(*)</span></div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
+        v-model="doiTuongThucHien['GiayDangKyKinhDoanh']['NoiCap']"
         solo
         dense
         hide-details="auto"
@@ -415,7 +440,7 @@
       <div class="text-label">Họ và tên <span style="color: red">(*)</span></div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
+        v-model="caNhanPhuTrachBVDLCN['TenGoi']"
         solo
         dense
         hide-details="auto"
@@ -428,7 +453,7 @@
       <div class="text-label">Chức danh</div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
+        v-model="caNhanPhuTrachBVDLCN['ChucDanh']"
         solo
         dense
         hide-details="auto"
@@ -439,7 +464,7 @@
       <div class="text-label">Số điện thoại</div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
+        v-model="caNhanPhuTrachBVDLCN['SoDienThoai']"
         solo
         dense
         hide-details="auto"
@@ -450,7 +475,7 @@
       <div class="text-label">Thư điện tử  <span style="color: red">(*)</span></div>
       <v-text-field
         class="flex input-form"
-        v-model="thongTinDoanhNghiepToChuc['DanhBaLienLac']['Website']"
+        v-model="caNhanPhuTrachBVDLCN['Email']"
         solo
         dense
         hide-details="auto"
