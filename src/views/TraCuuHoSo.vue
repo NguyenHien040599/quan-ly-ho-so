@@ -328,7 +328,7 @@
 				></v-text-field>
 			</v-col>
     </v-row>
-		<v-row class="mx-0 my-0">
+		<!-- <v-row class="mx-0 my-0">
       <v-col cols="12" sm="6" md="5" class="px-0 py-0" style="line-height: 32px;">
 				<span class="label">Mã bảo mật </span>
 				<span style="color: #EB0202">*</span>
@@ -361,7 +361,7 @@
 					</v-col>
 				</v-row>
 			</v-col>
-    </v-row>
+    </v-row> -->
 		<v-row justify="center" class="mx-0 my-0" style="margin-top: 25px !important; margin-bottom: 25px !important">
 			<v-btn
 				size="small"

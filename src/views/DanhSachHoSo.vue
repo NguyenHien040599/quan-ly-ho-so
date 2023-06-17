@@ -236,6 +236,9 @@
   const pageCount = ref(3)
   const total = ref(10)
 
+  const themMoiHoSo = function () {
+    router.push({ path: '/nop-ho-so' + menuSelected.value.to })
+  }
   const eventClick = function () {
     console.log('run callback')
   }
@@ -342,6 +345,23 @@
 </script>
 <template>
   <v-card class="mx-auto pa-0" style="box-shadow: none !important; overflow: inherit;">
+    <v-row class="my-0 mb-5 mx-0">
+      <v-col class="row-header d-flex align-center justify-start py-0 px-0" style="border: none">
+        <div class="header-content" style="text-transform: uppercase;">
+          Danh sách hồ sơ
+        </div>
+        <div class="triangle-header"></div>
+        <div class="text-sub-header pl-2" style="text-transform: uppercase;">{{ menuSelected.dossierName }}</div>
+      </v-col>
+      <v-btn
+        size="small"
+        :color="baseColor"
+        @click.stop="themMoiHoSo" class="mx-0"
+      >
+      <v-icon size="20" class="mr-2">mdi-plus</v-icon>
+        <span style="padding-top: 2px;">Thêm mới hồ sơ</span>
+      </v-btn>
+    </v-row>
     <!-- table -->
     <v-row class="mx-0 my-0">
       <v-col cols="12" class="px-0 py-0">

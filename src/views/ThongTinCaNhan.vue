@@ -1,6 +1,7 @@
 <script setup>
   import { ref, reactive} from 'vue'
 	import { useCrudStore } from '@/stores/formcrud.js'
+  import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
 	const crud = useCrudStore()
@@ -14,6 +15,7 @@
       default: {}
     }
   })
+  const hsDvcStore = useHosoDvcStore()
 	const mauNhapForm = reactive(props.mauNhap)
   const dataInputForm = reactive(props.dataInput)
 	const data = ref({})
@@ -179,7 +181,6 @@
 			}
 		}
 		if (type === 'update' && dataInputForm) {
-      
 			data.value = Object.assign({}, dataInputForm)
       console.log('dataInputForm', data.value)
 			for (let key in data.value) {
@@ -203,6 +204,15 @@
 			this.$refs.formCrud.resetValidation()
 		}
 	}
+  const getDanhMuc = function () {
+    let filter = {
+      maDanhMuc: 'trangthaihoso'
+    }
+    hsDvcStore.getDanhMuc(filter).then(function(result) {
+      console.log('result------', result.resp)
+    }).catch(function(){})
+  }
+  getDanhMuc()
 	const formatBirthDate = function (name) {
 		let lengthDate = String(data.value[name]).trim().length
 		let splitDate = String(data.value[name]).split('/')

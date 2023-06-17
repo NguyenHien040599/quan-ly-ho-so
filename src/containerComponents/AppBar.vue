@@ -13,13 +13,6 @@
   const publicPath = ref(import.meta.env.VITE_APP_PULIC_PATH)
   const items = reactive([
     {
-      icon: 'mdi:mdi-file-document-outline',
-      title: 'Thủ tục hành chính',
-      class: 'hoso-tab',
-      id: 'hoso-tab-id',
-      to: '/thu-tuc-hanh-chinh'
-    },
-    {
       icon: 'mdi:mdi-chart-box-outline',
       title: 'Quản lý hồ sơ',
       class: 'baocao-tab',

@@ -20,73 +20,19 @@
     })
     appStore.SET_MENU_SELECTED(menu)
   } else {
-    appStore.SET_MENU_SELECTED(menuItems[0])
+    if (routes.name == 'ThongBao') {
+      let menu = menuItems.find(function (item) {
+        return item.id === 'thongbao'
+      })
+      appStore.SET_MENU_SELECTED(menu)
+    } else {
+      appStore.SET_MENU_SELECTED(menuItems[0])
+    }
   }
   console.log('menuSelected', menuSelected)
   const loading = ref(false)
-  const validForm = ref(false)
-  const rules = reactive({
-    required: (value) => (!!value && !Array.isArray(value)) || (Array.isArray(value) && value.length) || "Thông tin bắt buộc"
-  })
-  const dialog = ref(false)
-  const crudFormReference = ref(null)
-  const dataInputSearch = reactive({})
-  const dataInputCrud = ref({})
-  const dataSource = reactive([
-    {name: 'Giá trị 1', value: 1},
-    {name: 'Giá trị 2', value: 2},
-    {name: 'Giá trị 3', value: 3}
-  ])
-  const showDialog = function (type, data) {
-    dialog.value = true
-    console.log('dataItem', data)
-    if (type === 'update') {
-      dataInputCrud.value = data
-    }
-    setTimeout(function () {
-      crudFormReference.value.initForm(type)
-    }, 100)
-  }
-  const submitFormCrud = async function () {
-    let valid = await crudFormReference.value.validateForm()
-    console.log('validForm', valid)
-    if (valid) {
-      let dataOutput = crudFormReference.value.submit()
-      console.log('dataOutputCrud', dataOutput)
-    }
-  }
-  const showConfirm = function () {
-    appStore.SET_SHOWCONFIRM(true)
-    let confirm = {
-      auth: false,
-      title: 'Xóa sinh viên',
-      message: 'Bạn có chắc chắn muốn xóa',
-      button: {
-        yes: 'Có',
-        no: 'Không'
-      },
-      callback: () => {
-        console.log("Tôi đồng ý")
-      }
-    }
-    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
-  }
-  const dateLocale = function (dateInput) {
-		if (!dateInput) return ''
-		let date = new Date(dateInput)
-		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
-	}
   const themMoiHoSo = function () {
     router.push({ path: '/nop-ho-so' + menuSelected.value.to })
-  }
-  const eventClick = function () {
-    console.log('run callback')
-  }
-  const action = function () {
-    loading.value = true
-    setTimeout(function () {
-      loading.value = false
-    }, 300)
   }
   const redirectTo = function (menu) {
     appStore.SET_MENU_SELECTED(menu)
@@ -95,14 +41,21 @@
   watch(route, async (val) => {
     console.log('run watch-routes:', val.name)
     if (val.name !== 'ThongTinHoSo' && val.name !== 'BieuMauDienTu') {
-      console.log('run watch-routes2:', val.name)
+      console.log('run watch-routes2:', val.name, val.params)
       if (val && val.params.hasOwnProperty('status') && val.params.status) {
         let menu = menuItems.find(function (item) {
           return item.to.split('/')[1] === val.params.status
         })
         appStore.SET_MENU_SELECTED(menu)
       } else {
-        appStore.SET_MENU_SELECTED(menuItems[0])
+        if (val.name == 'ThongBao') {
+          let menu = menuItems.find(function (item) {
+            return item.id === 'thongbao'
+          })
+          appStore.SET_MENU_SELECTED(menu)
+        } else {
+          appStore.SET_MENU_SELECTED(menuItems[0])
+        }
       }
     }
   })
@@ -111,8 +64,8 @@
   })
 </script>
 <template>
-  <v-card style="border-radius: 0;">
-    <div>
+  <v-card style="border-radius: 0;border-top-left-radius: 3px;border-top-right-radius: 3px;border-top: 3px solid #1E7D30">
+    <!-- <div>
       <v-btn
         size="small"
         :color="baseColor"
@@ -122,7 +75,7 @@
         <span style="padding-top: 2px;">Thêm mới hồ sơ</span>
       </v-btn>
     </div>
-    <v-divider></v-divider>
+    <v-divider></v-divider> -->
     <v-list dense class="menu-drawer pt-0">
       <v-list-item v-for="(menu, index) in menuItems" :key="index" @click.stop="redirectTo(menu, index)"
       :class="menu.id === menuSelected.id ? 'item-active list-menu' : 'list-menu'" 
@@ -140,7 +93,7 @@
             <span>{{ menu.title }}</span>
           </v-tooltip>
         </template>
-        <v-list-item-title class="text-list">{{
+        <v-list-item-title class="text-list pr-2">{{
           menu.title
         }}</v-list-item-title>
         <template v-slot:append>
@@ -149,61 +102,6 @@
       </v-list-item>
     </v-list>
   </v-card>
-  
-    <!-- dialog -->
-    <v-dialog
-      max-width="1000"
-      v-model="dialog"
-      persistent
-      absolute
-    >
-      <v-card>
-        <v-toolbar
-          dark
-          :color="baseColor" class="px-0"
-        >
-          <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
-            <div class="sub-header-content">
-              Thêm mới hồ sơ
-            </div>
-            <div class="triangle-header"></div>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn variant="flat" size="small" icon color="#E9FFF2" @click="dialog = false" >
-              <v-icon size="20">mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-        <v-card-text class="mt-2 px-3">
-          <!-- Content dialog -->
-        </v-card-text>
-        <v-card-actions class="justify-center pb-3 px-3">
-          <v-btn
-            size="small" variant="elevated"
-            :loading="loading"
-            :disabled="loading"
-            color="error"
-            prepend-icon="mdi-close"
-            @click.stop="dialog = false"
-            class="mr-2"
-          >
-            Thoát
-          </v-btn>
-          <v-btn
-            size="small" variant="elevated"
-            :loading="loading"
-            :disabled="loading"
-            :color="baseColor"
-            prepend-icon="mdi-content-save"
-            @click.stop="submitFormCrud"
-          >
-            Thêm mới
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!--  -->
 </template>
 
 <style scoped>
@@ -228,7 +126,7 @@
     margin-inline-end: 15px !important;
   }
   .item-active {
-    background: #E9FFF2;
+    background: #e0fdec;
     border-left: 6px solid #1E7D30;
     padding: 0 8px !important
   }

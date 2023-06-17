@@ -34,6 +34,13 @@
       "align": "center",
       "value": "tepDinhKem",
       "class": "td-left"
+    },
+    {
+      "sortable": false,
+      "title": "Thao tác",
+      "align": "center",
+      "value": "action",
+      "class": "td-center"
     }
   ])
   if (editTep) {
@@ -188,7 +195,7 @@
                 </v-tooltip>
               </div>
             </td>
-            <td class="align-center" width="200" v-if="editTep">
+            <td class="align-center" width="200">
               <v-btn
                 class="mx-0"
                 size="small"

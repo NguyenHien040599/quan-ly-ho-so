@@ -2,7 +2,7 @@
   "menuHoSo": [
     {
       "icon": "mdi:mdi-message-badge-outline",
-      "title": "Thông báo vi phạm",
+      "title": "Thông báo vi phạm xử lý DLCN",
       "class": "thong-bao-tab",
       "id": "thongbaovipham",
       "to": "/thong-bao-vi-pham",
@@ -19,19 +19,33 @@
         },
         {
           "sortable": false,
-          "title": "Hồ sơ",
+          "title": "Mã hồ sơ",
           "align": "center",
           "value": "MaSinhVien",
           "class": "td-left"
         },
         {
-            "sortable": false,
-            "title": "Ngày tạo",
-            "align": "center",
-            "value": "NgaySinh",
-            "class": "td-left",
-            "type": "date",
-            "width": 150
+          "sortable": false,
+          "title": "Tên hồ sơ",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
+        },
+        {
+          "sortable": false,
+          "title": "Chủ hồ sơ",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
+        },
+        {
+          "sortable": false,
+          "title": "Ngày tạo",
+          "align": "center",
+          "value": "NgaySinh",
+          "class": "td-left",
+          "type": "date",
+          "width": 150
         },
         {
           "sortable": false,
@@ -53,11 +67,11 @@
             "width": 150
         }
       ],
-      "dossierName": "Hồ sơ thông báo vi phạm"
+      "dossierName": "Thông báo vi phạm xử lý dữ liệu cá nhân"
     },
     {
       "icon": "mdi:mdi-badge-account-horizontal-outline",
-      "title": "Xử lý dữ liệu cá nhân",
+      "title": "Hồ sơ ĐGTĐ xử lý DLCN",
       "class": "xu-ly-tab",
       "id": "xulydulieu",
       "to": "/xu-ly-du-lieu",
@@ -73,11 +87,25 @@
             "width": 50
         },
         {
-            "sortable": false,
-            "title": "Hồ sơ",
-            "align": "center",
-            "value": "MaSinhVien",
-            "class": "td-left"
+          "sortable": false,
+          "title": "Mã hồ sơ",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
+        },
+        {
+          "sortable": false,
+          "title": "Tên hồ sơ",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
+        },
+        {
+          "sortable": false,
+          "title": "Chủ hồ sơ",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
         },
         {
           "sortable": false,
@@ -108,28 +136,42 @@
           "width": 150
         }
       ],
-      "dossierName": "Hồ sơ đánh giá tác động xử lý dữ liệu cá nhân"
+      "dossierName": "Đánh giá tác động xử lý dữ liệu cá nhân"
     },
     {
       "icon": "mdi:mdi-ballot-recount-outline",
-      "title": "Chuyển dữ liệu cá nhân ra nước ngoài",
+      "title": "Hồ sơ ĐGTĐ chuyển DLCN ra nước ngoài",
       "class": "chuyen-du-lieu-tab",
       "id": "chuyendulieu",
       "to": "/chuyen-du-lieu",
       "counter": 2,
       "headerTable": [
         {
-            "sortable": false,
-            "title": "STT",
-            "align": "center",
-            "value": "stt",
-            "type": "index",
-            "class": "td-center",
-            "width": 50
+          "sortable": false,
+          "title": "STT",
+          "align": "center",
+          "value": "stt",
+          "type": "index",
+          "class": "td-center",
+          "width": 50
         },
         {
           "sortable": false,
-          "title": "Hồ sơ",
+          "title": "Mã hồ sơ",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
+        },
+        {
+          "sortable": false,
+          "title": "Tên hồ sơ",
+          "align": "center",
+          "value": "MaSinhVien",
+          "class": "td-left"
+        },
+        {
+          "sortable": false,
+          "title": "Chủ hồ sơ",
           "align": "center",
           "value": "MaSinhVien",
           "class": "td-left"
@@ -163,7 +205,17 @@
             "width": 150
         }
       ],
-      "dossierName": "Hồ sơ chuyển dữ liệu cá nhân ra nước ngoài"
+      "dossierName": "Đánh giá tác động chuyển dữ liệu cá nhân ra nước ngoài"
+    },
+    {
+      "icon": "mdi:mdi-bell-badge-outline",
+      "title": "Tin nhắn, thông báo",
+      "class": "thong-bao-tab",
+      "id": "thongbao",
+      "to": "/thong-bao",
+      "counter": 2,
+      "headerTable": [],
+      "dossierName": ""
     }
   ],
   "thuTucHanhChinh": [

@@ -9,12 +9,6 @@ const router = createRouter({
       component: () => import('@/views/Home.vue'),
       children: [
         {
-          path: 'thu-tuc-hanh-chinh',
-          name: 'ThuTucHanhChinh',
-          component: () => import('@/views/ThuTucHanhChinh.vue'),
-          props: true
-        },
-        {
           path: '/',
           name: 'QuanLyHoSo',
           component: () => import('@/views/QuanLyHoSo.vue'),
@@ -36,6 +30,12 @@ const router = createRouter({
           path: '/nop-ho-so/:id',
           name: 'BieuMauDienTu',
           component: () => import('@/views/BieuMauDienTu.vue'),
+          props: true
+        },
+        {
+          path: 'thong-bao',
+          name: 'ThongBao',
+          component: () => import('@/views/ThongBao.vue'),
           props: true
         },
         {

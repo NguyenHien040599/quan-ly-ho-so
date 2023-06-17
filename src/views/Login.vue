@@ -22,8 +22,8 @@
   const overlay = ref(false)
   const loading = ref(false)
   const valid = ref(true)
-  const userName = ref('')
-  const password = ref('')
+  const userName = ref('mtdata')
+  const password = ref('Mtdata@123456')
   const client_secret = ref('')
   const code = ref('')
   const signed = ref(false)
@@ -37,7 +37,9 @@
       data: {
         username: userName.value,
         password: password.value,
-        app: 'dvc-mobile'
+        grant_type: 'password',
+        client_id: 'mtdata-idpmgt267',
+        client_secret: 'BMKQDYC1TYHilQa1xe5IXqBLPBMaibwz'
       }
     }
     authorization.login(filter).then(function (result) {
