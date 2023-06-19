@@ -1,18 +1,18 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
   import { useCookies } from 'vue3-cookies'
-  import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
+  import { ref, reactive, computed, onMounted } from 'vue'
   import { useAppStore } from '@/stores/global.js'
-  import jsondata from '../stores/mock-data.json'
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
 
-  const router = useRouter()
   const appStore = useAppStore()
-  const { cookies } = useCookies()
-  const dialog = ref(false)
   const loadingData = ref(false)
   const loading = ref(false)
-  const thongTinHoSo = reactive(jsondata.thongTinHoSo)
+  const thanhPhanHoSo = computed(function () {
+    return appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
+      return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
+    })
+  })
   const headers = reactive([
     {
       "sortable": false,
@@ -35,40 +35,6 @@
   const downloadFile = function () {
 
   }
-  const eventClick = function () {
-    console.log('run callback')
-  }
-  const action = function () {
-    loading.value = true
-    setTimeout(function () {
-      loading.value = false
-    }, 300)
-  }
-  const showConfirm = function () {
-    appStore.SET_SHOWCONFIRM(true)
-    let confirm = {
-      auth: false,
-      title: 'Xóa sinh viên',
-      message: 'Bạn có chắc chắn muốn xóa',
-      button: {
-        yes: 'Có',
-        no: 'Không'
-      },
-      callback: () => {
-        console.log("Tôi đồng ý")
-      }
-    }
-    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
-  }
-  const dateLocale = function (dateInput) {
-		if (!dateInput) return ''
-		let date = new Date(dateInput)
-		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
-	}
-  const dateLocaleTime = function(dateInput) {
-    let date = new Date(dateInput)
-    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-  }
   onMounted(() => {
 
   })
@@ -81,13 +47,13 @@
           <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
         </div>
         <div class="triangle-header"></div>
-        <div class="text-sub-header">Tệp tin đính kèm</div>
+        <div class="text-sub-header">Thành phần hồ sơ</div>
       </v-col>
     </v-row>
     <v-row class="mx-0 my-0 mt-2">
       <v-data-table
         :headers="headers"
-        :items="thongTinHoSo.ThanhPhanHoSo"
+        :items="thanhPhanHoSo"
         items-per-page="20"
         item-value="PrimKey"
         hide-default-footer
@@ -99,22 +65,22 @@
         <template v-slot:item="{ item }">
           <tr>
             <td class="align-left">{{ item.raw.TenGiayTo }}</td>
-            <td class="align-left" width="350">
-              <div class="" @click="viewFileUpload()" v-for="(itemTep, indexTep) in item.raw.TepDuLieu" v-bind:key="indexTep">
-                <v-icon size="18" color="green" v-if="itemTep.DinhDangTep === 'xls' || itemTep.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                <v-icon size="18" color="blue" v-else-if="itemTep.DinhDangTep === 'doc' || itemTep.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                <v-icon size="18" color="red" v-else-if="itemTep.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                <v-icon size="18" color="blue" v-else-if="itemTep.DinhDangTep === 'png' || itemTep.DinhDangTep === 'jpg' || itemTep.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+            <td class="align-center" width="350">
+              <div class="py-1" @click="viewFileUpload()" v-if="item.raw.TepDuLieu.KichThuocTep">
+                <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
+                <v-icon size="18" color="red" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'png' || item.raw.TepDuLieu.DinhDangTep === 'jpg' || item.raw.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
                 <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{itemTep.TenTep}}</a>
-                  <v-tooltip location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(itemTep, indexTep)">
-                        <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Tải xuống</span>
-                  </v-tooltip>
+                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.raw.TepDuLieu.TenTep}}</a>
+                <v-tooltip location="top">
+                  <template v-slot:activator="{ props }">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(item.raw.TepDuLieu)">
+                      <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Tải xuống</span>
+                </v-tooltip>
               </div>
             </td>
           </tr>

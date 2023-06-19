@@ -16,6 +16,7 @@ export const useAppStore = defineStore('appStore', {
     drawer: false,
     isSigned: false,
     menuSelected: {},
+    thongTinHoSo: {},
     dataFormBieuMauXldl: {
       loaiDoiTuongThucHien: 'T_DonViKinhDoanh',
 
@@ -35,7 +36,8 @@ export const useAppStore = defineStore('appStore', {
       MaHoSoThayDoi: '',
       NoiDungThayDoi: '',
       LyDoThayDoi: ''
-    }
+    },
+    thanhPhanHoSoXldl: []
   }),
   getters: {
     getDialogConfirm: (state) => state.dialogConfirm,
@@ -45,7 +47,9 @@ export const useAppStore = defineStore('appStore', {
     getIsSigned: (state) => state.isSigned,
     getUserLogin: (state) => state.userInfo,
     getMenuSelected: (state) => state.menuSelected,
-    getDataFormBieuMauXldl: (state) => state.dataFormBieuMauXldl
+    getThongTinHoSo: (state) => state.thongTinHoSo,
+    getDataFormBieuMauXldl: (state) => state.dataFormBieuMauXldl,
+    getThanhPhanHoSoXldl: (state) => state.thanhPhanHoSoXldl
   },
   actions: {
     SET_USERINFO (val) {
@@ -66,8 +70,14 @@ export const useAppStore = defineStore('appStore', {
     SET_MENU_SELECTED (val) {
       this.menuSelected = val
     },
+    SET_THONGTINHOSO (val) {
+      this.thongTinHoSo = val
+    },
     SET_DATA_FORM_BIEUMAU_XLDL (val) {
       this.dataFormBieuMauXldl = val
+    },
+    SET_TPHS_XLDL (val) {
+      this.thanhPhanHoSoXldl = val
     },
     SET_ISSIGNED (val) {
       this.isSigned = val

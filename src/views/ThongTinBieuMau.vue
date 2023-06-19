@@ -4,46 +4,22 @@
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import jsondata from '../stores/mock-data.json'
-  const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
-  const TepTinDinhKem = defineAsyncComponent(() =>
-    import('./TepTinDinhKem.vue')
+  const thongTinHoSo = computed(function () {
+    return appStore.thongTinHoSo
+  })
+  const ThanhPhanHoSo = defineAsyncComponent(() =>
+    import('./ThanhPhanHoSo.vue')
   )
   const router = useRouter()
   console.log('routes', router.currentRoute.value)
   const appStore = useAppStore()
   const { cookies } = useCookies()
   const menuSelected = computed(() => appStore.getMenuSelected)
-  const dialog = ref(false)
-  const loadingData = ref(false)
   const loading = ref(false)
   const tab = ref(null)
-  const thongTinHoSo = reactive(jsondata.thongTinHoSo)
+  // const thongTinHoSo = reactive(jsondata.thongTinHoSo)
   const mauHienThi = reactive(jsondata.thuTucHanhChinh[1]['mauHienThiBieuMau'])
-  const eventClick = function () {
-    console.log('run callback')
-  }
-  const action = function () {
-    loading.value = true
-    setTimeout(function () {
-      loading.value = false
-    }, 300)
-  }
-  const showConfirm = function () {
-    appStore.SET_SHOWCONFIRM(true)
-    let confirm = {
-      auth: false,
-      title: 'Xóa sinh viên',
-      message: 'Bạn có chắc chắn muốn xóa',
-      button: {
-        yes: 'Có',
-        no: 'Không'
-      },
-      callback: () => {
-        console.log("Tôi đồng ý")
-      }
-    }
-    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
-  }
+
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
 		let date = new Date(dateInput)
@@ -157,16 +133,8 @@
         </div>
       </v-col>
     </v-row>
-    <v-row class="mx-0 my-0 mt-3">
-      <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0">
-        <div class="sub-header-content">
-          <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
-        </div>
-        <div class="triangle-header"></div>
-        <div class="text-sub-header">Tài liệu đính kèm</div>
-      </v-col>
-      <TepTinDinhKem></TepTinDinhKem>
-    </v-row>
+    
+    <ThanhPhanHoSo></ThanhPhanHoSo>
   </v-card>
 </template>
 

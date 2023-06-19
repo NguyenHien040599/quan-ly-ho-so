@@ -15,7 +15,7 @@ const router = createRouter({
           props: true
         },
         {
-          path: '/:status',
+          path: '/:thutuc',
           name: 'QuanLyHoSoDanhSach',
           component: () => import('@/views/QuanLyHoSo.vue'),
           props: true
@@ -27,7 +27,7 @@ const router = createRouter({
           props: true
         },
         {
-          path: '/nop-ho-so/:id',
+          path: '/nop-ho-so/:thutuc/:id',
           name: 'BieuMauDienTu',
           component: () => import('@/views/BieuMauDienTu.vue'),
           props: true

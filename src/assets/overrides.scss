@@ -192,6 +192,12 @@ table td {
 .input-form:not(.v-textarea):not(.v-autocomplete) .v-input__slot {
   height: 32px;
 }
+.input-form .v-input__details {
+  min-height: 18px;
+}
+.input-form.v-input--error {
+  height: 42px !important
+}
 .height-auto.input-form:not(.v-textarea),
 .height-auto.input-form:not(.v-textarea) .v-input__slot {
   height: auto !important;
@@ -287,7 +293,7 @@ table td {
 .row-header .header-content::before {
   content: "";
   position: absolute;
-  bottom: -14px;
+  bottom: -13px;
   left: 0;
   width: 0;
   height: 0;
@@ -671,25 +677,25 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 }
 
 // 
-.biemau .v-tab {
+.bieumau .v-tab {
   margin-right: 0px;
   opacity: 1;
 }
-.biemau .v-tabs {
+.bieumau .v-tabs {
   border-top: 1px solid #DADADA;
   border-bottom: 1px solid #DADADA;
   border-right: 1px solid #DADADA;
 }
-.biemau .v-tab:not(:first-child) {
+.bieumau .v-tab:not(:first-child) {
   margin-left: 20px;
 }
-.biemau .v-tabs button, .biemau .v-tabs .v-slide-group__container {
+.bieumau .v-tabs button, .bieumau .v-tabs .v-slide-group__container {
   height: 48px;
 }
-.biemau .v-tab:not(:first-child) {
+.bieumau .v-tab:not(:first-child) {
   padding-left: 30px;
 }
-.biemau .v-tabs .v-tab--selected:not(.v-tab:first-child):after {
+.bieumau .v-tabs .v-tab--selected:not(.v-tab:first-child):after {
   content: "";
   position: absolute;
   left: 0;
@@ -702,7 +708,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   opacity: 1;
   border-right: 0;
 }
-.biemau .v-tabs .v-tab--selected:before {
+.bieumau .v-tabs .v-tab--selected:before {
   content: "";
   position: absolute;
   right: -20px;
@@ -713,7 +719,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   border-top: 24px solid transparent;
   border-bottom: 24px solid transparent;
 }
-.biemau .v-tabs .v-tab:not(.v-tab--selected):not(:first-child):after {
+.bieumau .v-tabs .v-tab:not(.v-tab--selected):not(:first-child):after {
   content: "";
   position: absolute;
   left: 0;
@@ -726,7 +732,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   opacity: 1;
   border-right: 0;
 }
-.biemau .v-tabs .v-tab:not(.v-tab--selected):before {
+.bieumau .v-tabs .v-tab:not(.v-tab--selected):before {
   content: "";
   position: absolute;
   right: -20px;
@@ -736,6 +742,9 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   border-left: 20px solid #E3E3E3;
   border-top: 24px solid transparent;
   border-bottom: 24px solid transparent;
+}
+.bieumau .v-window {
+  overflow: initial !important;
 }
 // 
 

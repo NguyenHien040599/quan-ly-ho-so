@@ -25,20 +25,44 @@
   const headers = reactive(props.headers)
 
   const loadingData = ref(false)
-  const loading = ref(false)
-
   const initData = function () {
     let filter = {
       maDanhMuc: props.maDanhMuc
     }
     hosoDvcStore.getDanhMuc(filter).then(function(result) {
-      danhSachDanhMuc.value = result.content
+      let danhMuc = result.content
+      if (danhSachSelected && danhSachSelected.length) {
+        danhMuc.forEach(element => {
+          let exits = danhSachSelected.find(function (item) {
+            return item.MaMuc == element.MaMuc
+          })
+          if (exits) {
+            element['Selected'] = true
+          } else {
+            element['Selected'] = false
+          }
+        })
+      }
+      danhSachDanhMuc.value = danhMuc
     }).catch(function(){
-      danhSachDanhMuc.value = [
-        {'TenMuc': 'DLCNCB fake-1', 'MaMuc': 'f1'},
-        {'TenMuc': 'DLCNCB fake-2', 'MaMuc': 'f2'},
-        {'TenMuc': 'DLCNCB fake-3', 'MaMuc': 'f3'}
+      let danhMuc = [
+        {'TenMuc': 'DLCNCB fake-1', 'MaMuc': 'f1', 'Selected': false},
+        {'TenMuc': 'DLCNCB fake-2', 'MaMuc': 'f2', 'Selected': false},
+        {'TenMuc': 'DLCNCB fake-3', 'MaMuc': 'f3', 'Selected': false}
       ]
+      if (danhSachSelected && danhSachSelected.length) {
+        danhMuc.forEach(element => {
+          let exits = danhSachSelected.find(function (item) {
+            return item.MaMuc == element.MaMuc
+          })
+          if (exits) {
+            element['Selected'] = true
+          } else {
+            element['Selected'] = false
+          }
+        })
+      }
+      danhSachDanhMuc.value = danhMuc
     })
   }
   initData()
@@ -46,6 +70,9 @@
   onMounted(() => {
 
   })
+  defineExpose({
+		danhSachDanhMuc
+	})
 </script>
 <template>
   <v-card class="mx-auto pa-0" style="box-shadow: none !important; overflow: inherit;">
@@ -69,7 +96,7 @@
                   <v-checkbox v-if="itemHeader.type == 'select'"
                     width="50"
                     height="50"
-                    :model-value="item.raw['selected']"
+                    :model-value="item.raw['Selected']"
                     hide-details
                   ></v-checkbox>
                   <div v-else>

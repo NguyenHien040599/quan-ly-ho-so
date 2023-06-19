@@ -40,5 +40,80 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       let data = await $.ajax(settings)
       return data
     },
+    async getDanhSachHoSo (filter) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/publicadministrativemgt/internal/hosodichvucong/1.0/filter`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('params') ? filter.params : {},
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
+    async getChiTietHoSo (filter) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/publicadministrativemgt/internal/hosodichvucong/1.0/${filter.primKey}`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: {},
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
+    async themMoiHoSo (filter) {
+      let settings = {
+        method: 'post',
+        url: `${this.baseURL}/publicadministrativemgt/internal/hosodichvucong/1.0`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('data') ? JSON.stringify(filter.data) : JSON.stringify({}),
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
+    async capNhatHoSo (filter) {
+      let settings = {
+        method: 'post',
+        url: `${this.baseURL}/publicadministrativemgt/internal/hosodichvucong/1.0/${filter.data.primKey}`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('data') ? JSON.stringify(filter.data) : JSON.stringify({}),
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
+    async xoaHoSo (filter) {
+      let settings = {
+        method: 'delete',
+        url: `${this.baseURL}/publicadministrativemgt/internal/hosodichvucong/1.0/${filter.data.primKey}`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: {},
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
   },
 })

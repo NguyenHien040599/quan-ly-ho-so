@@ -276,9 +276,6 @@
 	const traCuu = function () {
 		kqTraCuu.value = true
 	}
-  const redirectTo = function (menu) {
-    appStore.SET_MENU_SELECTED(menu)
-  }
   const showConfirm = function () {
     appStore.SET_SHOWCONFIRM(true)
     let confirm = {

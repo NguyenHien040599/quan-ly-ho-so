@@ -4,15 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
-import toastr from 'toastr'
 import vuetify from './plugins/vuetify'
-import 'toastr/build/toastr.css'
-toastr.options = {
-  'closeButton': true,
-  'timeOut': '5000',
-  "positionClass": "toast-top-center"
-}
-
 
 import { useCookies } from "vue3-cookies"
 const { cookies } = useCookies()

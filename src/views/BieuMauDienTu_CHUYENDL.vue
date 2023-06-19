@@ -164,7 +164,7 @@
 </script>
 <template>
   
-  <v-card class="mx-auto pa-0 biemau" style="box-shadow: none !important; overflow: inherit;">
+  <v-card class="mx-auto pa-0 bieumau" style="box-shadow: none !important; overflow: inherit;">
     <v-row class="my-0 mb-5 mx-0">
       <v-col class="row-header d-flex align-center justify-start py-0 px-0" style="border: none">
         <div class="header-content" style="text-transform: uppercase;">

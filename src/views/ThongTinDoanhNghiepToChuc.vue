@@ -414,7 +414,7 @@
     </v-col>
     <v-col cols="12" md="4" class="py-0 mb-10">
       <div class="text-label">Ngày cấp <span style="color: red">(*)</span></div>
-      <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
+      <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát" auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']"
         v-model="doiTuongThucHien['GiayDangKyKinhDoanh']['NgayCap']" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
         @blur="changeDatePicker(doiTuongThucHien['GiayDangKyKinhDoanh']['NgayCap'])"
         >

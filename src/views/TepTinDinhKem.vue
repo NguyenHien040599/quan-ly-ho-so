@@ -1,9 +1,7 @@
 <script setup>
-  import { useRouter, useRoute } from 'vue-router'
-  import { useCookies } from 'vue3-cookies'
-  import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
+  import { ref, reactive, computed, onMounted } from 'vue'
   import { useAppStore } from '@/stores/global.js'
-  import jsondata from '../stores/mock-data.json'
+  import { useHosoDvcStore } from '@/stores/hosodvc.js'
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const props = defineProps({
     permission: {
@@ -11,15 +9,18 @@
       default: false
     }
   })
-  const editTep = reactive(props.permission)
-
-  const router = useRouter()
   const appStore = useAppStore()
-  const { cookies } = useCookies()
-  const dialog = ref(false)
+  const hosoDvcStore = useHosoDvcStore()
   const loadingData = ref(false)
+  const dialog = ref(false)
+  const tenGiayToKhac = ref('')
+  const formGiayToKhac = ref(null)
   const loading = ref(false)
-  const thongTinHoSo = reactive(jsondata.thongTinHoSo)
+  const thanhPhanHoSo = computed(function () {
+    return appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
+      return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
+    })
+  })
   const headers = reactive([
     {
       "sortable": false,
@@ -34,54 +35,12 @@
       "align": "center",
       "value": "tepDinhKem",
       "class": "td-left"
-    },
-    {
-      "sortable": false,
-      "title": "Thao tác",
-      "align": "center",
-      "value": "action",
-      "class": "td-center"
     }
   ])
-  if (editTep) {
-    headers.push({
-      "sortable": false,
-      "title": "Thao tác",
-      "align": "center",
-      "value": "action",
-      "class": "td-center"
-    })
-  }
   const viewFileUpload = function () {
-
   }
   const downloadFile = function () {
 
-  }
-  const eventClick = function () {
-    console.log('run callback')
-  }
-  const action = function () {
-    loading.value = true
-    setTimeout(function () {
-      loading.value = false
-    }, 300)
-  }
-  const showConfirm = function () {
-    appStore.SET_SHOWCONFIRM(true)
-    let confirm = {
-      auth: false,
-      title: 'Xóa sinh viên',
-      message: 'Bạn có chắc chắn muốn xóa',
-      button: {
-        yes: 'Có',
-        no: 'Không'
-      },
-      callback: () => {
-        console.log("Tôi đồng ý")
-      }
-    }
-    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
   }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
@@ -131,12 +90,87 @@
             toastr.success('Xóa tài liệu đính kèm thành công')
             vm.$store.commit('SET_FILEUPLOADYET', false)
           }).catch(function(){
-            toastr.success('Xóa tài liệu đính kèm thất bại')
+            toastr.error('Xóa tài liệu đính kèm thất bại')
           })
         }
       }
       vm.$store.commit('SET_CONFIG_CONFIRM_DIALOG', confirm)
       
+    }
+  }
+  const showFormGiayToKhac = function () {
+    tenGiayToKhac.value = ''
+    dialog.value = true
+  }
+  const xoaGiayToKhac = function (item) {
+    appStore.SET_SHOWCONFIRM(true)
+    let confirm = {
+      auth: false,
+      title: 'Xóa giấy tờ',
+      message: 'Bạn có chắc chắn muốn xóa giấy tờ này',
+      button: {
+        yes: 'Có',
+        no: 'Không'
+      },
+      callback: () => {
+        
+      }
+    }
+    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
+  }
+  const submitTaoGiayToKhac = async function () {
+    const { valid } = await formGiayToKhac.value.validate()
+    if (valid) {
+      
+      let tphsAdd = {
+        "IDGiayTo": "",
+        "TenGiayTo": tenGiayToKhac.value,
+        "SoBanGiay": 0,
+        "HinhThucGiayTo": {
+          "MaMuc": "",
+          "TenMuc": ""
+        },
+        "NgayBoSung": null,
+        "MaThanhPhanHoSo": null,
+        "MaGiayToKetQua": null,
+        "DaHuyBoThayThe": false,
+        "TinhTrangSoHoa": 1,
+        "GiayToCaNhanToChuc": {
+          "MaDinhDanh": "",
+          "TenGiayTo": ""
+        },
+        "TepDuLieu": {
+          "MaDinhDanh": "",
+          "TenTep": "",
+          "DinhDangTep": "",
+          "KichThuocTep": 0,
+          "DuongDanURL": "",
+          "Ext": ""
+        },
+        "GiayToLuuTruSo": {
+          "MaDinhDanh": "",
+          "TenGiayTo": ""
+        },
+        "DuLieuDienTu": {
+          "MaDinhDanh": ""
+        }
+      }
+      console.log('tphsAdd', tphsAdd)
+      appStore.$patch((state) => {
+        state.thongTinHoSo.ThanhPhanHoSo.push(tphsAdd)
+      })
+      console.log('appStore.thongTinHoSo', appStore.thongTinHoSo.ThanhPhanHoSo)
+      return
+      let hoSo = Object.assign(appStore.thongTinHoSo, {"ThanhPhanHoSo": tphs})
+      
+      let filter = {
+        data: hoSo
+      }
+      hosoDvcStore.capNhatHoSo(filter).then(function(result) {
+        appStore.SET_THONGTINHOSO(result.resp)
+      }).catch(function(){
+        alert('Thêm giấy tờ khác thất bại')
+      })
     }
   }
   onMounted(() => {
@@ -145,75 +179,153 @@
 </script>
 <template>
   <v-card class="pa-0 thanhphanhoso" style="box-shadow: none !important;width: 100%;">
-    <!-- <v-row class="mx-0 my-0 mt-3">
-      <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
-        <div class="sub-header-content">
-          <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
-        </div>
-        <div class="triangle-header"></div>
-        <div class="text-sub-header">Tải lên tệp tin đính kèm</div>
-      </v-col>
-    </v-row> -->
     <v-row class="mx-0 my-0 mt-2">
       <v-data-table
         :headers="headers"
-        :items="thongTinHoSo.ThanhPhanHoSo"
+        :items="thanhPhanHoSo"
         items-per-page="20"
         item-value="PrimKey"
         hide-default-footer
-        class="table-base"
+        class="table-base mb-5"
         no-data="Không có dữ liệu"
         :loading="loadingData"
         loading-text="Đang tải... "
       >
         <template v-slot:item="{ item }">
           <tr>
-            <td class="align-left">{{ item.raw.TenGiayTo }}</td>
-            <td class="align-left" width="350">
-              <div class="py-1" @click="viewFileUpload()" v-for="(itemTep, indexTep) in item.raw.TepDuLieu" v-bind:key="indexTep">
-                <v-icon size="18" color="green" v-if="itemTep.DinhDangTep === 'xls' || itemTep.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                <v-icon size="18" color="blue" v-else-if="itemTep.DinhDangTep === 'doc' || itemTep.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                <v-icon size="18" color="red" v-else-if="itemTep.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                <v-icon size="18" color="blue" v-else-if="itemTep.DinhDangTep === 'png' || itemTep.DinhDangTep === 'jpg' || itemTep.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+            <td class="align-left">{{ item.raw.TenGiayTo }} 
+              <span v-if="item.raw.MaThanhPhanHoSo" style="color:red">(*)</span>
+              <!-- <v-tooltip location="top" v-if="!item.raw.MaThanhPhanHoSo">
+                <template v-slot:activator="{ props }" >
+                  <v-btn v-bind="props" icon variant="flat" size="small" class="ml-2" @click.stop="xoaGiayToKhac(item.raw)">
+                    <v-icon size="18" color="red">mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+                <span>Xóa giấy tờ</span>
+              </v-tooltip> -->
+              <v-btn v-if="!item.raw.MaThanhPhanHoSo"
+                class="mx-0 ml-2"
+                size="small"
+                variant="outlined"
+                color="red"
+                @click.stop="xoaGiayToKhac(item.raw)"
+                height="28px" width="50px"
+              >
+                <v-icon size="14" color="red">mdi-delete</v-icon>
+                <span style="font-size: 14px; text-transform: none;">Xóa</span>
+              </v-btn>
+            </td>
+            <td class="align-center" width="350">
+              <div class="py-1" @click="viewFileUpload()" v-if="item.raw.TepDuLieu.KichThuocTep">
+                <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
+                <v-icon size="18" color="red" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'png' || item.raw.TepDuLieu.DinhDangTep === 'jpg' || item.raw.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
                 <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{itemTep.TenTep}}</a>
-                <v-tooltip location="top" v-if="editTep">
+                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.raw.TepDuLieu.TenTep}}</a>
+                <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
-                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(itemTep, indexTep)">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(item.raw.TepDuLieu)">
                       <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
                     </v-btn>
                   </template>
                   <span>Tải xuống</span>
                 </v-tooltip>
-                <v-tooltip location="top" v-if="editTep">
+                <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
-                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(itemTep, indexTep)">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="downloadFile(item.raw.TepDuLieu)">
                       <v-icon size="18" color="red">mdi-close</v-icon>
                     </v-btn>
                   </template>
                   <span>Xóa</span>
                 </v-tooltip>
               </div>
-            </td>
-            <td class="align-center" width="200">
-              <v-btn
+              <v-btn v-else
                 class="mx-0"
                 size="small"
                 variant="outlined"
                 color="#1E7D30"
                 @click.stop="pickFileUpload"
-                height="36px" width="180px"
+                height="32px" width="120px"
               >
-                <v-icon size="26" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>
-                <span style="font-size: 18px; text-transform: none;">Tải lên</span>
+                <v-icon size="22" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>
+                <span style="font-size: 14px; text-transform: none;">Tải lên tệp</span>
               </v-btn>
             </td>
           </tr>
         </template>
       </v-data-table>
+      <v-row class="mx-0 my-0" style="justify-content: flex-end;">
+        <v-btn
+          size="small"
+          color="#1E7D30"
+          prepend-icon="mdi-plus"
+          class="mx-0"
+          @click.stop="showFormGiayToKhac"
+        >
+          Thêm giấy tờ khác
+        </v-btn>
+      </v-row>
     </v-row>
     <input type="file" id="file_upload_tep_dinh_kem" :multiple="false" @input="uploadFile()" style="display:none"/>
   </v-card>
+  <v-dialog
+    max-width="900"
+    v-model="dialog"
+    persistent
+    absolute
+  >
+    <v-card>
+      <v-toolbar
+        dark
+        :color="baseColor" class="px-0"
+      >
+        <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
+          <div class="sub-header-content">
+            Tên giấy tờ
+          </div>
+          <div class="triangle-header"></div>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <v-btn variant="flat" size="small" icon color="#E9FFF2" @click="dialog = false" >
+            <v-icon size="20">mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+      <v-card-text class="mt-2 px-3">
+        <!-- Content dialog -->
+        <v-form
+          ref="formGiayToKhac"
+          lazy-validation
+          class="py-0"
+        >
+          <v-text-field
+            v-model="tenGiayToKhac"
+            placeholder="Nhập tên giấy tờ"
+            dense
+            hide-details="auto"
+            class="input-form"
+            clearable
+            required
+            :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+          ></v-text-field>
+        </v-form>
+      </v-card-text>
+      <v-card-actions class="justify-center pb-3 px-3">
+        <v-btn
+          size="small" variant="elevated"
+          :loading="loading"
+          :disabled="loading"
+          :color="baseColor"
+          prepend-icon="mdi-content-save"
+          @click.stop="submitTaoGiayToKhac"
+        >
+          Đồng ý
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>

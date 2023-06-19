@@ -3,6 +3,9 @@
   import { useRouter, useRoute } from 'vue-router'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
+  import { useHosoDvcStore } from '@/stores/hosodvc.js'
+  import jsondata from '../stores/mock-data.json'
+  const hosoDvcStore = useHosoDvcStore()
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const route = useRoute()
   const router = useRouter()
@@ -11,9 +14,6 @@
   )
   // const TimKiemNangCao = defineAsyncComponent(() =>
   //   import('./TimKiemNangCao.vue')
-  // )
-  // const FormCRUD = defineAsyncComponent(() =>
-  //   import('./FormCRUD.vue')
   // )
   const appStore = useAppStore()
   const { cookies } = useCookies()
@@ -32,216 +32,54 @@
   const dataInputSearch = reactive({})
   const dataInputCrud = ref({})
   const headers = reactive([])
-  const dsHoSo = reactive([
-    {
-        "type": "T_SinhVien",
-        "PrimKey": "63fc1960b3bbb7226f56e0a1",
-        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
-        "ThoiGianTao": "2023-02-27T02:45:52",
-        "ThoiGianCapNhat": "2023-02-27T07:40:45",
-        "TimeCreate": 1677465952701,
-        "TimeUpdate": 1677483645662,
-        "NguoiTaoLap": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "NguoiCapNhat": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "MaSinhVien": "Thông báo vi phạm",
-        "SoHoSo": "2",
-        "SoBaoDanh": "2",
-        "MaNhapHoc": "2",
-        "HoVaTen": "A2931-123412",
-        "NgaySinh": "1999-04-27T17:00:00",
-        "TinhTrang": {
-            "type": "C_TinhTrang",
-            "MaMuc": "1",
-            "TenMuc": "Mới"
-        },
-        "DanToc": {
-            "type": "C_DanToc",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "TonGiao": {
-            "type": "C_TonGiao",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "QuocTich": {
-            "type": "C_QuocGia",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "GiayToTuyThan": [],
-        "DanhBaLienLac": {
-            "type": "S_DanhBaLienLac",
-            "ThuDienTu": "",
-            "SoDienThoai": "0355620860",
-            "SoFax": ""
-        },
-        "DanhTinhDienTu": [],
-        "EmailVNU": "zxt@gmail.com",
-        "ChungMinhThu": "012345678",
-        "MainImage": {
-            "type": "T_Attachment",
-            "Id": null,
-            "FileName": null,
-            "FileUrl": null
-        },
-        "MaLopKhoaHoc": null,
-        "TenLopKhoaHoc": null
-    },
-    {
-        "type": "T_SinhVien",
-        "PrimKey": "63fc1960b3bbb7226f56e0a1",
-        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
-        "ThoiGianTao": "2023-02-27T02:45:52",
-        "ThoiGianCapNhat": "2023-02-27T07:40:45",
-        "TimeCreate": 1677465952701,
-        "TimeUpdate": 1677483645662,
-        "NguoiTaoLap": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "NguoiCapNhat": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "MaSinhVien": "Thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu",
-        "SoHoSo": "2",
-        "SoBaoDanh": "2",
-        "MaNhapHoc": "2",
-        "HoVaTen": "A2931-123412",
-        "NgaySinh": "1999-04-27T17:00:00",
-        "TinhTrang": {
-            "type": "C_TinhTrang",
-            "MaMuc": "2",
-            "TenMuc": "Đang xử lý"
-        },
-        "DanToc": {
-            "type": "C_DanToc",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "TonGiao": {
-            "type": "C_TonGiao",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "QuocTich": {
-            "type": "C_QuocGia",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "GiayToTuyThan": [],
-        "DanhBaLienLac": {
-            "type": "S_DanhBaLienLac",
-            "ThuDienTu": "",
-            "SoDienThoai": "0355620860",
-            "SoFax": ""
-        },
-        "DanhTinhDienTu": [],
-        "EmailVNU": "zxt@gmail.com",
-        "ChungMinhThu": "012345678",
-        "MainImage": {
-            "type": "T_Attachment",
-            "Id": null,
-            "FileName": null,
-            "FileUrl": null
-        },
-        "MaLopKhoaHoc": null,
-        "TenLopKhoaHoc": null
-    },
-    {
-        "type": "T_SinhVien",
-        "PrimKey": "63fc1960b3bbb7226f56e0a1",
-        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
-        "ThoiGianTao": "2023-02-27T02:45:52",
-        "ThoiGianCapNhat": "2023-02-27T07:40:45",
-        "TimeCreate": 1677465952701,
-        "TimeUpdate": 1677483645662,
-        "NguoiTaoLap": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "NguoiCapNhat": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "MaSinhVien": "Thay đổi nội dung hồ sơ chuyển dữ liệu cá nhân ra nước ngoài",
-        "SoHoSo": "2",
-        "SoBaoDanh": "2",
-        "MaNhapHoc": "2",
-        "HoVaTen": "A2931-123412",
-        "NgaySinh": "1999-04-27T17:00:00",
-        "TinhTrang": {
-            "type": "C_TinhTrang",
-            "MaMuc": "3",
-            "TenMuc": "Hoàn thành"
-        },
-        "DanToc": {
-            "type": "C_DanToc",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "TonGiao": {
-            "type": "C_TonGiao",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "QuocTich": {
-            "type": "C_QuocGia",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "GiayToTuyThan": [],
-        "DanhBaLienLac": {
-            "type": "S_DanhBaLienLac",
-            "ThuDienTu": "",
-            "SoDienThoai": "0355620860",
-            "SoFax": ""
-        },
-        "DanhTinhDienTu": [],
-        "EmailVNU": "zxt@gmail.com",
-        "ChungMinhThu": "012345678",
-        "MainImage": {
-            "type": "T_Attachment",
-            "Id": null,
-            "FileName": null,
-            "FileUrl": null
-        },
-        "MaLopKhoaHoc": null,
-        "TenLopKhoaHoc": null
-    }
-  ])
-  const itemsPerPage = ref(10)
+  const dsHoSo = ref([])
+  const itemsPerPage = ref(20)
   const loadingData = ref(false)
   const loading = ref(false)
-  const page = ref(1)
-  const pageCount = ref(3)
-  const total = ref(10)
+  const page = ref(0)
+  const pageCount = ref(0)
+  const total = ref(0)
 
   const themMoiHoSo = function () {
-    router.push({ path: '/nop-ho-so' + menuSelected.value.to })
+    let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
+      return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+    })
+    if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
+      let filter = {
+        data: thuTucTaoMoi.thongTinHoSo
+      }
+      hosoDvcStore.themMoiHoSo(filter).then(function(result) {
+        let dataHs = result.resp
+        router.push({ path: `/nop-ho-so${menuSelected.value.to}/${dataHs.primKey}` })
+      }).catch(function(){
+        alert('Thêm mới hồ sơ thất bại')
+      })
+    }
+    
   }
-  const eventClick = function () {
-    console.log('run callback')
+  const getDanhSachHoSo = function () {
+    let filter = {
+      params: {
+        page: page.value,
+        size: itemsPerPage.value,
+        // thuTucHanhChinh_MaMuc: menuSelected.value.hasOwnProperty('thuTucThayDoi') ? menuSelected.value.thuTuc.maThuTuc + ',' + menuSelected.value.thuTucThayDoi.maThuTuc : menuSelected.value.thuTuc.maThuTuc
+        thuTucHanhChinh_MaMuc: menuSelected.value.thuTuc.maThuTuc
+      }
+    }
+    loadingData.value = true
+    hosoDvcStore.getDanhSachHoSo(filter).then(function(result) {
+      loadingData.value = false
+      dsHoSo.value = result.content
+      total.value = result.totalElements
+      pageCount.value = result.totalPages
+    }).catch(function(){
+      loadingData.value = false
+      dsHoSo.value = []
+      total.value = 0
+      pageCount.value = 0
+    })
   }
+  getDanhSachHoSo()
   const action = function () {
     loading.value = true
     setTimeout(function () {
@@ -249,7 +87,35 @@
     }, 300)
   }
   const redirectThongTinHoSo = function (hoso) {
-    router.push({ path: '/thong-tin-ho-so/' + hoso.PrimKey })
+    router.push({ path: '/thong-tin-ho-so/' + hoso.primKey })
+  }
+  const suaHoSo = function (item) {
+    router.push({ path: `/nop-ho-so${menuSelected.value.to}/${item.primKey}` })
+  }
+  const xoaHoSo = function (item) {
+    appStore.SET_SHOWCONFIRM(true)
+    let confirm = {
+      auth: false,
+      title: 'Xóa hồ sơ',
+      message: 'Bạn có chắc chắn muốn xóa hồ sơ này',
+      button: {
+        yes: 'Có',
+        no: 'Không'
+      },
+      callback: () => {
+        let filter = {
+          data: item
+        }
+        hosoDvcStore.xoaHoSo(filter).then(function(result) {
+          getDanhSachHoSo()
+        }).catch(function(){
+        })
+      }
+    }
+    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
+  }
+  const rutHoSo = function (item) {
+    console.log('ruthoso', item)
   }
   const lapHoSoThayDoi = function (item) {
     router.push({ path: '/nop-ho-so' + menuSelected.value.to + '?id_update=' + item.PrimKey })
@@ -274,7 +140,7 @@
     }
   }
   const changePage = function (page) {
-    console.log('page_pagination', page.value)
+    console.log('page_pagination', page)
   }
   const showConfirm = function () {
     appStore.SET_SHOWCONFIRM(true)
@@ -293,14 +159,7 @@
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
   }
   const showDialog = function (type, data) {
-    dialog.value = true
     console.log('dataItem', data)
-    if (type === 'update') {
-      dataInputCrud.value = data
-    }
-    setTimeout(function () {
-      crudFormReference.value.initForm(type)
-    }, 100)
   }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
@@ -338,7 +197,10 @@
     output = output.toString().replace(/,/g, ', ')
     return output
   }
-
+  watch(route, async (val) => {
+    console.log('run watch-routes DSHS:', val.name)
+    getDanhSachHoSo()
+  })
   onMounted(() => {
 
   })
@@ -369,7 +231,7 @@
           :headers="menuSelected.headerTable"
           :items="dsHoSo"
           v-model:items-per-page="itemsPerPage"
-          item-value="PrimKey"
+          item-value="primKey"
           hide-default-footer
           class="table-base"
           no-data="Không có dữ liệu"
@@ -403,28 +265,39 @@
                   {{ convertDataView(itemHeader, item.raw) }}
                 </div>
                 <div v-else-if="itemHeader.type == 'action'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  <v-tooltip location="top" v-if="item.raw.TinhTrang.MaMuc == '1'">
+                  <v-menu>
                     <template v-slot:activator="{ props }">
-                      <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="showDialog('update', item.columns)">
-                        <v-icon size="24" :color="baseColor">mdi-playlist-edit</v-icon>
+                      <v-btn icon variant="flat" size="small" v-bind="props">
+                        <v-icon size="24" :color="baseColor">mdi-filter-variant</v-icon>
                       </v-btn>
                     </template>
-                    <span>Sửa</span>
-                  </v-tooltip>
 
-                  <v-tooltip location="top" v-if="item.raw.TinhTrang.MaMuc == '1'">
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon variant="flat" size="small" v-bind="props" @click.stop="showConfirm">
-                        <v-icon size="22" color="#FF0000">mdi-close</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Xóa</span>
-                  </v-tooltip>
-
-                  <v-btn v-if="item.raw.TinhTrang.MaMuc == '3' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')" color="#1E7D30" class="mx-0" size="small" @click.stop="lapHoSoThayDoi(item.raw)">
-                    <v-icon size="20" color="#FFFFFF" class="mr-2">mdi-file-document-plus-outline</v-icon>
-                    <span>Lập hồ sơ thay đổi</span>
-                  </v-btn>
+                    <v-list>
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '00'" @click="suaHoSo(item.raw)">
+                        <v-list-item-title>
+                          <v-icon size="24" :color="baseColor" class="mr-2">mdi-playlist-edit</v-icon> Sửa hồ sơ
+                        </v-list-item-title>
+                      </v-list-item>
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '00'" @click="xoaHoSo(item.raw)">
+                        <v-list-item-title>
+                          <v-icon size="22" color="#FF0000" class="mr-2">mdi-close</v-icon> Xóa hồ sơ
+                        </v-list-item-title>
+                      </v-list-item>
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '01'" @click="rutHoSo(item.raw)">
+                        <v-list-item-title>
+                          <v-icon size="22" color="#FF0000" class="mr-2">mdi-file-refresh-outline</v-icon>Rút hồ sơ
+                        </v-list-item-title>
+                      </v-list-item>
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '09' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')"
+                        @click="lapHoSoThayDoi(item.raw)"
+                      >
+                        <v-list-item-title>
+                          <v-icon size="20" :color="baseColor" class="mr-2">mdi-file-document-plus-outline</v-icon>
+                          Lập hồ sơ thay đổi
+                        </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
                 </div>
                 <div v-else :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
                   {{ item.raw[itemHeader.value] }}
@@ -434,7 +307,8 @@
             </tr>
           </template>
         </v-data-table>
-        <Pagination :pageInput="page" :pageCount="pageCount" :total="total" @changePage="changePage" style="margin-bottom: 50px;"></Pagination>
+        <div v-if="!pageCount" style="height: 50px;border: 1px solid #DADADA;line-height: 50px; text-align: center;border-top: 0;">KHÔNG CÓ HỒ SƠ NÀO</div>
+        <Pagination v-if="pageCount && pageCount > 1" :pageInput="page+1" :pageCount="pageCount" :total="total" @changePage="changePage" style="margin-bottom: 50px;"></Pagination>
       </v-col>
     </v-row>
     <!-- dialog -->

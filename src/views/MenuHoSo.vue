@@ -14,9 +14,10 @@
 
   const menuItems = reactive(jsondata.menuHoSo)
   const menuSelected = computed(() => appStore.getMenuSelected)
-  if (routes && routes.params.hasOwnProperty('status') && routes.params.status) {
+  console.log('routes-menu-component', routes, routes.params)
+  if (routes && routes.params.hasOwnProperty('thutuc') && routes.params.thutuc) {
     let menu = menuItems.find(function (item) {
-      return item.to.split('/')[1] === routes.params.status
+      return item.to.split('/')[1] === routes.params.thutuc
     })
     appStore.SET_MENU_SELECTED(menu)
   } else {
@@ -42,9 +43,9 @@
     console.log('run watch-routes:', val.name)
     if (val.name !== 'ThongTinHoSo' && val.name !== 'BieuMauDienTu') {
       console.log('run watch-routes2:', val.name, val.params)
-      if (val && val.params.hasOwnProperty('status') && val.params.status) {
+      if (val && val.params.hasOwnProperty('thutuc') && val.params.thutuc) {
         let menu = menuItems.find(function (item) {
-          return item.to.split('/')[1] === val.params.status
+          return item.to.split('/')[1] === val.params.thutuc
         })
         appStore.SET_MENU_SELECTED(menu)
       } else {
