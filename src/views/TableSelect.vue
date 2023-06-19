@@ -66,7 +66,10 @@
     })
   }
   initData()
-
+  const changeSelect = function (data) {
+    console.log('dataChange', data)
+    console.log('danhSachDanhMuc', danhSachDanhMuc.value)
+  }
   onMounted(() => {
 
   })
@@ -96,7 +99,7 @@
                   <v-checkbox v-if="itemHeader.type == 'select'"
                     width="50"
                     height="50"
-                    :model-value="item.raw['Selected']"
+                    v-model="item.raw['Selected']"
                     hide-details
                   ></v-checkbox>
                   <div v-else>

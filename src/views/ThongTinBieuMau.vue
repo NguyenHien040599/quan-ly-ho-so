@@ -1,11 +1,10 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
-  import { useCookies } from 'vue3-cookies'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import jsondata from '../stores/mock-data.json'
-  const thongTinHoSo = computed(function () {
-    return appStore.thongTinHoSo
+  const thongTinBieuMau = computed(function () {
+    return appStore.dataFormBieuMauXldl
   })
   const ThanhPhanHoSo = defineAsyncComponent(() =>
     import('./ThanhPhanHoSo.vue')
@@ -13,13 +12,17 @@
   const router = useRouter()
   console.log('routes', router.currentRoute.value)
   const appStore = useAppStore()
-  const { cookies } = useCookies()
   const menuSelected = computed(() => appStore.getMenuSelected)
   const loading = ref(false)
   const tab = ref(null)
-  // const thongTinHoSo = reactive(jsondata.thongTinHoSo)
-  const mauHienThi = reactive(jsondata.thuTucHanhChinh[1]['mauHienThiBieuMau'])
-
+  const mauHienThi = ref(null)
+  let thuTuc = jsondata.thuTucHanhChinh.find(function (item) {
+    return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+  })
+  if (thuTuc && thuTuc.mauHienThiBieuMau) {
+    mauHienThi.value = thuTuc.mauHienThiBieuMau
+  }
+  
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
 		let date = new Date(dateInput)
@@ -62,75 +65,166 @@
 </script>
 <template>
   <v-card class="mx-auto pa-0 thongtinhoso" style="box-shadow: none !important; overflow: inherit;">
-    <v-row class="thongtinchung mx-0 my-0">
-      <v-col v-for="(item, index) in mauHienThi" v-bind:key="index" :class="item['class']">
-        <v-row v-if="item.hasOwnProperty('group') && item.group" class="mx-0 my-0">
-          <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
-            <div class="sub-header-content">
-              <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
-            </div>
-            <div class="triangle-header"></div>
-            <div class="text-sub-header">{{ item.title }}</div>
-          </v-col>
-          <v-col v-for="(itemChild, indexChild) in item.content" v-bind:key="indexChild" :class="itemChild['class']">
-            <span class="label-text">{{itemChild.title}}: </span>
-            <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocale(thongTinHoSo[itemChild.value]) : '' }}
-            </span>
-            <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinHoSo[itemChild.value]) : ''}}
-            </span>
-            <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? thongTinHoSo[itemChild.value][itemChild.mapping] : '' }}
-            </span>
-            <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? currency(thongTinHoSo[itemChild.value]) : '' }}
-            </span>
-            <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinHoSo[itemChild.value]) : '' }}
-            </span>
-            <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              {{ convertDataView(itemChild, thongTinHoSo) }}
-            </span>
-            <div class="pl-2" v-else-if="itemChild.type == 'danhmuc'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              <div class="mb-1">
-                <v-icon size="18" color="#1E7D30" class="mr-2">mdi-check</v-icon>
-                <span>Hình ảnh của cá nhân</span>
-              </div>
-              <div class="mb-1">
-                <v-icon size="18" color="#1E7D30" class="mr-2">mdi-check</v-icon>
-                <span>Thông tin về tài khoản số của cá nhân</span>
-              </div>
-            </div>
-            <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-              {{ itemChild.value ? thongTinHoSo[itemChild.value] : '' }}
-            </span>
-          </v-col>
-        </v-row>
-        <div v-else>
-          <span class="label-text">{{item.title}}: </span>
-          <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-            {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocale(thongTinHoSo[itemChild.value]) : '' }}
-          </span>
-          <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-            {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinHoSo[itemChild.value]) : ''}}
-          </span>
-          <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-            {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? thongTinHoSo[itemChild.value][itemChild.mapping] : '' }}
-          </span>
-          <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-            {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? currency(thongTinHoSo[itemChild.value]) : '' }}
-          </span>
-          <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-            {{ thongTinHoSo.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinHoSo[itemChild.value]) : '' }}
-          </span>
-          <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-            {{ convertDataView(itemChild, thongTinHoSo) }}
-          </span>
-          <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-            {{ itemChild.value ? thongTinHoSo[itemChild.value] : '' }}
-          </span>
+    <v-row v-if="thongTinBieuMau.loaiDoiTuongThucHien === 'T_DonViKinhDoanh'"  class="thongtinchung mx-0 my-0">
+      <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0">
+        <div class="sub-header-content">
+          <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
         </div>
+        <div class="triangle-header"></div>
+        <div class="text-sub-header">{{ mauHienThi['thongTinDoanhNghiep'].title }}</div>
+      </v-col>
+      <v-col v-for="(itemChild, indexChild) in mauHienThi['thongTinDoanhNghiep'].content" v-bind:key="indexChild" :class="itemChild['class']">
+        <span class="label-text">{{itemChild.title}}: </span>
+        <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-if="itemChild.type == 'obj-date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau.DoiTuongThucHien[itemChild.value][itemChild.mapping]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : ''}}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? thongTinBieuMau.DoiTuongThucHien[itemChild.value][itemChild.mapping] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object-2'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? thongTinBieuMau.DoiTuongThucHien[itemChild.value][itemChild.mapping][itemChild.mapping2] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? currency(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ convertDataView(itemChild, thongTinBieuMau.DoiTuongThucHien) }}
+        </span>
+        <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ itemChild.value ? thongTinBieuMau.DoiTuongThucHien[itemChild.value] : '' }}
+        </span>
+      </v-col>
+    </v-row>
+    <v-row v-if="thongTinBieuMau.loaiDoiTuongThucHien === 'T_CaNhan'" class="thongtinchung mx-0 my-0">
+      <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0 mt-2">
+        <div class="sub-header-content">
+          <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
+        </div>
+        <div class="triangle-header"></div>
+        <div class="text-sub-header">{{ mauHienThi['thongTinCaNhan'].title }}</div>
+      </v-col>
+      <v-col v-for="(itemChild, indexChild) in mauHienThi['thongTinCaNhan'].content" v-bind:key="indexChild" :class="itemChild['class']">
+        <span class="label-text">{{itemChild.title}}: </span>
+        <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-if="itemChild.type == 'obj-date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau.DoiTuongThucHien[itemChild.value][itemChild.mapping]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : ''}}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? thongTinBieuMau.DoiTuongThucHien[itemChild.value][itemChild.mapping] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object-2'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? thongTinBieuMau.DoiTuongThucHien[itemChild.value][itemChild.mapping][itemChild.mapping2] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? currency(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ convertDataView(itemChild, thongTinBieuMau.DoiTuongThucHien) }}
+        </span>
+        <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ itemChild.value ? thongTinBieuMau.DoiTuongThucHien[itemChild.value] : '' }}
+        </span>
+      </v-col>
+    </v-row>
+    <v-row class="thongtinchung mx-0 my-0 mt-2">
+      <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0 mt-2">
+        <div class="sub-header-content">
+          <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
+        </div>
+        <div class="triangle-header"></div>
+        <div class="text-sub-header">{{ mauHienThi['nhanSuBVDLCN'].title }}</div>
+      </v-col>
+      <v-col v-for="(itemChild, indexChild) in mauHienThi['nhanSuBVDLCN'].content" v-bind:key="indexChild" :class="itemChild['class']">
+        <span class="label-text">{{itemChild.title}}: </span>
+        <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.CaNhanPhuTrachBVDLCN.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-if="itemChild.type == 'obj-date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.CaNhanPhuTrachBVDLCN.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value][itemChild.mapping]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.CaNhanPhuTrachBVDLCN.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value]) : ''}}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.CaNhanPhuTrachBVDLCN.hasOwnProperty(itemChild.value) ? thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value][itemChild.mapping] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object-2'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.CaNhanPhuTrachBVDLCN.hasOwnProperty(itemChild.value) ? thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value][itemChild.mapping][itemChild.mapping2] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.CaNhanPhuTrachBVDLCN.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ convertDataView(itemChild, thongTinBieuMau.CaNhanPhuTrachBVDLCN) }}
+        </span>
+        <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ itemChild.value ? thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value] : '' }}
+        </span>
+      </v-col>
+    </v-row>
+    <v-row  class="thongtinchung mx-0 my-0 mt-2">
+      <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0 mt-2">
+        <div class="sub-header-content">
+          <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
+        </div>
+        <div class="triangle-header"></div>
+        <div class="text-sub-header">{{ mauHienThi['noiDungDanhGia'].title }}</div>
+      </v-col>
+      <v-col v-for="(itemChild, indexChild) in mauHienThi['noiDungDanhGia'].content" v-bind:key="indexChild" :class="itemChild['class']">
+        <span class="label-text">{{itemChild.title}}: </span>
+        <span class="content-text" v-if="itemChild.type == 'date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'obj-date'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? dateLocale(thongTinBieuMau[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'datetime'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? dateLocaleTime(thongTinBieuMau[itemChild.value]) : ''}}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? thongTinBieuMau[itemChild.value][itemChild.mapping] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'object-2'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? thongTinBieuMau[itemChild.value][itemChild.mapping][itemChild.mapping2] : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? currency(thongTinBieuMau[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau[itemChild.value]) : '' }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ convertDataView(itemChild, thongTinBieuMau) }}
+        </span>
+        <span class="content-text" v-else-if="itemChild.type == 'boolean'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) && thongTinBieuMau[itemChild.value] ? 'Có' : 'Không' }}
+        </span>
+        <div class="pl-2" v-else-if="itemChild.type == 'danhmuc'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          <div class="my-1" v-for="(item1, index1) in thongTinBieuMau[itemChild.value]" v-bind:key="index1">
+            <v-icon size="18" color="#1E7D30" class="mr-2">mdi-check</v-icon>
+            <span>{{ item1[itemChild.mapping] }}</span>
+          </div>
+        </div>
+        <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ itemChild.value ? thongTinBieuMau[itemChild.value] : '' }}
+        </span>
       </v-col>
     </v-row>
     

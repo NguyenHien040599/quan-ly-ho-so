@@ -1,4 +1,5 @@
 <script setup>
+  import $ from 'jquery'
   import { ref, reactive, computed, onMounted } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'

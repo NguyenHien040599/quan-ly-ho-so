@@ -33,6 +33,7 @@
   const ThongTinBieuMau = defineAsyncComponent(() =>
     import('./ThongTinBieuMau.vue')
   )
+  const formTomTatNoiDung = ref(null)
   const router = useRouter()
   // console.log('routes', router.currentRoute.value)
   const props = defineProps({
@@ -83,7 +84,7 @@
   getData()
   const changeDatePicker = (key, data) => {
     appStore.$patch((state) => {
-      state.dataFormBieuMauXldl[key] = data
+      state.dataFormBieuMauXldl[key] = dateIsoLocal(data)
     })
   }
   const nextTab = async function (tabSelect) {
@@ -96,9 +97,16 @@
       }
       if (dataFormBieuMau.value['loaiDoiTuongThucHien'] == 'T_CaNhan') {
         let doiTuongThucHien = thongtincanhan.value.doiTuongThucHien
+        let caNhanPhuTrachBVDLCN = thongtincanhan.value.caNhanPhuTrachBVDLCN
         let validThongTinCaNhan = await thongtincanhan.value.validateForm()
         if (validThongTinCaNhan && doiTuongThucHien.GiayToTuyThan.NgayCap) {
-          console.log('doiTuongThucHien', doiTuongThucHien)
+          console.log('doiTuongThucHienCaNhan', doiTuongThucHien)
+          appStore.$patch((state) => {
+            state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
+          })
+          appStore.$patch((state) => {
+            state.dataFormBieuMauXldl['CaNhanPhuTrachBVDLCN'] = caNhanPhuTrachBVDLCN
+          })
         } else {
           if (validThongTinCaNhan && !doiTuongThucHien.GiayToTuyThan.NgayCap) {
             toastr.error('Vui lòng nhập "Ngày cấp"')
@@ -106,9 +114,17 @@
           return
         }
       } else {
+        let doiTuongThucHien = thongtindoanhnghiep.value.doiTuongThucHien
+        let caNhanPhuTrachBVDLCN = thongtindoanhnghiep.value.caNhanPhuTrachBVDLCN
         let validThongTinDoanhNghiepToChuc = await thongtindoanhnghiep.value.validateForm()
         if (validThongTinDoanhNghiepToChuc && doiTuongThucHien.GiayDangKyKinhDoanh.NgayCap) {
-          console.log('doiTuongThucHien', doiTuongThucHien)
+          console.log('doiTuongThucHienDoanhNghiep', doiTuongThucHien)
+          appStore.$patch((state) => {
+            state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
+          })
+          appStore.$patch((state) => {
+            state.dataFormBieuMauXldl['CaNhanPhuTrachBVDLCN'] = caNhanPhuTrachBVDLCN
+          })
         } else {
           if (validThongTinDoanhNghiepToChuc && !doiTuongThucHien.GiayDangKyKinhDoanh.NgayCap) {
             toastr.error('Vui lòng nhập "Ngày cấp"')
@@ -118,15 +134,65 @@
       }
     }
     if (tabSelect == 'dinhkem') {
+      const { valid } = await formTomTatNoiDung.value.validate()
+      console.log('validFormTomTat', valid)
+      if (!valid) {
+        document.getElementById("top-menu").scrollIntoView()
+        return
+      }
       console.log('loaidlcncobanRef', loaidlcncobanRef.value.danhSachDanhMuc)
       console.log('loaidlcnnhaycamRef', loaidlcnnhaycamRef.value.danhSachDanhMuc)
       console.log('loaibienphapbvdlcnRef', loaibienphapbvdlcnRef.value.danhSachDanhMuc)
       console.log('loainguycoruiroRef', loainguycoruiroRef.value.danhSachDanhMuc)
-      let exits = loainguycoruiroRef.value.danhSachDanhMuc.filter(function (item) {
+      let exitsDlcb = loaidlcncobanRef.value.danhSachDanhMuc.filter(function (item) {
         return item['Selected']
       })
-      console.log('exits', exits.length)
-
+      if (!exitsDlcb.length) {
+        toastr.clear()
+        toastr.error('Vui lòng chọn "Phạm vi xử lý các loại dữ liệu cá nhân cơ bản"')
+        return
+      }
+      let exitsDlnc = loaidlcnnhaycamRef.value.danhSachDanhMuc.filter(function (item) {
+        return item['Selected']
+      })
+      if (!exitsDlnc.length) {
+        toastr.clear()
+        toastr.error('Vui lòng chọn "Phạm vi xử lý các loại dữ liệu cá nhân nhạy cảm"')
+        return
+      }
+      let exitsBpbv = loaibienphapbvdlcnRef.value.danhSachDanhMuc.filter(function (item) {
+        return item['Selected']
+      })
+      if (!exitsBpbv.length) {
+        toastr.clear()
+        toastr.error('Vui lòng chọn "Biện pháp bảo vệ dữ liệu cá nhân được áp dụng"')
+        return
+      }
+      let exitsNguyCo = loainguycoruiroRef.value.danhSachDanhMuc.filter(function (item) {
+        return item['Selected']
+      })
+      if (!exitsNguyCo.length) {
+        toastr.clear()
+        toastr.error('Vui lòng chọn "Loại đánh giá tác động đã thực hiện"')
+        return
+      }
+      if (!dataFormBieuMau.value['ThoiGianXuLy']) {
+        toastr.error('Vui lòng chọn "Thời gian xử lý"')
+        return
+      }
+      appStore.$patch((state) => {
+        state.dataFormBieuMauXldl['LoaiDLCNCoBan'] = exitsDlcb
+      })
+      appStore.$patch((state) => {
+        state.dataFormBieuMauXldl['LoaiDLCNNhayCam'] = exitsDlnc
+      })
+      appStore.$patch((state) => {
+        state.dataFormBieuMauXldl['LoaiBienPhapBVDLCN'] = exitsBpbv
+      })
+      appStore.$patch((state) => {
+        state.dataFormBieuMauXldl['LoaiDanhGiaTacDong'] = exitsNguyCo
+      })
+      
     }
     tab.value = tabSelect
     document.getElementById("top-menu").scrollIntoView()
@@ -302,6 +368,7 @@
         </v-window-item>
 
         <v-window-item :transition="false" value="noidung" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+          <v-form ref="formTomTatNoiDung" lazy-validation class="py-0">
           <v-row class="mx-0 my-0">
             <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 mb-3">
               <div class="sub-header-content">
@@ -310,7 +377,7 @@
               <div class="triangle-header"></div>
               <div class="text-sub-header">TÓM TẮT NỘI DUNG ĐÁNH GIÁ TÁC ĐỘNG XỬ LÝ DỮ LIỆU CÁ NHÂN</div>
             </v-col>
-            <v-col cols="12" class="py-0 mb-10">
+            <!-- <v-col cols="12" class="py-0 mb-10">
               <div class="text-label">Tên nhiệm vụ xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
               <v-text-field
                 class="flex input-form"
@@ -322,8 +389,8 @@
                 required
                 :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
               ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="py-0 mb-10" v-if="dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'ks' || dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'ksxl'">
+            </v-col> -->
+            <!-- <v-col cols="12" class="py-0 mb-10" v-if="dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'ks' || dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'ksxl'">
               <div class="text-label">Điều kiện cho phép việc thu thập, xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
               <v-autocomplete
                 class="flex input-form"
@@ -340,17 +407,33 @@
                 :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
               >
               </v-autocomplete>
-            </v-col>
+            </v-col> -->
             <v-col cols="12" class="py-0 mb-10" v-if="dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'xl'">
-              <div class="text-label">Mô tả mục đích, hoạt động xử lý dữ liệu cá nhân</div>
+              <div class="text-label">Mô tả mục đích, hoạt động xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
               <v-textarea
                 class="flex input-form"
                 rows="3"
-                v-model="dataFormBieuMau['MucDichHoatDong']"
+                v-model="dataFormBieuMau['MucDichXLDLCN']"
                 solo
                 dense
                 hide-details="auto"
                 clearable
+                required
+                :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="12" class="py-0 mb-10" v-if="dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'xl'">
+              <div class="text-label">Hoạt động xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
+              <v-textarea
+                class="flex input-form"
+                rows="3"
+                v-model="dataFormBieuMau['HoatDongXLDLCN']"
+                solo
+                dense
+                hide-details="auto"
+                clearable
+                required
+                :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
               ></v-textarea>
             </v-col>
             <v-col cols="12" class="py-0 mb-10">
@@ -368,7 +451,14 @@
               :maDanhMuc="'loaidlcnnhaycam'" :selected="dataFormBieuMau['LoaiDLCNNhayCam']"></TableSelect>
             </v-col>
             <v-col cols="12" class="py-0 mb-10">
-              <div class="text-label">Có chuyển dữ liệu cá nhân ra nước ngoài không?</div>
+              <div class="text-label">Có sự đồng ý của chủ thể dữ liệu không?</div>
+              <v-radio-group inline v-model="dataFormBieuMau['DongYChuTheDLCN']" hide-details>
+                <v-radio label="Có" :value="true" color="#1E7D30" class="mr-3"></v-radio>
+                <v-radio label="Không" :value="false" color="#1E7D30"></v-radio>
+              </v-radio-group>
+            </v-col>
+            <v-col cols="12" class="py-0 mb-10">
+              <div class="text-label">Có liên quan chuyển dữ liệu cá nhân ra nước ngoài không?</div>
               <v-radio-group inline v-model="dataFormBieuMau['ChuyenDLCNRaNuocNgoai']" hide-details>
                 <v-radio label="Có" :value="true" color="#1E7D30" class="mr-3"></v-radio>
                 <v-radio label="Không" :value="false" color="#1E7D30"></v-radio>
@@ -398,13 +488,23 @@
               :maDanhMuc="'loaibienphapbvdlcn'" :selected="dataFormBieuMau['LoaiBienPhapBVDLCN']"></TableSelect>
             </v-col>
             <v-col cols="12" class="py-0 mb-10">
-              <div class="text-label">Nguy cơ rủi ro, thiệt hại có thể xảy ra<span style="color: red">(*)</span></div>
+              <div class="text-label">Các loại đánh giá tác động đã thực hiện <span style="color: red">(*)</span></div>
             </v-col>
             <v-col cols="12" class="py-0 mb-10">
-              <TableSelect ref="loainguycoruiroRef" :headers="[{type: 'select',sortable: false,title: 'Chọn', key: 'selected',class: 'selected' },{sortable: false,title: 'Loại rủi do, thiệt hại',key: 'TenMuc' }]" 
-              :maDanhMuc="'loainguycoruiro'" :selected="dataFormBieuMau['LoaiNguyCoRuiRo']"></TableSelect>
+              <TableSelect ref="loainguycoruiroRef" :headers="[{type: 'select',sortable: false,title: 'Chọn', key: 'selected',class: 'selected' },{sortable: false,title: 'Loại đánh giá tác động',key: 'TenMuc' }]" 
+              :maDanhMuc="'loainguycoruiro'" :selected="dataFormBieuMau['LoaiDanhGiaTacDong']"></TableSelect>
             </v-col>
+
+            <v-col cols="12" class="py-0 mb-10">
+              <div class="text-label">Có lấy ý kiến đánh giá tác động không?</div>
+              <v-radio-group inline v-model="dataFormBieuMau['LayYKienDanhGia']" hide-details>
+                <v-radio label="Có" :value="true" color="#1E7D30" class="mr-3"></v-radio>
+                <v-radio label="Không" :value="false" color="#1E7D30"></v-radio>
+              </v-radio-group>
+            </v-col>
+            
           </v-row>
+          </v-form>
           <v-row class="mx-0 my-2" justify="center">
             <v-btn
               class="mr-3"
