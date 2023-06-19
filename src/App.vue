@@ -7,6 +7,8 @@ import { onMounted } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useAppStore } from '@/stores/global.js'
 
+import 'toastr/build/toastr.css'
+
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()

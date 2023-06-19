@@ -1,12 +1,18 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
-  import { useCookies } from 'vue3-cookies'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
-  import jsondata from '../stores/mock-data.json'
+
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
+  import toastr from 'toastr'
+  toastr.options = {
+    'closeButton': true,
+    'timeOut': '5000',
+    "positionClass": "toast-top-center"
+  }
+  
   const appStore = useAppStore()
   const hosoDvcStore = useHosoDvcStore()
   const dataFormBieuMau = computed(() => appStore.dataFormBieuMauXldl)
@@ -75,21 +81,38 @@
     })
   }
   getData()
-  const changeDatePicker = (data) => {
-    console.log('dateInput', data)
+  const changeDatePicker = (key, data) => {
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl[key] = data
+    })
   }
   const nextTab = async function (tabSelect) {
     if (tabSelect == 'noidung') {
-      let doiTuongThucHien = thongtincanhan.value.doiTuongThucHien
       console.log('loaiDoiTuongThucHien', dataFormBieuMau.value['loaiDoiTuongThucHien'])
-      console.log('doiTuongThucHien', doiTuongThucHien)
+      if (!dataFormBieuMau.value['LoaiDoiTuongBVDLCN']) {
+        toastr.error('Vui lòng chọn "Đối tượng bảo vệ DLCN"')
+        document.getElementById("top-menu").scrollIntoView()
+        return
+      }
       if (dataFormBieuMau.value['loaiDoiTuongThucHien'] == 'T_CaNhan') {
+        let doiTuongThucHien = thongtincanhan.value.doiTuongThucHien
         let validThongTinCaNhan = await thongtincanhan.value.validateForm()
-        console.log('validThongTinCaNhan123123', validThongTinCaNhan)
-        
-        if (validThongTinCaNhan) {
+        if (validThongTinCaNhan && doiTuongThucHien.GiayToTuyThan.NgayCap) {
           console.log('doiTuongThucHien', doiTuongThucHien)
         } else {
+          if (validThongTinCaNhan && !doiTuongThucHien.GiayToTuyThan.NgayCap) {
+            toastr.error('Vui lòng nhập "Ngày cấp"')
+          }
+          return
+        }
+      } else {
+        let validThongTinDoanhNghiepToChuc = await thongtindoanhnghiep.value.validateForm()
+        if (validThongTinDoanhNghiepToChuc && doiTuongThucHien.GiayDangKyKinhDoanh.NgayCap) {
+          console.log('doiTuongThucHien', doiTuongThucHien)
+        } else {
+          if (validThongTinDoanhNghiepToChuc && !doiTuongThucHien.GiayDangKyKinhDoanh.NgayCap) {
+            toastr.error('Vui lòng nhập "Ngày cấp"')
+          }
           return
         }
       }
@@ -113,6 +136,15 @@
     document.getElementById("top-menu").scrollIntoView()
   }
   // 
+  const dateIsoLocal = function (date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
 		let date = new Date(dateInput)
@@ -346,7 +378,7 @@
               <div class="text-label">Thời gian xử lý <span style="color: red">(*)</span></div>
               <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
                 v-model="dataFormBieuMau['ThoiGianXuLy']" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
-                auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']"
+                auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" @update:model-value="changeDatePicker('ThoiGianXuLy', dataFormBieuMau['ThoiGianXuLy'])"
                 >
                 </VueDatePicker>
             </v-col>
@@ -354,7 +386,7 @@
               <div class="text-label">Thời gian xóa/hủy dữ liệu (nếu có)</div>
               <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
                 v-model="dataFormBieuMau['ThoiGianHuyXoa']" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
-                auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']"
+                auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" @update:model-value="changeDatePicker('ThoiGianHuyXoa', dataFormBieuMau['ThoiGianHuyXoa'])"
                 >
                 </VueDatePicker>
             </v-col>
