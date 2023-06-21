@@ -18,14 +18,14 @@
       "sortable": false,
       "title": "Tên giấy tờ",
       "align": "center",
-      "value": "tenGiayTo",
+      "key": "tenGiayTo",
       "class": "td-left"
     },
     {
       "sortable": false,
       "title": "Tệp đính kèm",
       "align": "center",
-      "value": "tepDinhKem",
+      "key": "tepDinhKem",
       "class": "td-left"
     }
   ])
@@ -55,7 +55,7 @@
         :headers="headers"
         :items="thanhPhanHoSo"
         items-per-page="20"
-        item-value="PrimKey"
+        item-value="primKey"
         hide-default-footer
         class="table-base"
         no-data="Không có dữ liệu"

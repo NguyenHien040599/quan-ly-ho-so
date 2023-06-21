@@ -3,7 +3,15 @@
   import { useCookies } from 'vue3-cookies'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
+  import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import jsondata from '../stores/mock-data.json'
+  const props = defineProps({
+    id: {
+      type: String,
+      default: ''
+    }
+  })
+  const hosoDvcStore = useHosoDvcStore()
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const ThanhPhanHoSo = defineAsyncComponent(() =>
     import('./ThanhPhanHoSo.vue')
@@ -17,7 +25,25 @@
   const loadingData = ref(false)
   const loading = ref(false)
   const tab = ref(null)
-  const thongTinHoSo = reactive(jsondata.thongTinHoSo)
+  // const thongTinHoSo = reactive(jsondata.thongTinHoSo)
+  const thongTinHoSo = computed(function () {
+    return appStore.thongTinHoSo
+  })
+  const getThongTinHoSo = function () {
+    let filter = {
+      primKey: props.id
+    }
+    hosoDvcStore.getChiTietHoSo(filter).then(function(result) {
+      if (result.resp) {
+        appStore.SET_THONGTINHOSO(result.resp)
+      } else {
+        appStore.SET_THONGTINHOSO(null)
+      }
+      
+    }).catch(function(){
+    })
+  }
+  getThongTinHoSo()
   const mauHienThi = reactive(jsondata.thuTucHanhChinh[1]['mauHienThiHoSo'])
   const eventClick = function () {
     console.log('run callback')

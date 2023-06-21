@@ -46,9 +46,9 @@
       danhSachDanhMuc.value = danhMuc
     }).catch(function(){
       let danhMuc = [
-        {'TenMuc': 'DLCNCB fake-1', 'MaMuc': 'f1', 'Selected': false},
-        {'TenMuc': 'DLCNCB fake-2', 'MaMuc': 'f2', 'Selected': false},
-        {'TenMuc': 'DLCNCB fake-3', 'MaMuc': 'f3', 'Selected': false}
+        {'TenMuc': 'DLCNCB 1', 'MaMuc': 'f1', 'Selected': false},
+        {'TenMuc': 'DLCNCB 2', 'MaMuc': 'f2', 'Selected': false},
+        {'TenMuc': 'DLCNCB 3', 'MaMuc': 'f3', 'Selected': false}
       ]
       if (danhSachSelected && danhSachSelected.length) {
         danhMuc.forEach(element => {

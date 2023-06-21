@@ -27,14 +27,14 @@
       "sortable": false,
       "title": "Tên giấy tờ",
       "align": "center",
-      "value": "tenGiayTo",
+      "key": "tenGiayTo",
       "class": "td-left"
     },
     {
       "sortable": false,
       "title": "Tệp đính kèm",
       "align": "center",
-      "value": "tepDinhKem",
+      "key": "tepDinhKem",
       "class": "td-left"
     }
   ])
@@ -103,7 +103,8 @@
     tenGiayToKhac.value = ''
     dialog.value = true
   }
-  const xoaGiayToKhac = function (item) {
+  const xoaGiayToKhac = function (item, index) {
+    console.log('item', item, index)
     appStore.SET_SHOWCONFIRM(true)
     let confirm = {
       auth: false,
@@ -114,7 +115,9 @@
         no: 'Không'
       },
       callback: () => {
-        
+        appStore.$patch((state) => {
+          state.thongTinHoSo.ThanhPhanHoSo.splice(index + 1, 1)
+        })
       }
     }
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
@@ -160,18 +163,17 @@
       appStore.$patch((state) => {
         state.thongTinHoSo.ThanhPhanHoSo.push(tphsAdd)
       })
-      console.log('appStore.thongTinHoSo', appStore.thongTinHoSo.ThanhPhanHoSo)
-      return
-      let hoSo = Object.assign(appStore.thongTinHoSo, {"ThanhPhanHoSo": tphs})
+      // console.log('appStore.thongTinHoSo', appStore.thongTinHoSo.ThanhPhanHoSo)
+      // let hoSo = Object.assign(appStore.thongTinHoSo, {"ThanhPhanHoSo": tphs})
       
-      let filter = {
-        data: hoSo
-      }
-      hosoDvcStore.capNhatHoSo(filter).then(function(result) {
-        appStore.SET_THONGTINHOSO(result.resp)
-      }).catch(function(){
-        alert('Thêm giấy tờ khác thất bại')
-      })
+      // let filter = {
+      //   data: hoSo
+      // }
+      // hosoDvcStore.capNhatHoSo(filter).then(function(result) {
+      //   appStore.SET_THONGTINHOSO(result.resp)
+      // }).catch(function(){
+      //   alert('Thêm giấy tờ khác thất bại')
+      // })
     }
   }
   onMounted(() => {
@@ -192,7 +194,7 @@
         :loading="loadingData"
         loading-text="Đang tải... "
       >
-        <template v-slot:item="{ item }">
+        <template v-slot:item="{ item, index }">
           <tr>
             <td class="align-left">{{ item.raw.TenGiayTo }} 
               <span v-if="item.raw.MaThanhPhanHoSo" style="color:red">(*)</span>
@@ -209,7 +211,7 @@
                 size="small"
                 variant="outlined"
                 color="red"
-                @click.stop="xoaGiayToKhac(item.raw)"
+                @click.stop="xoaGiayToKhac(item.raw, index)"
                 height="28px" width="50px"
               >
                 <v-icon size="14" color="red">mdi-delete</v-icon>

@@ -1,12 +1,11 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
-  import { useCookies } from 'vue3-cookies'
-  import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
+  import { onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
   const hosoDvcStore = useHosoDvcStore()
   const appStore = useAppStore()
-  const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
+  const route = useRoute()
   const props = defineProps({
     thutuc: {
       type: String,
@@ -26,7 +25,7 @@
   const BieuMauDienTu_TBVP = defineAsyncComponent(() =>
     import('./BieuMauDienTu_TBVP.vue')
   )
-  const router = useRouter()
+
   const getThongTinHoSo = function () {
     let filter = {
       primKey: props.id
@@ -42,6 +41,10 @@
     })
   }
   getThongTinHoSo()
+  watch(route, async (val) => {
+    console.log('run watch-routes BMDT:', val.name)
+    getThongTinHoSo()
+  })
   onMounted(() => {
 
   })

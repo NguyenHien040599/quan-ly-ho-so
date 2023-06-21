@@ -289,6 +289,9 @@ table td {
   color: #1E7D30;
   margin-left: 5px;
 }
+.row-header .header-content {
+  position: relative;
+}
 .row-header .header-content::before {
   content: "";
   position: absolute;
@@ -684,12 +687,16 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   border-top: 1px solid #DADADA;
   border-bottom: 1px solid #DADADA;
   border-right: 1px solid #DADADA;
+  height: 48px;
 }
 .bieumau .v-tab:not(:first-child) {
   margin-left: 20px;
 }
 .bieumau .v-tabs button, .bieumau .v-tabs .v-slide-group__container {
   height: 48px;
+}
+.bieumau .v-tabs button {
+  border-radius: 0;
 }
 .bieumau .v-tab:not(:first-child) {
   padding-left: 30px;
@@ -836,14 +843,14 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 
 
 @media (min-width: 1024px) {
-  .container {
+  #app .container {
     max-width: 1500px !important;
     width: 100%;
     margin: 0 auto !important;
   }
 }
 @media (min-width: 1904px) {
-  .container {
+  #app .container {
     max-width: 1785px !important;
     width: 100%;
     margin: 0 auto !important;

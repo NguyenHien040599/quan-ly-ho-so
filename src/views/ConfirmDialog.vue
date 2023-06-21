@@ -9,7 +9,7 @@
   }
   const handleClickButton = function ({ target }, confirm) {
     if (confirm) {
-      this.dialog.callback()
+      dialog.value.callback()
     } else {
       appStore.SET_CONFIG_CONFIRM_DIALOG(
         {

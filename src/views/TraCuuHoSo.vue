@@ -1,10 +1,13 @@
 <script setup>
   import { useCookies } from 'vue3-cookies'
-  import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { ref, reactive, watch, onMounted} from 'vue'
   import { useAppStore } from '@/stores/global.js'
-  const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
-
+  import { useHosoDvcStore } from '@/stores/hosodvc.js'
   const appStore = useAppStore()
+  const hosoDvcStore = useHosoDvcStore()
+  const route = useRoute()
+  const counter = ref(0)
   const { cookies } = useCookies()
   const headers = reactive([
     {
@@ -38,265 +41,70 @@
       key: "GioiTinh"
     }
   ])
-  const listStudent = reactive([
-    {
-        "type": "T_SinhVien",
-        "PrimKey": "63fc1960b3bbb7226f56e0a1",
-        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
-        "ThoiGianTao": "2023-02-27T02:45:52",
-        "ThoiGianCapNhat": "2023-02-27T07:40:45",
-        "TimeCreate": 1677465952701,
-        "TimeUpdate": 1677483645662,
-        "NguoiTaoLap": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "NguoiCapNhat": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "MaSinhVien": "Thông báo vi phạm",
-        "SoHoSo": "2",
-        "SoBaoDanh": "2",
-        "MaNhapHoc": "2",
-        "HoVaTen": "A2931-123412",
-        "NgaySinh": "1999-04-27T17:00:00",
-        "GioiTinh": {
-            "type": "C_GioiTinh",
-            "MaMuc": "1",
-            "TenMuc": "Mới"
-        },
-        "DanToc": {
-            "type": "C_DanToc",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "TonGiao": {
-            "type": "C_TonGiao",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "QuocTich": {
-            "type": "C_QuocGia",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "GiayToTuyThan": [],
-        "DanhBaLienLac": {
-            "type": "S_DanhBaLienLac",
-            "ThuDienTu": "",
-            "SoDienThoai": "0355620860",
-            "SoFax": ""
-        },
-        "DanhTinhDienTu": [],
-        "EmailVNU": "zxt@gmail.com",
-        "ChungMinhThu": "012345678",
-        "MainImage": {
-            "type": "T_Attachment",
-            "Id": null,
-            "FileName": null,
-            "FileUrl": null
-        },
-        "MaLopKhoaHoc": null,
-        "TenLopKhoaHoc": null
-    },
-    {
-        "type": "T_SinhVien",
-        "PrimKey": "63fc1960b3bbb7226f56e0a1",
-        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
-        "ThoiGianTao": "2023-02-27T02:45:52",
-        "ThoiGianCapNhat": "2023-02-27T07:40:45",
-        "TimeCreate": 1677465952701,
-        "TimeUpdate": 1677483645662,
-        "NguoiTaoLap": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "NguoiCapNhat": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "MaSinhVien": "Thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu",
-        "SoHoSo": "2",
-        "SoBaoDanh": "2",
-        "MaNhapHoc": "2",
-        "HoVaTen": "A2931-123412",
-        "NgaySinh": "1999-04-27T17:00:00",
-        "GioiTinh": {
-            "type": "C_GioiTinh",
-            "MaMuc": "1",
-            "TenMuc": "Đang xử lý"
-        },
-        "DanToc": {
-            "type": "C_DanToc",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "TonGiao": {
-            "type": "C_TonGiao",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "QuocTich": {
-            "type": "C_QuocGia",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "GiayToTuyThan": [],
-        "DanhBaLienLac": {
-            "type": "S_DanhBaLienLac",
-            "ThuDienTu": "",
-            "SoDienThoai": "0355620860",
-            "SoFax": ""
-        },
-        "DanhTinhDienTu": [],
-        "EmailVNU": "zxt@gmail.com",
-        "ChungMinhThu": "012345678",
-        "MainImage": {
-            "type": "T_Attachment",
-            "Id": null,
-            "FileName": null,
-            "FileUrl": null
-        },
-        "MaLopKhoaHoc": null,
-        "TenLopKhoaHoc": null
-    },
-    {
-        "type": "T_SinhVien",
-        "PrimKey": "63fc1960b3bbb7226f56e0a1",
-        "MaDinhDanh": "72627e9d-5304-4888-8121-10cdaa23e363-wzbi4snsomf5f4dl",
-        "ThoiGianTao": "2023-02-27T02:45:52",
-        "ThoiGianCapNhat": "2023-02-27T07:40:45",
-        "TimeCreate": 1677465952701,
-        "TimeUpdate": 1677483645662,
-        "NguoiTaoLap": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "NguoiCapNhat": {
-            "type": "T_DanhTinhDienTu",
-            "maDinhDanh": "",
-            "tenDinhDanh": "",
-            "maSoID": ""
-        },
-        "MaSinhVien": "Thay đổi nội dung hồ sơ chuyển dữ liệu cá nhân ra nước ngoài",
-        "SoHoSo": "2",
-        "SoBaoDanh": "2",
-        "MaNhapHoc": "2",
-        "HoVaTen": "A2931-123412",
-        "NgaySinh": "1999-04-27T17:00:00",
-        "GioiTinh": {
-            "type": "C_GioiTinh",
-            "MaMuc": "1",
-            "TenMuc": "Hoàn thành"
-        },
-        "DanToc": {
-            "type": "C_DanToc",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "TonGiao": {
-            "type": "C_TonGiao",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "QuocTich": {
-            "type": "C_QuocGia",
-            "MaMuc": "",
-            "TenMuc": ""
-        },
-        "GiayToTuyThan": [],
-        "DanhBaLienLac": {
-            "type": "S_DanhBaLienLac",
-            "ThuDienTu": "",
-            "SoDienThoai": "0355620860",
-            "SoFax": ""
-        },
-        "DanhTinhDienTu": [],
-        "EmailVNU": "zxt@gmail.com",
-        "ChungMinhThu": "012345678",
-        "MainImage": {
-            "type": "T_Attachment",
-            "Id": null,
-            "FileName": null,
-            "FileUrl": null
-        },
-        "MaLopKhoaHoc": null,
-        "TenLopKhoaHoc": null
-    }
-  ])
+  const keywordSearch = ref('')
+  const dsHsTraCuu = ref([])
   const loadingData = ref(false)
-  const loading = ref(false)
-	const itemsPerPage = ref(10)
-  const page = ref(1)
-  const pageCount = ref(3)
-  const total = ref(5)
-	const dossierNo = ref("")
-	const secretCode = ref("")
 	const kqTraCuu = ref(false)
-	const dsHoSo = reactive([
-		{
-			id: 1,
-			dossierNo: "A90123-12314123",
-			dossierName: "Thông báo vi phạm quy định về bảo vệ dữ liệu cá nhân",
-			applicantName: "Lê Thị Hoàng Phương"
-		},
-		{
-			id: 2,
-			dossierNo: "B90123-12314123",
-			dossierName: "Lập và gửi hồ sơ đánh giá tác động xử lý dữ liệu cá nhân ",
-			applicantName: "Lê Thị Hoàng Phương"
-		},
-		{
-			id: 3,
-			dossierNo: "C90123-12314123",
-			dossierName: "Thông báo thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu cá nhân",
-			applicantName: "Lê Thị Hoàng Phương"
-		},
-	])
-  const eventClick = function () {
-    console.log('run callback')
-  }
-  const action = function () {
-    loading.value = true
-    setTimeout(function () {
-      loading.value = false
-    }, 300)
-  }
-	const traCuu = function () {
+	const dsHoSoMoiTiepNhan = ref([])
+  const total = ref(0)
+  const totalTiepNhan = ref(0)
+  const pageCountTiepNhan = ref(0)
+	const traCuuHoSo = function () {
+    if (!String(keywordSearch.value).trim()) {
+      return
+    }
 		kqTraCuu.value = true
-	}
-  const showConfirm = function () {
-    appStore.SET_SHOWCONFIRM(true)
-    let confirm = {
-      auth: false,
-      title: 'Xóa sinh viên',
-      message: 'Bạn có chắc chắn muốn xóa',
-      button: {
-        yes: 'Có',
-        no: 'Không'
-      },
-      callback: () => {
-        console.log("Tôi đồng ý")
+    let filter = {
+      params: {
+        page: 0,
+        size: 20,
+        keywordChinhXac: String(keywordSearch.value).trim()
       }
     }
-    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
-  }
-  const dateLocale = function (dateInput) {
-		if (!dateInput) return ''
-		let date = new Date(dateInput)
-		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
+    loadingData.value = true
+    hosoDvcStore.getDanhSachHoSo(filter).then(function(result) {
+      loadingData.value = false
+      dsHsTraCuu.value = result.content
+      total.value = result.totalElements
+    }).catch(function(){
+      loadingData.value = false
+      dsHoSo.value = []
+      total.value = 0
+      pageCount.value = 0
+    })
 	}
+  const getHsTiepNhan = function ({ done }) {
+    let filter = {
+      params: {
+        page: counter.value,
+        size: 5,
+        trangThaiHoSo_MaMuc: '02'
+      }
+    }
+    loadingData.value = true
+    hosoDvcStore.getDanhSachHoSo(filter).then(function(result) {
+      loadingData.value = false
+      if (result.content.length) {
+        counter.value += 1
+      }
+      dsHoSoMoiTiepNhan.value = dsHoSoMoiTiepNhan.value.concat(result.content)
+      totalTiepNhan.value = result.totalElements
+      pageCountTiepNhan.value = result.totalPages
+      if (dsHoSoMoiTiepNhan.value.length <= result.totalElements) {
+        done('empty')
+      } else {
+        done('ok')
+      }
+    }).catch(function(){
+      loadingData.value = false
+      dsHoSoMoiTiepNhan.value = []
+      totalTiepNhan.value = 0
+      done('empty')
+    })
+  }
+  watch(route, async (val) => {
+    getHsTiepNhan()
+  })
   onMounted(() => {
 
   })
@@ -305,19 +113,20 @@
   <v-card class="wrap-c-tracuu mx-auto mt-3">
     <v-row justify="center" class="mx-0 my-0">
       <v-col cols="12" class="px-0 py-0 text-header">
-				TRA CỨU HỒ SƠ
+				TRA CỨU HỒ SƠ THỦ TỤC HÀNH CHÍNH
 			</v-col>
     </v-row>
-		<v-row class="mx-0 my-0" style="margin-bottom: 18px !important;">
-      <v-col cols="12" sm="6" md="5" class="px-0 py-0" style="line-height: 32px;">
-				<span class="label">Mã hồ sơ/ Mã số thuế/ Mã số doanh nghiệp </span>
-				<span style="color: #EB0202">*</span>
+		<v-row class="mx-auto" style="margin-top: 12px !important;margin-bottom: 24px !important;max-width: 700px;">
+      <v-col cols="12"  class="px-0 py-0" style="line-height: 32px;">
+				<span style="font-weight: 600;">Mã hồ sơ/ Số CCCD/ Mã số thuế/ Mã số doanh nghiệp </span>
+				<span style="color: #EB0202">(*)</span>
 			</v-col>
-			<v-col cols="12" sm="6" md="7" class="px-0 py-0">
+			<v-col cols="12"  class="px-0 py-0">
 				<v-text-field
+          prepend-inner-icon="mdi-file-document-edit-outline"
 					class="flex input-form"
-					v-model="dossierNo"
-					placeholder="Nhập mã hồ sơ/ mã số thuế/ mã số doanh nghiệp"
+					v-model="keywordSearch"
+					placeholder="Nhập thông tin tra cứu"
 					solo
 					dense
 					hide-details="auto"
@@ -364,63 +173,84 @@
 				size="small"
 				color="#1E7D30"
 				class="mx-0" style="float: right"
-				@click.stop="traCuu"
-				height="35px" width="120px"
+				@click.stop="traCuuHoSo"
+				height="35px" width="150px"
 			>
 				<v-icon size="24" color="#ffffff" class="mr-2">mdi-magnify</v-icon>
 				<span style="font-size: 16px">Tra cứu</span>
 			</v-btn>
     </v-row>
     <!-- table -->
-    <v-row v-if="kqTraCuu" class="mx-0 mt-3">
-      <v-col cols="12" class="px-0">
-				<div class="mb-2" style="font-style: italic;font-weight: 400;font-size: 14px;line-height: 16px;color: #1E7D30;">
-					<span>Kết quả tra cứu: </span>
-					<span style="font-weight: 600">{{ total }} hồ sơ</span>
-				</div>
-        <v-data-table
-          :headers="headers"
-          :items="listStudent"
-          v-model:items-per-page="itemsPerPage"
-          item-value="PrimKey"
-          hide-default-footer
-          class="table-base"
-          no-data="Không có dữ liệu"
-          :loading="loadingData"
-          loading-text="Đang tải... "
-        >
-          <template v-slot:item="{ item, index }">
-            <tr>
-              <td class="align-center" width="70">{{ index + 1 }}</td>
-              <td class="align-left">{{ item.columns.HoVaTen }}</td>
-              <td>{{ dateLocale(item.columns.NgaySinh) }}</td>
-              <td class="align-left">{{ item.columns.MaSinhVien }}</td>
-              <td>{{ item.columns.GioiTinh.TenMuc }}</td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
+    <div v-if="kqTraCuu" class="mx-0 mt-3">
+      <v-row class="my-0 mx-0">
+				<v-col cols="12" class="px-0 py-0 text-header-ho-so py-2">
+          <v-icon size="28" color="#1E7D30" class="mr-2">mdi-text-box-search-outline</v-icon>
+					KẾT QUẢ TRA CỨU
+				</v-col>
+			</v-row>
+			<div>
+				<v-row v-for="(item) in dsHsTraCuu" :key="item" class="mx-0 my-0" style="align-items: center;max-height: 60px;border-bottom: 1px dotted rgb(167, 165, 165);padding: 5px 0px;">
+					<v-col class="px-0 py-0" style="max-width: 40px">
+						<v-icon size="28" color="#1E7D30" class="mr-2">mdi-chevron-double-right</v-icon>
+					</v-col>
+					<v-col class="py-0">
+						<div>
+							<span style="font-weight: 600;">{{ item.MaSoQuanLy }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
+						</div>
+						<div style="font-style: italic;">
+							<span>Chủ hồ sơ: </span> <span style="font-weight: 600;">{{ item.ChuHoSo['TenGoi'] }}</span> - 
+              <span>Trạng thái hồ sơ: </span> <span style="font-weight: 600;">{{ item.TrangThaiHoSo['TenMuc'] }}</span>
+						</div>
+					</v-col>
+				</v-row>
+        <div v-if="kqTraCuu && !total" style="height: 45px;padding: 10px 0;">KHÔNG CÓ HỒ SƠ NÀO ĐƯỢC TÌM THẤY</div>
+			</div>
+    </div>
     <div class="mt-4">
 			<v-row class="my-0 mx-0">
 				<v-col cols="12" class="px-0 py-0 text-header-ho-so py-2">
+          <v-icon size="28" color="#1E7D30" class="mr-2">mdi-text-box-check-outline</v-icon>
 					HỒ SƠ MỚI TIẾP NHẬN
 				</v-col>
 			</v-row>
 			<div>
-				<v-row v-for="(item, index) in dsHoSo" :key="index" class="mx-0 my-0 mt-2" style="align-items: center;">
+				<!-- <v-row v-for="(item, index) in dsHoSoMoiTiepNhan" :key="index" class="mx-0 my-0 mt-2" style="align-items: center;">
 					<v-col class="px-0 py-0" style="max-width: 40px">
 						<v-icon size="28" color="#1E7D30" class="mr-2">mdi-file-document-check-outline</v-icon>
 					</v-col>
 					<v-col class="py-0">
 						<div>
-							<span style="font-weight: 600;">{{ item.dossierNo }}</span> - <span>{{ item.dossierName }}</span>
+							<span style="font-weight: 600;">{{ item.MaSoQuanLy }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
 						</div>
 						<div style="font-style: italic;">
-							<span>(Chủ hồ sơ: </span> <span>{{ item.applicantName }})</span>
+							<span>Chủ hồ sơ: </span> <span style="font-weight: 600;">{{ item.ChuHoSo['TenGoi'] }}</span> - 
+              <span>Trạng thái hồ sơ: </span> <span style="font-weight: 600;">{{ item.TrangThaiHoSo['TenMuc'] }}</span>
 						</div>
 					</v-col>
-				</v-row>
+				</v-row> -->
+        <div v-if="!totalTiepNhan" style="height: 45px;padding: 10px 0;">KHÔNG CÓ HỒ SƠ NÀO</div>
+        <v-infinite-scroll :height="250" :items="dsHoSoMoiTiepNhan" :onLoad="getHsTiepNhan">
+          <template v-for="(item) in dsHoSoMoiTiepNhan" :key="item.primKey">
+            <v-row class="mx-0 my-0" style="align-items: center;max-height: 60px;border-bottom: 1px dotted rgb(167, 165, 165);padding: 5px 0px;">
+              <v-col class="px-0 py-0" style="max-width: 40px">
+                <v-icon size="28" color="#1E7D30" class="mr-2">mdi-chevron-double-right</v-icon>
+              </v-col>
+              <v-col class="py-0">
+                <div>
+                  <span style="font-weight: 600;">{{ item.MaSoQuanLy }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
+                </div>
+                <div style="font-style: italic;">
+                  <span>Chủ hồ sơ: </span> <span style="font-weight: 600;">{{ item.ChuHoSo['TenGoi'] }}</span> - 
+                  <span>Trạng thái hồ sơ: </span> <span style="font-weight: 600;">{{ item.TrangThaiHoSo['TenMuc'] }}</span>
+                </div>
+              </v-col>
+            </v-row>
+          </template>
+          <template v-slot:empty>
+            <div v-if="totalTiepNhan">Không còn hồ sơ nào!</div>
+          </template>
+        </v-infinite-scroll>
+        
 			</div>
 		</div>
   </v-card>

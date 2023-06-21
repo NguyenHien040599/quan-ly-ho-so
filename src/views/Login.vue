@@ -17,15 +17,12 @@
   const authorization = authorizationStore()
   const { cookies } = useCookies()
   
-  const publicPath = ref(import.meta.env.VITE_APP_PULIC_PATH)
-  const apiSso = ref(import.meta.env.VITE_APP_PATH_API_SSO)
+
   const overlay = ref(false)
   const loading = ref(false)
   const valid = ref(true)
-  const userName = ref('mtdata')
-  const password = ref('Mtdata@123456')
-  const client_secret = ref('')
-  const code = ref('')
+  const userName = ref('admin')
+  const password = ref('Thanhtra2022')
   const signed = ref(false)
 
   const login = function () {
@@ -38,8 +35,8 @@
         username: userName.value,
         password: password.value,
         grant_type: 'password',
-        client_id: 'mtdata-idpmgt267',
-        client_secret: 'BMKQDYC1TYHilQa1xe5IXqBLPBMaibwz'
+        client_id: 'bvdlcn-client',
+        client_secret: 'NgWhFZ8qHsEWz9587n1FOiRPUg3YQC2u3KSf9PZaTAsMvqVXDMl0RGFShhmbnb6C'
       }
     }
     authorization.login(filter).then(function (result) {
@@ -95,21 +92,6 @@
       tag="section"
     >
       <div class="container-wrap">
-        <div class="wrap-title">
-          <div class="d-flex justify-end py-0 pb-0 my-0 px-5">
-          </div>
-          <v-row align="center">
-            <v-col class="py-0">
-              <img class="img-login-logo" :src="`${publicPath}/images/logo-bca-bigger.png?t=93111413`">
-            </v-col>
-          </v-row>
-          
-          <v-row class="wrap-title pt-1 my-0 mt-3">
-            <v-col cols="12" class="text-1 py-2 my-0 mb-2">CỔNG THÔNG TIN QUỐC GIA </v-col>
-            <v-col cols="12" class="text-2 py-2">VỀ BẢO VỆ DỮ LIỆU CÁ NHÂN </v-col>
-          </v-row>
-        </div>
-
         <div class="wrap-form px-4 py-3" v-if="!signed">
           <div>
             <v-form ref="form" v-model="valid" lazy-validation class="">
@@ -196,21 +178,6 @@
       </div> 
       
     </v-container>
-    <div class="wrap-contact-info">
-      <div class="mb-1">Trường Đại học Quốc gia Hà Nội</div>
-      <div class="mb-1">
-        <v-icon size="18" color="#fff">mdi-map-marker-outline</v-icon>&nbsp;
-        <span>Xuân Thủy - Cầu Giấy - Hà Nội</span>
-      </div>
-      <div class="mb-1">
-        <v-icon size="18" color="#fff">mdi-phone-in-talk-outline</v-icon>&nbsp;
-        <span>(84.4) 37547670</span>
-      </div>
-      <div class="mb-1">
-        <v-icon size="18" color="#fff">mdi-email-outline</v-icon>&nbsp;
-        <span>vanphong@vnu.edu.vn</span>
-      </div>
-    </div>
     <div class="text-center">
       <v-overlay :value="overlay">
         <v-progress-circular
@@ -224,12 +191,10 @@
 </template>
 
 <style lang="scss">
-  $image-login: $public-path + '/images/bg-login-2.png?t=3913123';
   #app {
     background: transparent !important
   }
   .wrap-login {
-    background: url($image-login) no-repeat;
     background-size: cover;
     height: 100vh;
     width: 100%;
@@ -326,6 +291,7 @@
   .input-text .v-field__prepend-inner {
     margin-top: 0;
     padding-top: 0;
+    padding-bottom: 15px;
   }
   .input-text .v-icon{
     color: #ffffff !important;
@@ -352,7 +318,7 @@
     color: #ffffff !important;
   }
   .btn-login {
-    background: linear-gradient(90deg,#007f3e,#007f3e)
+    background: #007f3e !important
   }
   .wrap-title, .wrap-btn-login {
     text-align: center;
@@ -453,6 +419,7 @@
     font-size: 16px;
     color: white;
     margin: 5px;
+    background: #007f3e !important;
   }
   #login-page .label {
     color: white;

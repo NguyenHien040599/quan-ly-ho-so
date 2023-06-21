@@ -18,11 +18,11 @@ export const useAppStore = defineStore('appStore', {
     menuSelected: {},
     thongTinHoSo: {},
     dataFormBieuMauXldl: {
-      loaiDoiTuongThucHien: 'T_DonViKinhDoanh',
-
-      DoiTuongThucHien: null,
-      LoaiDoiTuongBVDLCN: null,
-      CaNhanPhuTrachBVDLCN: null,
+      DoiTuongThucHien: {
+        LoaiDoiTuongThucHien: null
+      },
+      LoaiBenDGTD: null,
+      NguoiLienHe: null,
       MucDichXLDLCN: '',
       HoatDongXLDLCN: '',
       LoaiDLCNCoBan: [],

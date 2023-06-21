@@ -115,5 +115,35 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       let data = await $.ajax(settings)
       return data
     },
+    async themMoiDLDT (filter) {
+      let settings = {
+        method: 'post',
+        url: `${this.baseURL}/documentmgt/internal/dulieudientu/1.0`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('data') ? JSON.stringify(filter.data) : JSON.stringify({}),
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
+    async capNhatDLDT (filter) {
+      let settings = {
+        method: 'post',
+        url: `${this.baseURL}/documentmgt/internal/dulieudientu/1.0/${filter.data.primKey}`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('data') ? JSON.stringify(filter.data) : JSON.stringify({}),
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
   },
 })

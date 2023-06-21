@@ -58,26 +58,28 @@
     
   }
   const getDanhSachHoSo = function () {
-    let filter = {
-      params: {
-        page: page.value,
-        size: itemsPerPage.value,
-        // thuTucHanhChinh_MaMuc: menuSelected.value.hasOwnProperty('thuTucThayDoi') ? menuSelected.value.thuTuc.maThuTuc + ',' + menuSelected.value.thuTucThayDoi.maThuTuc : menuSelected.value.thuTuc.maThuTuc
-        thuTucHanhChinh_MaMuc: menuSelected.value.thuTuc.maThuTuc
+    if (menuSelected.value && menuSelected.value.thuTuc && menuSelected.value.thuTuc.maThuTuc) {
+      let filter = {
+        params: {
+          page: page.value,
+          size: itemsPerPage.value,
+          thuTucHanhChinh_MaMuc: menuSelected.value.thuTuc.maThuTuc
+        }
       }
+      loadingData.value = true
+      hosoDvcStore.getDanhSachHoSo(filter).then(function(result) {
+        loadingData.value = false
+        dsHoSo.value = result.content
+        total.value = result.totalElements
+        pageCount.value = result.totalPages
+      }).catch(function(){
+        loadingData.value = false
+        dsHoSo.value = []
+        total.value = 0
+        pageCount.value = 0
+      })
     }
-    loadingData.value = true
-    hosoDvcStore.getDanhSachHoSo(filter).then(function(result) {
-      loadingData.value = false
-      dsHoSo.value = result.content
-      total.value = result.totalElements
-      pageCount.value = result.totalPages
-    }).catch(function(){
-      loadingData.value = false
-      dsHoSo.value = []
-      total.value = 0
-      pageCount.value = 0
-    })
+    
   }
   getDanhSachHoSo()
   const action = function () {
@@ -116,9 +118,43 @@
   }
   const rutHoSo = function (item) {
     console.log('ruthoso', item)
+    appStore.SET_SHOWCONFIRM(true)
+    let confirm = {
+      auth: false,
+      title: 'Xóa hồ sơ',
+      message: 'Bạn có chắc chắn muốn rút hồ sơ này',
+      button: {
+        yes: 'Có',
+        no: 'Không'
+      },
+      callback: () => {
+        // let filter = {
+        //   data: item
+        // }
+        // hosoDvcStore.xoaHoSo(filter).then(function(result) {
+        //   getDanhSachHoSo()
+        // }).catch(function(){
+        // })
+      }
+    }
+    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
   }
   const lapHoSoThayDoi = function (item) {
-    router.push({ path: '/nop-ho-so' + menuSelected.value.to + '?id_update=' + item.PrimKey })
+    router.push({ path: `/nop-ho-so${menuSelected.value.to}/${item.primKey}`, query: { id_update: item.primKey } })
+    // let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
+    //   return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+    // })
+    // if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
+    //   let filter = {
+    //     data: thuTucTaoMoi.thongTinHoSo
+    //   }
+    //   hosoDvcStore.themMoiHoSo(filter).then(function(result) {
+    //     let dataHs = result.resp
+    //     router.push({ path: `/nop-ho-so${menuSelected.value.to}/${dataHs.primKey}?id_update=${item.primKey}` })
+    //   }).catch(function(){
+    //     alert('Thêm mới hồ sơ thất bại')
+    //   })
+    // }
   }
   const showAdvanceSearch = function () {
     advanceSearch.value = !advanceSearch.value
@@ -197,12 +233,22 @@
     output = output.toString().replace(/,/g, ', ')
     return output
   }
-  watch(route, async (val) => {
-    console.log('run watch-routes DSHS:', val.name)
+  // watch(route, async (val) => {
+  //   console.log('run watch-routes DSHS:', val)
+  //   getDanhSachHoSo()
+  // })
+  watch(menuSelected, async (val) => {
+    console.log('run watch-routes menuSelected:', val)
     getDanhSachHoSo()
   })
   onMounted(() => {
-
+    if (cookies.get('Token')) {
+      appStore.SET_ISSIGNED(true)
+    } else {
+      appStore.SET_ISSIGNED(false)
+      appStore.SET_USERINFO('')
+      router.push({ path: '/login' })
+    }
   })
 </script>
 <template>
@@ -234,9 +280,7 @@
           item-value="primKey"
           hide-default-footer
           class="table-base"
-          no-data="Không có dữ liệu"
-          :loading="loadingData"
-          loading-text="Đang tải... "
+          no-data-text="Không có hồ sơ nào"
         >
           <template v-slot:item="{ item, index }">
             <tr @click="redirectThongTinHoSo(item.raw)">
@@ -247,19 +291,19 @@
                   <div v-else :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">{{ index + 1 }}</div>
                 </div>
                 <div v-else-if="itemHeader.type == 'date'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  {{ item.raw.hasOwnProperty(itemHeader.value) ? dateLocale(item.raw[itemHeader.value]) : '' }}
+                  {{ item.raw.hasOwnProperty(itemHeader.key) ? dateLocale(item.raw[itemHeader.key]) : '' }}
                 </div>
                 <div v-else-if="itemHeader.type == 'datetime'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  {{ item.raw.hasOwnProperty(itemHeader.value) ? dateLocaleTime(item.raw[itemHeader.value]) : ''}}
+                  {{ item.raw.hasOwnProperty(itemHeader.key) ? dateLocaleTime(item.raw[itemHeader.key]) : ''}}
                 </div>
                 <div v-else-if="itemHeader.type == 'object'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  {{ item.raw.hasOwnProperty(itemHeader.value) ? item.raw[itemHeader.value][itemHeader.mapping] : '' }}
+                  {{ item.raw.hasOwnProperty(itemHeader.key) ? item.raw[itemHeader.key][itemHeader.mapping] : '' }}
                 </div>
                 <div v-else-if="itemHeader.type == 'money'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  {{ item.raw.hasOwnProperty(itemHeader.value) ? currency(item.raw[itemHeader.value]) : '' }}
+                  {{ item.raw.hasOwnProperty(itemHeader.key) ? currency(item.raw[itemHeader.key]) : '' }}
                 </div>
                 <div v-else-if="itemHeader.type == 'array'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  {{ item.raw.hasOwnProperty(itemHeader.value) ? convertDataArray(itemHeader, item.raw[itemHeader.value]) : '' }}
+                  {{ item.raw.hasOwnProperty(itemHeader.key) ? convertDataArray(itemHeader, item.raw[itemHeader.key]) : '' }}
                 </div>
                 <div v-else-if="itemHeader.type == 'calculator'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
                   {{ convertDataView(itemHeader, item.raw) }}
@@ -300,14 +344,13 @@
                   </v-menu>
                 </div>
                 <div v-else :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  {{ item.raw[itemHeader.value] }}
+                  {{ item.raw[itemHeader.key] }}
                 </div>
               </td>
 
             </tr>
           </template>
         </v-data-table>
-        <div v-if="!pageCount" style="height: 50px;border: 1px solid #DADADA;line-height: 50px; text-align: center;border-top: 0;">KHÔNG CÓ HỒ SƠ NÀO</div>
         <Pagination v-if="pageCount && pageCount > 1" :pageInput="page+1" :pageCount="pageCount" :total="total" @changePage="changePage" style="margin-bottom: 50px;"></Pagination>
       </v-col>
     </v-row>

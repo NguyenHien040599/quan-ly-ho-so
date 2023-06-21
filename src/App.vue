@@ -1,7 +1,6 @@
 
 <script setup>
 import VueConfirmDialog from './views/ConfirmDialog.vue'
-import { useRouter, useRoute } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
 import { onMounted } from 'vue'
 import { useDisplay } from 'vuetify'
@@ -9,8 +8,6 @@ import { useAppStore } from '@/stores/global.js'
 
 import 'toastr/build/toastr.css'
 
-const router = useRouter()
-const route = useRoute()
 const appStore = useAppStore()
 const { cookies } = useCookies()
 const { name } = useDisplay()
@@ -32,7 +29,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-app v-resize="onResize" class="wrap-app">
+  <v-app v-resize="onResize" class="wrap-app mt-3">
     <router-view></router-view>
     <VueConfirmDialog></VueConfirmDialog>
   </v-app>

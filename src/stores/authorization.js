@@ -12,7 +12,7 @@ export const authorizationStore = defineStore('authorization', {
   actions: {
     async login (filter) {
       let settings = {
-        "url": `${this.baseURL}/realms/flex-v2-dev/protocol/openid-connect/token`,
+        "url": `${this.baseURL}/auth/oauth/token`,
         "method": "POST",
         "headers": {
           'Accept': 'application/json',

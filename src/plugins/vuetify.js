@@ -4,12 +4,13 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 import { createVuetify } from 'vuetify'
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { VInfiniteScroll } from 'vuetify/labs/VInfiniteScroll'
 // import * as components from 'vuetify/components'
 // import * as directives from 'vuetify/directives'
 
 const vuetify = createVuetify({
   components: {
-    VDataTable
+    VDataTable, VInfiniteScroll
   },
   // directives,
   icons: {

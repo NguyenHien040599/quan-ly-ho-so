@@ -12,18 +12,32 @@
     'timeOut': '5000',
     "positionClass": "toast-top-center"
   }
-  
+  const route = useRoute()
+  const router = useRouter()
   const appStore = useAppStore()
   const hosoDvcStore = useHosoDvcStore()
   const dataFormBieuMau = computed(() => appStore.dataFormBieuMauXldl)
-  const ThongTinDoanhNghiepToChuc = defineAsyncComponent(() =>
-    import('./ThongTinDoanhNghiepToChuc.vue')
+  const thongTinHoSo = computed(function () {
+    return appStore.thongTinHoSo
+  })
+  const menuSelected = computed(() => appStore.getMenuSelected)
+  const hoSoThayDoiNoiDung = ref(false)
+  const dossierName = ref('Đánh giá tác động xử lý dữ liệu cá nhân')
+  const tabSelected = ref(null)
+  if (router.currentRoute.value.query && router.currentRoute.value.query.hasOwnProperty('id_update')) {
+    console.log('router', router)
+    hoSoThayDoiNoiDung.value = true
+    dossierName.value = 'Thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu cá nhân'
+    tabSelected.value = 'thongtinthaydoi'
+  } else {
+    hoSoThayDoiNoiDung.value = false
+    dossierName.value = 'Đánh giá tác động xử lý dữ liệu cá nhân'
+    tabSelected.value = 'nhapdon'
+  }
+  const ThongTinChuHoSo = defineAsyncComponent(() =>
+    import('./ThongTinChuHoSo.vue')
   )
-  const thongtindoanhnghiep = ref(null)
-  const ThongTinCaNhan = defineAsyncComponent(() =>
-    import('./ThongTinCaNhan.vue')
-  )
-  const thongtincanhan = ref(null)
+  const thongtinchuhoso = ref(null)
   const TableSelect = defineAsyncComponent(() =>
     import('./TableSelect.vue')
   )
@@ -34,8 +48,7 @@
     import('./ThongTinBieuMau.vue')
   )
   const formTomTatNoiDung = ref(null)
-  const router = useRouter()
-  // console.log('routes', router.currentRoute.value)
+  const formNoiDungThayDoi = ref(null)
   const props = defineProps({
     dataInput: {
       type: Object,
@@ -46,18 +59,19 @@
   const loaibienphapbvdlcnRef = ref(null)
   const loaidlcnnhaycamRef = ref(null)
   const loaidlcncobanRef = ref(null)
-  const dossierName = ref('Đánh giá tác động xử lý dữ liệu cá nhân')
   const dsLoaiDoiTuongBVDLCN = ref([])
+  
   const dsDieuKienXuLyDLCN = ref([])
+  const camKet = ref(false)
 
   const dialog = ref(false)
   const loadingData = ref(false)
   const loading = ref(false)
-  const tab = ref(null)
+  
   // 
   const getData = function () {
     let filter = {
-      maDanhMuc: 'loaidoituongbvdlcn'
+      maDanhMuc: 'LoaiBenDGTD'
     }
     hosoDvcStore.getDanhMuc(filter).then(function(result) {
       dsLoaiDoiTuongBVDLCN.value = result.content
@@ -65,19 +79,8 @@
       dsLoaiDoiTuongBVDLCN.value = [
         {'TenMuc': 'Bên kiểm soát dữ liệu cá nhân', 'MaMuc': 'ks'},
         {'TenMuc': 'Bên xử lý dữ liệu cá nhân', 'MaMuc': 'xl'},
-        {'TenMuc': 'Bên kiểm soát và xử lý dữ liệu cá nhân', 'MaMuc': 'ksxl'}
-      ]
-    })
-    let filter1 = {
-      maDanhMuc: 'dieukienxulydlcn'
-    }
-    hosoDvcStore.getDanhMuc(filter1).then(function(result) {
-      dsDieuKienXuLyDLCN.value = result.content
-    }).catch(function(){
-      dsDieuKienXuLyDLCN.value = [
-        {'TenMuc': 'Điều kiện fake-1', 'MaMuc': 'f1'},
-        {'TenMuc': 'Điều kiện fake-2', 'MaMuc': 'f2'},
-        {'TenMuc': 'Điều kiện fake-3', 'MaMuc': 'f3'}
+        {'TenMuc': 'Bên kiểm soát và xử lý dữ liệu cá nhân', 'MaMuc': 'ksxl'},
+        {'TenMuc': 'Bên thứ ba', 'MaMuc': 'khac'}
       ]
     })
   }
@@ -88,52 +91,43 @@
     })
   }
   const nextTab = async function (tabSelect) {
+    if (tabSelect == 'nhapdon') {
+      const { valid } = await formNoiDungThayDoi.value.validate()
+      console.log('formNoiDungThayDoi', valid)
+      if (!valid) {
+        document.getElementById("top-menu").scrollIntoView()
+        return
+      }
+    }
     if (tabSelect == 'noidung') {
-      console.log('loaiDoiTuongThucHien', dataFormBieuMau.value['loaiDoiTuongThucHien'])
-      if (!dataFormBieuMau.value['LoaiDoiTuongBVDLCN']) {
+        let doiTuongThucHien = thongtinchuhoso.value.doiTuongThucHien
+        let nguoiLienHe = thongtinchuhoso.value.nguoiLienHe
+        let validThongTinCaNhan = await thongtinchuhoso.value.validateForm()
+        if (validThongTinCaNhan && doiTuongThucHien.GiayChungNhan.NgayCap) {
+          console.log('doiTuongThucHienCaNhan', doiTuongThucHien)
+          appStore.$patch((state) => {
+            state.thongTinHoSo['ChuHoSo'] = doiTuongThucHien
+          })
+          appStore.$patch((state) => {
+            state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
+          })
+          appStore.$patch((state) => {
+            state.dataFormBieuMauXldl['NguoiLienHe'] = nguoiLienHe
+          })
+        } else {
+          if (validThongTinCaNhan && !doiTuongThucHien.GiayChungNhan.NgayCap) {
+            toastr.error('Vui lòng nhập "Ngày cấp"')
+          }
+          return
+        }
+    }
+    if (tabSelect == 'dinhkem') {
+      console.log('LoaiBenDGTD', dataFormBieuMau.value['LoaiBenDGTD'])
+      if (!dataFormBieuMau.value['LoaiBenDGTD']) {
         toastr.error('Vui lòng chọn "Đối tượng bảo vệ DLCN"')
         document.getElementById("top-menu").scrollIntoView()
         return
       }
-      if (dataFormBieuMau.value['loaiDoiTuongThucHien'] == 'T_CaNhan') {
-        let doiTuongThucHien = thongtincanhan.value.doiTuongThucHien
-        let caNhanPhuTrachBVDLCN = thongtincanhan.value.caNhanPhuTrachBVDLCN
-        let validThongTinCaNhan = await thongtincanhan.value.validateForm()
-        if (validThongTinCaNhan && doiTuongThucHien.GiayToTuyThan.NgayCap) {
-          console.log('doiTuongThucHienCaNhan', doiTuongThucHien)
-          appStore.$patch((state) => {
-            state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
-          })
-          appStore.$patch((state) => {
-            state.dataFormBieuMauXldl['CaNhanPhuTrachBVDLCN'] = caNhanPhuTrachBVDLCN
-          })
-        } else {
-          if (validThongTinCaNhan && !doiTuongThucHien.GiayToTuyThan.NgayCap) {
-            toastr.error('Vui lòng nhập "Ngày cấp"')
-          }
-          return
-        }
-      } else {
-        let doiTuongThucHien = thongtindoanhnghiep.value.doiTuongThucHien
-        let caNhanPhuTrachBVDLCN = thongtindoanhnghiep.value.caNhanPhuTrachBVDLCN
-        let validThongTinDoanhNghiepToChuc = await thongtindoanhnghiep.value.validateForm()
-        if (validThongTinDoanhNghiepToChuc && doiTuongThucHien.GiayDangKyKinhDoanh.NgayCap) {
-          console.log('doiTuongThucHienDoanhNghiep', doiTuongThucHien)
-          appStore.$patch((state) => {
-            state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
-          })
-          appStore.$patch((state) => {
-            state.dataFormBieuMauXldl['CaNhanPhuTrachBVDLCN'] = caNhanPhuTrachBVDLCN
-          })
-        } else {
-          if (validThongTinDoanhNghiepToChuc && !doiTuongThucHien.GiayDangKyKinhDoanh.NgayCap) {
-            toastr.error('Vui lòng nhập "Ngày cấp"')
-          }
-          return
-        }
-      }
-    }
-    if (tabSelect == 'dinhkem') {
       const { valid } = await formTomTatNoiDung.value.validate()
       console.log('validFormTomTat', valid)
       if (!valid) {
@@ -194,12 +188,47 @@
       })
       
     }
-    tab.value = tabSelect
+    tabSelected.value = tabSelect
     document.getElementById("top-menu").scrollIntoView()
   }
   const prevTab = function (currentTab) {
-    tab.value = currentTab
+    tabSelected.value = currentTab
     document.getElementById("top-menu").scrollIntoView()
+  }
+  const submitNopHoSo = function () {
+    if (!camKet.value) {
+      toastr.error('Vui lòng xác nhận cam kết')
+      return
+    }
+    console.log('dataFormBieuMau', dataFormBieuMau.value)
+    console.log('thongTinHoSo', thongTinHoSo.value)
+    let dataBm = Object.assign(dataFormBieuMau.value, {"BieuMauDienTu": {"MaMuc": "BM_DGTD_XLDLCN", "TenMuc": "Biểu mẫu DGTD_XLDLCN"}})
+    let filter = {
+      data: dataBm
+    }
+    hosoDvcStore.themMoiDLDT(filter).then(function(result) {
+      let dataDldt = result.resp
+      appStore.thongTinHoSo.ThanhPhanHoSo.forEach((element, index) => {
+        if (element.MaThanhPhanHoSo && element.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT') {
+          appStore.$patch((state) => {
+            state.thongTinHoSo['ThanhPhanHoSo'][index]['DuLieuDienTu'] = dataDldt['MaDinhDanh']
+          })
+        }
+      })
+      console.log('thongTinHoSo', thongTinHoSo.value)
+      let filterHs = {
+        data: thongTinHoSo.value
+      }
+      hosoDvcStore.capNhatHoSo(filterHs).then(function(result) {
+        let dataDldt = result.resp
+        toastr.success('Gửi hồ sơ thành công')
+        router.push({ path: menuSelected.value.to })
+      }).catch(function(){
+        toastr.error('Cập nhật hồ sơ thất bại')
+      })
+    }).catch(function(){
+      toastr.error('Thêm mới dữ liệu thất bại')
+    })
   }
   // 
   const dateIsoLocal = function (date) {
@@ -216,30 +245,6 @@
 		let date = new Date(dateInput)
 		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
 	}
-  const dateLocaleTime = function(dateInput) {
-    let date = new Date(dateInput)
-    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-  }
-  const convertDataView = function (itemHeader, item) {
-    let output = ''
-    try {
-      let calu = itemHeader['calculator'].replace(/dataInput/g, 'item')
-      output = eval(calu)
-    } catch (error) {
-      output = ''
-    }
-    return output
-  }
-  const convertDataArray = function (itemHeader, array) {
-    let output = ''
-    if (array) {
-      output = Array.from(array, function (item) {
-        return item[itemHeader['mapping']]
-      })
-    }
-    output = output.toString().replace(/,/g, ', ')
-    return output
-  }
   const formatDatePicker = (date) => {
     try {
       if (date.getDate()) {
@@ -284,6 +289,18 @@
 	}
   
   // 
+  watch(route, async (val) => {
+    getData()
+    if (val.query && val.query.hasOwnProperty('id_update')) {
+      hoSoThayDoiNoiDung.value = true
+      dossierName.value = 'Thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu cá nhân'
+      tabSelected.value = 'thongtinthaydoi'
+    } else {
+      hoSoThayDoiNoiDung.value = false
+      dossierName.value = 'Đánh giá tác động xử lý dữ liệu cá nhân'
+      tabSelected.value = 'nhapdon'
+    }
+  })
   onMounted(() => {
 
   })
@@ -300,60 +317,121 @@
         <div class="text-sub-header pl-2" style="text-transform: uppercase;">{{ dossierName }}</div>
       </v-col>
     </v-row>
+
     <v-tabs
-      v-model="tab"
+      v-if="!hoSoThayDoiNoiDung"
+      v-model="tabSelected"
       bg-color="#00000000"
       :hide-slider="true"
     >
-      <v-tab :hide-slider="true" disabled value="nhapdon" id="top-menu">
-        <span style="font-size: 18px;">1.</span> Đối tượng thực hiện
+      <v-tab :hide-slider="true"  value="nhapdon" id="top-menu">
+        <span style="font-size: 18px;">1.</span> Chủ hồ sơ
       </v-tab>
-      <v-tab :hide-slider="true" disabled value="noidung"><span style="font-size: 18px;">2.</span> Nội dung hồ sơ</v-tab>
-      <v-tab :hide-slider="true" disabled value="dinhkem"><span style="font-size: 18px;">3.</span> Thành phần hồ sơ</v-tab>
-      <v-tab :hide-slider="true" disabled value="xemlai"><span style="font-size: 18px;">4.</span> Gửi hồ sơ</v-tab>
+      <v-tab :hide-slider="true"  value="noidung"><span style="font-size: 18px;">2.</span> Nội dung hồ sơ</v-tab>
+      <v-tab :hide-slider="true"  value="dinhkem"><span style="font-size: 18px;">3.</span> Thành phần hồ sơ</v-tab>
+      <v-tab :hide-slider="true"  value="xemlai"><span style="font-size: 18px;">4.</span> Gửi hồ sơ</v-tab>
+    </v-tabs>
+
+    <v-tabs
+      v-else
+      v-model="tabSelected"
+      bg-color="#00000000"
+      :hide-slider="true"
+    >
+      <v-tab :hide-slider="true"  value="thongtinthaydoi" id="top-menu">
+        <span style="font-size: 18px;">1.</span> Thông tin thay đổi
+      </v-tab>
+      <v-tab :hide-slider="true"  value="nhapdon" id="top-menu">
+        <span style="font-size: 18px;">2.</span> Chủ hồ sơ
+      </v-tab>
+      <v-tab :hide-slider="true"  value="noidung"><span style="font-size: 18px;">3.</span> Nội dung hồ sơ</v-tab>
+      <v-tab :hide-slider="true"  value="dinhkem"><span style="font-size: 18px;">4.</span> Thành phần hồ sơ</v-tab>
+      <v-tab :hide-slider="true"  value="xemlai"><span style="font-size: 18px;">5.</span> Gửi hồ sơ</v-tab>
     </v-tabs>
 
     <v-card-text class="px-0 py-0">
-      <v-window v-model="tab" >
+      <v-window v-model="tabSelected" >
+        <v-window-item :transition="false" value="thongtinthaydoi" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+          <v-form ref="formNoiDungThayDoi" lazy-validation class="py-0">
+            <v-row class="mx-0 my-0">
+              <v-col cols="12" class="py-0 mb-10">
+                <div class="text-label">Mã hồ sơ thay đổi <span style="color: red">(*)</span></div>
+                <v-text-field
+                  class="flex input-form"
+                  v-model="dataFormBieuMau.MaHoSoThayDoi"
+                  solo
+                  dense
+                  hide-details="auto"
+                  required
+                  :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" class="py-0 mb-10">
+                <div class="text-label">Nội dung thay đổi <span style="color: red">(*)</span></div>
+                <v-textarea
+                  rows="3"
+                  class="flex input-form"
+                  v-model="dataFormBieuMau.NoiDungThayDoi"
+                  solo
+                  dense
+                  hide-details="auto"
+                  required
+                  :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12" class="py-0 mb-10">
+                <div class="text-label">Lý do thay đổi <span style="color: red">(*)</span></div>
+                <v-textarea
+                  rows="3"
+                  class="flex input-form"
+                  v-model="dataFormBieuMau.LyDoThayDoi"
+                  solo
+                  dense
+                  hide-details="auto"
+                  required
+                  :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-form>
+          <v-row class="mx-0 my-2" justify="center">
+            <v-btn
+              size="small"
+              color="#1E7D30"
+              class="mx-0"
+              @click.stop="nextTab('nhapdon')"
+              height="32px" width="130px"
+            >
+              <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
+              <span style="font-size: 16px">Tiếp tục</span>
+            </v-btn>
+          </v-row>
+        </v-window-item>
+
         <v-window-item :transition="false" value="nhapdon" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
-          <v-row class="thongtinchung mx-0 my-0">
-            <v-col cols="12" md="4" class="py-0">
-              <div class="text-label">Chọn đối tượng thực hiện <span style="color: red">(*)</span></div>
-              <v-radio-group v-model="dataFormBieuMau['loaiDoiTuongThucHien']">
-                <v-radio label="Cá nhân" value="T_CaNhan" color="#1E7D30"></v-radio>
-                <v-radio label="Doanh nghiệp" value="T_DonViKinhDoanh" color="#1E7D30"></v-radio>
-                <v-radio label="Cơ quan nhà nước" value="T_CoQuanDonVi" color="#1E7D30"></v-radio>
-              </v-radio-group>
-            </v-col>
-            <v-col cols="12" md="4" class="py-0">
-              <div class="text-label">Đối tượng bảo vệ DLCN <span style="color: red">(*)</span></div>
-              <v-radio-group v-model="dataFormBieuMau['LoaiDoiTuongBVDLCN']">
-                <v-radio v-for="(item, index) in dsLoaiDoiTuongBVDLCN" :key="index" 
-                :label="item['TenMuc']" :value="item" color="#1E7D30"></v-radio>
-              </v-radio-group>
-            </v-col>
-          </v-row>
-          <v-row class="mx-0 my-0" v-if="dataFormBieuMau['loaiDoiTuongThucHien'] !== 'T_CaNhan'">
+          <v-row class="mx-0 my-0">
             <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 mb-3">
               <div class="sub-header-content">
                 <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
               </div>
               <div class="triangle-header"></div>
-              <div class="text-sub-header">THÔNG TIN TỔ CHỨC, DOANH NGHIỆP ĐÁNH GIÁ TÁC ĐỘNG XỬ LÝ DỮ LIỆU CÁ NHÂN</div>
+              <div class="text-sub-header">THÔNG TIN CÁ NHÂN, TỔ CHỨC THỰC HIỆN ĐÁNH GIÁ TÁC ĐỘNG XỬ LÝ DỮ LIỆU CÁ NHÂN</div>
             </v-col>
-            <ThongTinDoanhNghiepToChuc ref="thongtindoanhnghiep"></ThongTinDoanhNghiepToChuc>
-          </v-row>
-          <v-row class="mx-0 my-0" v-else>
-            <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 mb-3">
-              <div class="sub-header-content">
-                <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
-              </div>
-              <div class="triangle-header"></div>
-              <div class="text-sub-header">THÔNG TIN CÁ NHÂN ĐÁNH GIÁ TÁC ĐỘNG XỬ LÝ DỮ LIỆU CÁ NHÂN</div>
-            </v-col>
-            <ThongTinCaNhan ref="thongtincanhan"></ThongTinCaNhan>
+            <ThongTinChuHoSo ref="thongtinchuhoso"></ThongTinChuHoSo>
           </v-row>
           <v-row class="mx-0 my-2" justify="center">
+            <v-btn
+              v-if="hoSoThayDoiNoiDung"
+              class="mr-3"
+              size="small"
+              variant="outlined"
+              color="#1E7D30"
+              @click.stop="prevTab('thongtinthaydoi')"
+              height="32px" width="150px"
+            >
+              <v-icon size="22" color="#1E7D30" class="mr-2">mdi-reply-all-outline</v-icon>
+              <span style="font-size: 16px; text-transform: none;">Bước trước</span>
+            </v-btn>
             <v-btn
               size="small"
               color="#1E7D30"
@@ -377,38 +455,14 @@
               <div class="triangle-header"></div>
               <div class="text-sub-header">TÓM TẮT NỘI DUNG ĐÁNH GIÁ TÁC ĐỘNG XỬ LÝ DỮ LIỆU CÁ NHÂN</div>
             </v-col>
-            <!-- <v-col cols="12" class="py-0 mb-10">
-              <div class="text-label">Tên nhiệm vụ xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
-              <v-text-field
-                class="flex input-form"
-                v-model="dataFormBieuMau['TenDuAnDanhGia']"
-                solo
-                dense
-                hide-details="auto"
-                clearable
-                required
-                :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
-              ></v-text-field>
-            </v-col> -->
-            <!-- <v-col cols="12" class="py-0 mb-10" v-if="dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'ks' || dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'ksxl'">
-              <div class="text-label">Điều kiện cho phép việc thu thập, xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
-              <v-autocomplete
-                class="flex input-form"
-                hide-no-data
-                v-model="dataFormBieuMau['DieuKienXuLyDLCN']"
-                :items="dsDieuKienXuLyDLCN"
-                item-title="TenMuc"
-                item-value="MaMuc"
-                dense
-                solo
-                hide-details="auto"
-                return-object
-                required
-                :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
-              >
-              </v-autocomplete>
-            </v-col> -->
-            <v-col cols="12" class="py-0 mb-10" v-if="dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'xl'">
+            <v-col cols="12" class="py-0">
+              <div class="text-label">Đối tượng bảo vệ DLCN <span style="color: red">(*)</span></div>
+              <v-radio-group v-model="dataFormBieuMau['LoaiBenDGTD']">
+                <v-radio v-for="(item, index) in dsLoaiDoiTuongBVDLCN" :key="index" 
+                :label="item['TenMuc']" :value="item" color="#1E7D30"></v-radio>
+              </v-radio-group>
+            </v-col>
+            <v-col cols="12" class="py-0 mb-10">
               <div class="text-label">Mô tả mục đích, hoạt động xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
               <v-textarea
                 class="flex input-form"
@@ -422,7 +476,7 @@
                 :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
               ></v-textarea>
             </v-col>
-            <v-col cols="12" class="py-0 mb-10" v-if="dataFormBieuMau['LoaiDoiTuongBVDLCN']['MaMuc'] == 'xl'">
+            <v-col cols="12" class="py-0 mb-10">
               <div class="text-label">Hoạt động xử lý dữ liệu cá nhân <span style="color: red">(*)</span></div>
               <v-textarea
                 class="flex input-form"
@@ -563,7 +617,7 @@
               <div class="text-label mb-0" style="font-weight: 600">CAM KẾT:<span style="color: red">(*)</span></div>
               <v-checkbox
                 class="check-cam-ket"
-                v-model="dataFormBieuMau['CamKet']"
+                v-model="camKet"
                 label="Chịu trách nhiệm trước pháp luật về tính chính xác, tính hợp pháp của hồ sơ đánh giá tác động xử lý dữ liệu cá nhân và tài liệu đính kèm"
                 color="#1E7D30"
                 :value="true"
@@ -587,7 +641,7 @@
               size="small"
               color="#1E7D30"
               class="mx-0"
-              @click.stop=""
+              @click.stop="submitNopHoSo()"
               height="32px" width="130px"
             >
               <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
