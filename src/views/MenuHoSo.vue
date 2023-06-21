@@ -1,20 +1,17 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
-  import { useCookies } from 'vue3-cookies'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
+  import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import jsondata from '../stores/mock-data.json'
- 
+  const hosoDvcStore = useHosoDvcStore()
   const route = useRoute()
   const router = useRouter()
   const routes = router.currentRoute.value
-  const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const appStore = useAppStore()
-  const { cookies } = useCookies()
 
   const menuItems = reactive(jsondata.menuHoSo)
   const menuSelected = computed(() => appStore.getMenuSelected)
-  console.log('routes-menu-component', routes, routes.params)
   if (routes && routes.params.hasOwnProperty('thutuc') && routes.params.thutuc) {
     let menu = menuItems.find(function (item) {
       return item.to.split('/')[1] === routes.params.thutuc
@@ -35,12 +32,55 @@
   const themMoiHoSo = function () {
     router.push({ path: '/nop-ho-so' + menuSelected.value.to })
   }
+  const thongKeSoLuong = function () {
+    let filter = {
+      doiTuong: 'thutuchanhchinh'
+    }
+    hosoDvcStore.thongKeHoSo(filter).then(function(result) {
+      menuItems[0].counter = 0
+      menuItems[1].counter = 0
+      menuItems[2].counter = 0
+      let data = result.resp
+      let tbvp = data.find(function(item) {
+        return item.MaMuc == 'TBVP'
+      })
+      if (tbvp) {
+        menuItems[0].counter = tbvp.SoLuong
+      }
+      let xldl = data.find(function(item) {
+        return item.MaMuc == 'DGTD_XLDLCN'
+      })
+      let tdndxldl = data.find(function(item) {
+        return item.MaMuc == 'TDND_DGTD_XLDLCN'
+      })
+      if (xldl) {
+        menuItems[1].counter += xldl.SoLuong
+      }
+      if (tdndxldl) {
+        menuItems[1].counter += tdndxldl.SoLuong
+      }
+      let cdl = data.find(function(item) {
+        return item.MaMuc == 'DGTD_CDLCN'
+      })
+      let tdndcdl = data.find(function(item) {
+        return item.MaMuc == 'TDND_DGTD_CDLCN'
+      })
+      if (cdl) {
+        menuItems[2].counter += cdl.SoLuong
+      }
+      if (tdndcdl) {
+        menuItems[2].counter += tdndcdl.SoLuong
+      }
+    }).catch(function(){
+    })
+  }
+  thongKeSoLuong()
   const redirectTo = function (menu) {
     appStore.SET_MENU_SELECTED(menu)
     router.push({ path: menu.to })
   }
   watch(route, async (val) => {
-    console.log('run watch-routes:', val.name)
+    thongKeSoLuong()
     if (val.name !== 'ThongTinHoSo' && val.name !== 'BieuMauDienTu') {
       console.log('run watch-routes2:', val.name, val.params)
       if (val && val.params.hasOwnProperty('thutuc') && val.params.thutuc) {

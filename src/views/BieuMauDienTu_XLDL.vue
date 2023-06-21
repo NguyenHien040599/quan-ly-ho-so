@@ -16,6 +16,7 @@
   const router = useRouter()
   const appStore = useAppStore()
   const hosoDvcStore = useHosoDvcStore()
+  appStore.SET_DATA_FORM_BIEUMAU_XLDL(appStore.dataFormBieuMauXldlDefault)
   const dataFormBieuMau = computed(() => appStore.dataFormBieuMauXldl)
   const thongTinHoSo = computed(function () {
     return appStore.thongTinHoSo
@@ -90,6 +91,10 @@
       state.dataFormBieuMauXldl[key] = dateIsoLocal(data)
     })
   }
+  const prevTab = function (currentTab) {
+    tabSelected.value = currentTab
+    document.getElementById("top-menu").scrollIntoView()
+  }
   const nextTab = async function (tabSelect) {
     if (tabSelect == 'nhapdon') {
       const { valid } = await formNoiDungThayDoi.value.validate()
@@ -105,8 +110,26 @@
         let validThongTinCaNhan = await thongtinchuhoso.value.validateForm()
         if (validThongTinCaNhan && doiTuongThucHien.GiayChungNhan.NgayCap) {
           console.log('doiTuongThucHienCaNhan', doiTuongThucHien)
+          doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
           appStore.$patch((state) => {
-            state.thongTinHoSo['ChuHoSo'] = doiTuongThucHien
+            state.thongTinHoSo['ChuHoSo'] = {
+              DanhBaLienLac: {SoFax: '', ThuDienTu: '', SoDienThoai: doiTuongThucHien['SoDienThoai']},
+              DiaChi: doiTuongThucHien['DiaChiHoatDong'],
+              LoaiDoiTuong: doiTuongThucHien['LoaiDoiTuongThucHien'],
+              MaDinhDanh: doiTuongThucHien['GiayChungNhan']['SoGiay'],
+              MaDoiTuong: '',
+              TenGoi: doiTuongThucHien['TenGoi'],
+              ThongTinKhac: ''
+            }
+          })
+          appStore.$patch((state) => {
+            state.thongTinHoSo['NguoiNopHoSo'] = {
+              DanhBaLienLac: {SoFax: '', ThuDienTu: nguoiLienHe['Email'], SoDienThoai: nguoiLienHe['SoDienThoai']},
+              MaDinhDanh: '',
+              MaDoiTuong: '',
+              TenGoi: nguoiLienHe['HoVaTen'],
+              ThongTinKhac: ''
+            }
           })
           appStore.$patch((state) => {
             state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
@@ -122,7 +145,6 @@
         }
     }
     if (tabSelect == 'dinhkem') {
-      console.log('LoaiBenDGTD', dataFormBieuMau.value['LoaiBenDGTD'])
       if (!dataFormBieuMau.value['LoaiBenDGTD']) {
         toastr.error('Vui lòng chọn "Đối tượng bảo vệ DLCN"')
         document.getElementById("top-menu").scrollIntoView()
@@ -134,10 +156,6 @@
         document.getElementById("top-menu").scrollIntoView()
         return
       }
-      console.log('loaidlcncobanRef', loaidlcncobanRef.value.danhSachDanhMuc)
-      console.log('loaidlcnnhaycamRef', loaidlcnnhaycamRef.value.danhSachDanhMuc)
-      console.log('loaibienphapbvdlcnRef', loaibienphapbvdlcnRef.value.danhSachDanhMuc)
-      console.log('loainguycoruiroRef', loainguycoruiroRef.value.danhSachDanhMuc)
       let exitsDlcb = loaidlcncobanRef.value.danhSachDanhMuc.filter(function (item) {
         return item['Selected']
       })
@@ -191,28 +209,210 @@
     tabSelected.value = tabSelect
     document.getElementById("top-menu").scrollIntoView()
   }
-  const prevTab = function (currentTab) {
-    tabSelected.value = currentTab
-    document.getElementById("top-menu").scrollIntoView()
+  const fillData = function () {
+    let doiTuongThucHien = thongtinchuhoso.value.doiTuongThucHien
+    let nguoiLienHe = thongtinchuhoso.value.nguoiLienHe
+    doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
+    appStore.$patch((state) => {
+      state.thongTinHoSo['ChuHoSo'] = {
+        DanhBaLienLac: {SoFax: '', ThuDienTu: '', SoDienThoai: doiTuongThucHien['SoDienThoai']},
+        DiaChi: doiTuongThucHien['DiaChiHoatDong'],
+        LoaiDoiTuong: doiTuongThucHien['LoaiDoiTuongThucHien'],
+        MaDinhDanh: doiTuongThucHien['GiayChungNhan']['SoGiay'],
+        MaDoiTuong: '',
+        TenGoi: doiTuongThucHien['TenGoi'],
+        ThongTinKhac: ''
+      }
+    })
+    appStore.$patch((state) => {
+      state.thongTinHoSo['NguoiNopHoSo'] = {
+        DanhBaLienLac: {SoFax: '', ThuDienTu: nguoiLienHe['Email'], SoDienThoai: nguoiLienHe['SoDienThoai']},
+        MaDinhDanh: '',
+        MaDoiTuong: '',
+        TenGoi: nguoiLienHe['HoVaTen'],
+        ThongTinKhac: ''
+      }
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['NguoiLienHe'] = nguoiLienHe
+    })
+    let exitsDlcb = loaidlcncobanRef.value ? loaidlcncobanRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    }): []
+    let exitsDlnc = loaidlcnnhaycamRef.value ? loaidlcnnhaycamRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    }): []
+    let exitsBpbv = loaibienphapbvdlcnRef.value ? loaibienphapbvdlcnRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    }) : []
+    let exitsNguyCo = loainguycoruiroRef.value ? loainguycoruiroRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    }) : []
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiDLCNCoBan'] = exitsDlcb
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiDLCNNhayCam'] = exitsDlnc
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiBienPhapBVDLCN'] = exitsBpbv
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiDanhGiaTacDong'] = exitsNguyCo
+    })
   }
-  const submitNopHoSo = function () {
+  const reviewTab = function () {
+    fillData()
+  }
+  const submitNopHoSo = async function () {
+    // validation
+    if (hoSoThayDoiNoiDung.value) {
+      const { valid } = await formNoiDungThayDoi.value.validate()
+      if (!valid) {
+        toastr.error('Vui lòng nhập đầy đủ "Nội dung thay đổi"')
+        tabSelected.value = 'thongtinthaydoi'
+        document.getElementById("top-menu").scrollIntoView()
+        return
+      }
+    }
+    // valid chủ hồ sơ
+    let doiTuongThucHien = thongtinchuhoso.value.doiTuongThucHien
+    let nguoiLienHe = thongtinchuhoso.value.nguoiLienHe
+    let validThongTinCaNhan = await thongtinchuhoso.value.validateForm()
+    if (validThongTinCaNhan && doiTuongThucHien.GiayChungNhan.NgayCap) {
+      doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
+      appStore.$patch((state) => {
+        state.thongTinHoSo['ChuHoSo'] = {
+          DanhBaLienLac: {SoFax: '', ThuDienTu: '', SoDienThoai: doiTuongThucHien['SoDienThoai']},
+          DiaChi: doiTuongThucHien['DiaChiHoatDong'],
+          LoaiDoiTuong: doiTuongThucHien['LoaiDoiTuongThucHien'],
+          MaDinhDanh: doiTuongThucHien['GiayChungNhan']['SoGiay'],
+          MaDoiTuong: '',
+          TenGoi: doiTuongThucHien['TenGoi'],
+          ThongTinKhac: ''
+        }
+      })
+      appStore.$patch((state) => {
+        state.thongTinHoSo['NguoiNopHoSo'] = {
+          DanhBaLienLac: {SoFax: '', ThuDienTu: nguoiLienHe['Email'], SoDienThoai: nguoiLienHe['SoDienThoai']},
+          MaDinhDanh: '',
+          MaDoiTuong: '',
+          TenGoi: nguoiLienHe['HoVaTen'],
+          ThongTinKhac: ''
+        }
+      })
+      appStore.$patch((state) => {
+        state.dataFormBieuMauXldl['DoiTuongThucHien'] = doiTuongThucHien
+      })
+      appStore.$patch((state) => {
+        state.dataFormBieuMauXldl['NguoiLienHe'] = nguoiLienHe
+      })
+    } else {
+      toastr.error('Vui lòng nhập đầy đủ "Thông tin chủ hồ sơ"')
+      tabSelected.value = 'nhapdon'
+      document.getElementById("top-menu").scrollIntoView()
+      return
+    }
+    // 
+    // valid noidunghoso
+    if (!dataFormBieuMau.value['LoaiBenDGTD']) {
+      toastr.error('Vui lòng chọn "Đối tượng bảo vệ DLCN"')
+      tabSelected.value = 'noidung'
+      document.getElementById("top-menu").scrollIntoView()
+      return
+    }
+    const { valid } = await formTomTatNoiDung.value.validate()
+    if (!valid) {
+      toastr.error('Vui lòng nhập đầy đủ thông tin "Nội dung hồ sơ"')
+      tabSelected.value = 'noidung'
+      document.getElementById("top-menu").scrollIntoView()
+      return
+    }
+    let exitsDlcb = loaidlcncobanRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    })
+    if (!exitsDlcb.length) {
+      toastr.clear()
+      toastr.error('Vui lòng chọn "Phạm vi xử lý các loại dữ liệu cá nhân cơ bản"')
+      tabSelected.value = 'noidung'
+      document.getElementById("top-menu").scrollIntoView()
+      return
+    }
+    let exitsDlnc = loaidlcnnhaycamRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    })
+    if (!exitsDlnc.length) {
+      toastr.clear()
+      toastr.error('Vui lòng chọn "Phạm vi xử lý các loại dữ liệu cá nhân nhạy cảm"')
+      tabSelected.value = 'noidung'
+      document.getElementById("top-menu").scrollIntoView()
+      return
+    }
+    let exitsBpbv = loaibienphapbvdlcnRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    })
+    if (!exitsBpbv.length) {
+      toastr.clear()
+      toastr.error('Vui lòng chọn "Biện pháp bảo vệ dữ liệu cá nhân được áp dụng"')
+      tabSelected.value = 'noidung'
+      return
+    }
+    let exitsNguyCo = loainguycoruiroRef.value.danhSachDanhMuc.filter(function (item) {
+      return item['Selected']
+    })
+    if (!exitsNguyCo.length) {
+      toastr.clear()
+      toastr.error('Vui lòng chọn "Loại đánh giá tác động đã thực hiện"')
+      tabSelected.value = 'noidung'
+      document.getElementById("top-menu").scrollIntoView()
+      return
+    }
+    if (!dataFormBieuMau.value['ThoiGianXuLy']) {
+      toastr.error('Vui lòng chọn "Thời gian xử lý"')
+      tabSelected.value = 'noidung'
+      return
+    }
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiDLCNCoBan'] = exitsDlcb
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiDLCNNhayCam'] = exitsDlnc
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiBienPhapBVDLCN'] = exitsBpbv
+    })
+    appStore.$patch((state) => {
+      state.dataFormBieuMauXldl['LoaiDanhGiaTacDong'] = exitsNguyCo
+    })
+    // 
+
     if (!camKet.value) {
       toastr.error('Vui lòng xác nhận cam kết')
       return
     }
     console.log('dataFormBieuMau', dataFormBieuMau.value)
-    console.log('thongTinHoSo', thongTinHoSo.value)
     let dataBm = Object.assign(dataFormBieuMau.value, {"BieuMauDienTu": {"MaMuc": "BM_DGTD_XLDLCN", "TenMuc": "Biểu mẫu DGTD_XLDLCN"}})
     let filter = {
       data: dataBm
     }
+    loading.value = true
     hosoDvcStore.themMoiDLDT(filter).then(function(result) {
+      loading.value = false
       let dataDldt = result.resp
-      appStore.thongTinHoSo.ThanhPhanHoSo.forEach((element, index) => {
-        if (element.MaThanhPhanHoSo && element.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT') {
+      thongTinHoSo.value.ThanhPhanHoSo.forEach((element, index) => {
+        if (element.MaThanhPhanHoSo && element.MaThanhPhanHoSo.MaMuc.split('_')[0] == 'BMDT') {
           appStore.$patch((state) => {
-            state.thongTinHoSo['ThanhPhanHoSo'][index]['DuLieuDienTu'] = dataDldt['MaDinhDanh']
+            state.thongTinHoSo['ThanhPhanHoSo'][index]['DuLieuDienTu'] = dataDldt
           })
+        }
+      })
+      appStore.$patch((state) => {
+        state.thongTinHoSo['TrangThaiHoSo'] = {
+          'MaMuc': '01',
+          'TenMuc': 'Mới đăng ký'
         }
       })
       console.log('thongTinHoSo', thongTinHoSo.value)
@@ -220,13 +420,13 @@
         data: thongTinHoSo.value
       }
       hosoDvcStore.capNhatHoSo(filterHs).then(function(result) {
-        let dataDldt = result.resp
         toastr.success('Gửi hồ sơ thành công')
         router.push({ path: menuSelected.value.to })
       }).catch(function(){
         toastr.error('Cập nhật hồ sơ thất bại')
       })
     }).catch(function(){
+      loading.value = false
       toastr.error('Thêm mới dữ liệu thất bại')
     })
   }
@@ -287,7 +487,7 @@
 		let ddd = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 		return (new Date(ddd)).getTime()
 	}
-  
+
   // 
   watch(route, async (val) => {
     getData()
@@ -329,7 +529,7 @@
       </v-tab>
       <v-tab :hide-slider="true"  value="noidung"><span style="font-size: 18px;">2.</span> Nội dung hồ sơ</v-tab>
       <v-tab :hide-slider="true"  value="dinhkem"><span style="font-size: 18px;">3.</span> Thành phần hồ sơ</v-tab>
-      <v-tab :hide-slider="true"  value="xemlai"><span style="font-size: 18px;">4.</span> Gửi hồ sơ</v-tab>
+      <v-tab :hide-slider="true"  value="xemlai" @click="reviewTab"><span style="font-size: 18px;">4.</span> Gửi hồ sơ</v-tab>
     </v-tabs>
 
     <v-tabs
@@ -643,6 +843,8 @@
               class="mx-0"
               @click.stop="submitNopHoSo()"
               height="32px" width="130px"
+              :loading="loading"
+              :disabled="loading"
             >
               <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
               <span style="font-size: 16px">Nộp hồ sơ</span>

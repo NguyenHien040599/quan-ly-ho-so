@@ -471,7 +471,7 @@
         <div class="text-label">Họ và tên <span style="color: red">(*)</span></div>
         <v-text-field
           class="flex input-form"
-          v-model="nguoiLienHe['TenGoi']"
+          v-model="nguoiLienHe['HoVaTen']"
           solo
           dense
           hide-details="auto"

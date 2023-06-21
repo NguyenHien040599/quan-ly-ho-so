@@ -194,7 +194,7 @@ table td {
 .input-form .v-input__details {
   min-height: 18px;
 }
-.input-form.v-input--error {
+.input-form.v-input--error:not(.v-textarea) {
   height: 42px !important
 }
 .height-auto.input-form:not(.v-textarea),

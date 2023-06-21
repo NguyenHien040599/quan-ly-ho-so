@@ -38,6 +38,27 @@ export const useAppStore = defineStore('appStore', {
       NoiDungThayDoi: '',
       LyDoThayDoi: ''
     },
+    dataFormBieuMauXldlDefault: {
+      DoiTuongThucHien: {
+        LoaiDoiTuongThucHien: null
+      },
+      LoaiBenDGTD: null,
+      NguoiLienHe: null,
+      MucDichXLDLCN: '',
+      HoatDongXLDLCN: '',
+      LoaiDLCNCoBan: [],
+      LoaiDLCNNhayCam: [],
+      DongYChuTheDLCN: false,
+      ChuyenDLCNRaNuocNgoai: false,
+      ThoiGianXuLy: '',
+      ThoiGianHuyXoa: '',
+      LoaiBienPhapBVDLCN: [],
+      LoaiDanhGiaTacDong: [],
+      LayYKienDanhGia: false,
+      MaHoSoThayDoi: '',
+      NoiDungThayDoi: '',
+      LyDoThayDoi: ''
+    },
     thanhPhanHoSoXldl: []
   }),
   getters: {

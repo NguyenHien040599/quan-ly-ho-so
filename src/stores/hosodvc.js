@@ -25,6 +25,21 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       let data = await $.ajax(settings)
       return data
     },
+    async thongKeHoSo (filter) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/publicadministrativemgt/internal/hosodichvucong/1.0/${filter.doiTuong}/distinct`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('data') ? filter.data : {},
+        params: filter.hasOwnProperty('params') ? filter.params : {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
     async getDanhMucCmon (filter) {
       let settings = {
         method: 'get',
@@ -145,5 +160,50 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       let data = await $.ajax(settings)
       return data
     },
+    async getChiTietBieuMauDienTu (filter) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/documentmgt/internal/dulieudientu/1.0/mdd/${filter.maDinhDanh}`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: {},
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
+    async uploadTep (fileUpload) {
+      let form = new FormData()
+      form.append("file", fileUpload)
+      let data =  await fetch(`${this.baseURL}/storagemgt/internal/device/1.0/upload`, {
+        method: "POST", 
+        body: form,
+        headers: {
+          'Accept': 'application/json', 
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        }
+      });
+      let jsonData = await data.json()
+      return jsonData
+    },
+    async taiTep (file) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/storagemgt/internal/tepdulieu/1.0/download/${file.MaDinhDanh}`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: {},
+        params: {},
+        responeType: Blob
+      }
+      let data = await $.ajax(settings)
+      return data
+    }
   },
 })

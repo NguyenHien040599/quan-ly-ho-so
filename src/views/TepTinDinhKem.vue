@@ -22,18 +22,19 @@
       return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
     })
   })
+  const tpUpdate = ref(null)
   const headers = reactive([
     {
       "sortable": false,
       "title": "Tên giấy tờ",
-      "align": "center",
+      "align": "left",
       "key": "tenGiayTo",
       "class": "td-left"
     },
     {
       "sortable": false,
       "title": "Tệp đính kèm",
-      "align": "center",
+      "align": "left",
       "key": "tepDinhKem",
       "class": "td-left"
     }
@@ -52,19 +53,33 @@
     let date = new Date(dateInput)
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
-  const pickFileUpload = function () {
+  const pickFileUpload = function (item, index) {
+    tpUpdate.value = item
     document.getElementById('file_upload_tep_dinh_kem').value = ''
     document.getElementById('file_upload_tep_dinh_kem').click()
   }
   const uploadFile = function () {
-    let vm = this
-    let files = $('#file_upload_tep_dinh_kem')[0].files
-    for (let index = 0; index < files.length; index++) {
-      vm.fileUpload.push({
-        name: files[index]['name']
+    let file = $('#file_upload_tep_dinh_kem')[0].files[0]
+    hosoDvcStore.uploadTep(file).then(function(result) {
+      console.log(result.resp)
+      appStore.thongTinHoSo.ThanhPhanHoSo.forEach((element, index) => {
+        if (element.MaThanhPhanHoSo.MaMuc === tpUpdate.value.MaThanhPhanHoSo.MaMuc) {
+          appStore.$patch((state) => {
+            state.thongTinHoSo['ThanhPhanHoSo'][index]['TepDuLieu'] = result.resp
+          })
+        }
       })
-    }
-    vm.$store.commit('SET_FILEUPLOADYET', true)
+      console.log('thongTinHoSo', appStore.thongTinHoSo)
+    }).catch(function(error){
+      console.log(error)
+    })
+  }
+  const taiXuongFile = function (file) {
+    hosoDvcStore.taiTep(file).then(function(result) {
+      console.log('result', result)
+      
+    }).catch(function(error){
+    })
   }
   const deleteFileAttack = function (item, index) {
     let vm = this
@@ -198,14 +213,6 @@
           <tr>
             <td class="align-left">{{ item.raw.TenGiayTo }} 
               <span v-if="item.raw.MaThanhPhanHoSo" style="color:red">(*)</span>
-              <!-- <v-tooltip location="top" v-if="!item.raw.MaThanhPhanHoSo">
-                <template v-slot:activator="{ props }" >
-                  <v-btn v-bind="props" icon variant="flat" size="small" class="ml-2" @click.stop="xoaGiayToKhac(item.raw)">
-                    <v-icon size="18" color="red">mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-                <span>Xóa giấy tờ</span>
-              </v-tooltip> -->
               <v-btn v-if="!item.raw.MaThanhPhanHoSo"
                 class="mx-0 ml-2"
                 size="small"
@@ -248,7 +255,7 @@
                 size="small"
                 variant="outlined"
                 color="#1E7D30"
-                @click.stop="pickFileUpload"
+                @click.stop="pickFileUpload(item.raw, index )"
                 height="32px" width="120px"
               >
                 <v-icon size="22" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>

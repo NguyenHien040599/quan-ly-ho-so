@@ -17,14 +17,14 @@
     {
       "sortable": false,
       "title": "Tên giấy tờ",
-      "align": "center",
+      "align": "left",
       "key": "tenGiayTo",
       "class": "td-left"
     },
     {
       "sortable": false,
       "title": "Tệp đính kèm",
-      "align": "center",
+      "align": "left",
       "key": "tepDinhKem",
       "class": "td-left"
     }
@@ -57,7 +57,7 @@
         items-per-page="20"
         item-value="primKey"
         hide-default-footer
-        class="table-base"
+        class="table-base table-tphs"
         no-data="Không có dữ liệu"
         :loading="loadingData"
         loading-text="Đang tải... "
@@ -91,6 +91,10 @@
 </template>
 
 <style scoped>
+  .table-tphs tr td {
+    height: 42px !important;
+    min-height: 42px
+  }
   @media (min-width: 1024px) {
     .about {
       min-height: 100vh;

@@ -25,6 +25,13 @@
   const loadingData = ref(false)
   const loading = ref(false)
   const tab = ref(null)
+  const mauHienThi = ref(null)
+  let thuTuc = jsondata.thuTucHanhChinh.find(function (item) {
+    return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+  })
+  if (thuTuc && thuTuc.mauHienThiHoSo) {
+    mauHienThi.value = thuTuc.mauHienThiHoSo
+  }
   // const thongTinHoSo = reactive(jsondata.thongTinHoSo)
   const thongTinHoSo = computed(function () {
     return appStore.thongTinHoSo
@@ -44,32 +51,6 @@
     })
   }
   getThongTinHoSo()
-  const mauHienThi = reactive(jsondata.thuTucHanhChinh[1]['mauHienThiHoSo'])
-  const eventClick = function () {
-    console.log('run callback')
-  }
-  const action = function () {
-    loading.value = true
-    setTimeout(function () {
-      loading.value = false
-    }, 300)
-  }
-  const showConfirm = function () {
-    appStore.SET_SHOWCONFIRM(true)
-    let confirm = {
-      auth: false,
-      title: 'Xóa sinh viên',
-      message: 'Bạn có chắc chắn muốn xóa',
-      button: {
-        yes: 'Có',
-        no: 'Không'
-      },
-      callback: () => {
-        console.log("Tôi đồng ý")
-      }
-    }
-    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
-  }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
 		let date = new Date(dateInput)
@@ -112,7 +93,7 @@
 </script>
 <template>
   <v-card class="mx-auto pa-0 thongtinhoso" style="box-shadow: none !important; overflow: inherit;">
-    <v-tabs
+    <!-- <v-tabs
       v-model="tab"
       bg-color="#00000000"
       :hide-slider="true"
@@ -120,11 +101,20 @@
       <v-tab :hide-slider="true" value="thongtin">Thông tin hồ sơ</v-tab>
       <v-tab :hide-slider="true" value="nhatky">Nhật ký sửa đổi</v-tab>
       <v-tab :hide-slider="true" value="tientrinh">Tiến trình xử lý</v-tab>
-    </v-tabs>
+    </v-tabs> -->
 
-    <v-card-text class="px-0 py-0" style="margin-top: -20px;">
-      <v-window v-model="tab">
-        <v-window-item value="thongtin" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px">
+    <v-card-text class="pa-3 py-0" style="padding: 15px; border: 1px solid #DADADA">
+      <!-- <v-window v-model="tab"> -->
+        <!-- <v-window-item value="thongtin" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px"> -->
+          <v-row class="my-0 mb-3 mx-0">
+            <v-col class="row-header d-flex align-center justify-start py-0 px-0" style="border: none">
+              <div class="header-content" style="text-transform: uppercase;">
+                Thông tin hồ sơ
+              </div>
+              <div class="triangle-header"></div>
+              <div class="text-sub-header pl-2" style="text-transform: uppercase;">{{ menuSelected.dossierName }}</div>
+            </v-col>
+          </v-row>
           <v-row class="thongtinchung mx-0 my-0">
             <v-col v-for="(item, index) in mauHienThi" v-bind:key="index" :class="item['class']">
               <v-row v-if="item.hasOwnProperty('group') && item.group" class="mx-0 my-0">
@@ -189,7 +179,7 @@
           <v-row class="mx-0 my-0 mt-2">
             <ThanhPhanHoSo></ThanhPhanHoSo>
           </v-row>
-          <v-row class="mx-0 my-0 mt-3">
+          <!-- <v-row class="mx-0 my-0 mt-3">
             <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0">
               <div class="sub-header-content">
                 <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
@@ -207,17 +197,17 @@
               </p>
             </v-col>
             
-          </v-row>
-        </v-window-item>
+          </v-row> -->
+        <!-- </v-window-item> -->
 
-        <v-window-item value="nhatky">
+        <!-- <v-window-item value="nhatky">
           Two
         </v-window-item>
 
         <v-window-item value="tientrinh">
           Three
         </v-window-item>
-      </v-window>
+      </v-window> -->
     </v-card-text>
   </v-card>
 </template>

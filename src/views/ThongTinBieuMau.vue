@@ -2,27 +2,74 @@
   import { useRouter, useRoute } from 'vue-router'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
+  import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import jsondata from '../stores/mock-data.json'
+  const hosoDvcStore = useHosoDvcStore()
+  const props = defineProps({
+    id: {
+      type: String,
+      default: ''
+    }
+  })
+  const route = useRoute()
+  const viewChiTietHoSo = ref(false)
+  const thongTinHoSo = computed(function () {
+    return appStore.thongTinHoSo
+  })
   const thongTinBieuMau = computed(function () {
     return appStore.dataFormBieuMauXldl
   })
   const ThanhPhanHoSo = defineAsyncComponent(() =>
     import('./ThanhPhanHoSo.vue')
   )
-  const router = useRouter()
-  console.log('routes', router.currentRoute.value)
   const appStore = useAppStore()
+  console.log('route', route.name)
   const menuSelected = computed(() => appStore.getMenuSelected)
-  const loading = ref(false)
-  const tab = ref(null)
   const mauHienThi = ref(null)
-  let thuTuc = jsondata.thuTucHanhChinh.find(function (item) {
-    return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
-  })
-  if (thuTuc && thuTuc.mauHienThiBieuMau) {
-    mauHienThi.value = thuTuc.mauHienThiBieuMau
+  const getThongTinHoSo = function () {
+    let filter = {
+      primKey: props.id
+    }
+    hosoDvcStore.getChiTietHoSo(filter).then(function(result) {
+      if (result.resp) {
+        appStore.SET_THONGTINHOSO(result.resp)
+        let tpbm = result.resp.ThanhPhanHoSo.find(function (item) {
+          return item.DuLieuDienTu.hasOwnProperty('MaDinhDanh') && item.DuLieuDienTu['MaDinhDanh']
+        })
+        if (tpbm) {
+          getDLDT(tpbm.DuLieuDienTu['MaDinhDanh'])
+        } else {
+          appStore.SET_DATA_FORM_BIEUMAU_XLDL(appStore.dataFormBieuMauXldlDefault)
+        }
+      } else {
+        appStore.SET_THONGTINHOSO(null)
+      }
+      
+    }).catch(function(){
+    })
   }
-  
+  const getDLDT = function (id) {
+    let filter = {
+      maDinhDanh: id
+    }
+    hosoDvcStore.getChiTietBieuMauDienTu(filter).then(function(result) {
+      if (result.resp) {
+        appStore.SET_DATA_FORM_BIEUMAU_XLDL(result.resp)
+      }
+    }).catch(function(){
+    })
+  }
+  if (route.name == 'ThongTinHoSo') {
+    viewChiTietHoSo.value = true
+    getThongTinHoSo()
+  } else {
+    let thuTuc = jsondata.thuTucHanhChinh.find(function (item) {
+      return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+    })
+    if (thuTuc && thuTuc.mauHienThiBieuMau) {
+      mauHienThi.value = thuTuc.mauHienThiBieuMau
+    }
+  }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
 		let date = new Date(dateInput)
@@ -39,32 +86,48 @@
     let date = new Date(dateInput)
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
-  const convertDataView = function (itemHeader, item) {
-    let output = ''
-    try {
-      let calu = itemHeader['calculator'].replace(/dataInput/g, 'item')
-      output = eval(calu)
-    } catch (error) {
-      output = ''
-    }
+  const convertAddress = function (item) {
+    let output = `${item.SoNhaChiTiet}, ${item.XaPhuong.TenMuc} - ${item.HuyenQuan.TenMuc} - ${item.TinhThanh.TenMuc} `
     return output
   }
-  const convertDataArray = function (itemHeader, array) {
-    let output = ''
-    if (array) {
-      output = Array.from(array, function (item) {
-        return item[itemHeader['mapping']]
+  watch(thongTinHoSo, async (val) => {
+    if (route.name == 'ThongTinHoSo') {
+      viewChiTietHoSo.value = true
+      let thuTuc = jsondata.thuTucHanhChinh.find(function (item) {
+        return item.maThuTuc == thongTinHoSo.value.ThuTucHanhChinh['MaMuc']
       })
+      if (thuTuc && thuTuc.mauHienThiBieuMau) {
+        mauHienThi.value = thuTuc.mauHienThiBieuMau
+      }
+      console.log('mauHienThi', mauHienThi.value)
+    } else {
+      let thuTuc = jsondata.thuTucHanhChinh.find(function (item) {
+        return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+      })
+      if (thuTuc && thuTuc.mauHienThiBieuMau) {
+        mauHienThi.value = thuTuc.mauHienThiBieuMau
+      }
     }
-    output = output.toString().replace(/,/g, ', ')
-    return output
-  }
+  })
+  
   onMounted(() => {
 
   })
 </script>
 <template>
-  <v-card class="mx-auto pa-0 thongtinhoso" style="box-shadow: none !important; overflow: inherit;">
+  <v-card class="mx-auto pa-0 thongtinhoso" style="box-shadow: none !important; overflow: inherit;" v-if="mauHienThi"
+    :style="viewChiTietHoSo? 'border: 1px solid #dadada' : ''"
+  >
+    <v-row v-if="viewChiTietHoSo" class="mt-0 mx-0" style="margin-bottom: 20px;">
+      <v-col class="row-header d-flex align-center justify-start py-0 px-0" style="border: none">
+        <div class="header-content" style="text-transform: uppercase;">
+          Thông tin hồ sơ
+        </div>
+        <div class="triangle-header"></div>
+        <div class="text-sub-header pl-2" style="text-transform: uppercase;">{{ menuSelected.dossierName }}</div>
+      </v-col>
+    </v-row>
+    <div :class="viewChiTietHoSo ? 'px-3 pb-3' : ''">
     <v-row  class="thongtinchung mx-0 my-0">
       <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0">
         <div class="sub-header-content">
@@ -93,11 +156,8 @@
         <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? currency(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
         </span>
-        <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
-        </span>
-        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ convertDataView(itemChild, thongTinBieuMau.DoiTuongThucHien) }}
+        <span class="content-text" v-else-if="itemChild.type == 'fulladdress'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+          {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? convertAddress(thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
         </span>
         <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ itemChild.value ? thongTinBieuMau.DoiTuongThucHien[itemChild.value] : '' }}
@@ -162,12 +222,6 @@
         <span class="content-text" v-else-if="itemChild.type == 'money'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? currency(thongTinBieuMau[itemChild.value]) : '' }}
         </span>
-        <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau[itemChild.value]) : '' }}
-        </span>
-        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ convertDataView(itemChild, thongTinBieuMau) }}
-        </span>
         <span class="content-text" v-else-if="itemChild.type == 'boolean'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.hasOwnProperty(itemChild.value) && thongTinBieuMau[itemChild.value] ? 'Có' : 'Không' }}
         </span>
@@ -182,8 +236,8 @@
         </span>
       </v-col>
     </v-row>
-    
     <ThanhPhanHoSo></ThanhPhanHoSo>
+    </div> 
   </v-card>
 </template>
 
