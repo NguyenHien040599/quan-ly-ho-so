@@ -1,9 +1,11 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
+  import { useDisplay } from 'vuetify'
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import jsondata from '../stores/mock-data.json'
+  const { mobile } = useDisplay()
   const hosoDvcStore = useHosoDvcStore()
   const props = defineProps({
     id: {
@@ -124,10 +126,11 @@
           Thông tin hồ sơ
         </div>
         <div class="triangle-header"></div>
-        <div class="text-sub-header pl-2" style="text-transform: uppercase;">{{ menuSelected.dossierName }}</div>
+        <div class="text-sub-header pl-2" style="text-transform: uppercase;" v-if="!mobile">{{ menuSelected.dossierName }}</div>
       </v-col>
     </v-row>
     <div :class="viewChiTietHoSo ? 'px-3 pb-3' : ''">
+      <div class="text-sub-header mx-0 mb-2" style="text-transform: uppercase;" v-if="mobile">{{ menuSelected.dossierName }}</div>
     <v-row  class="thongtinchung mx-0 my-0">
       <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 px-0">
         <div class="sub-header-content">

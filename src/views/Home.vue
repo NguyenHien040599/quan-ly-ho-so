@@ -4,13 +4,15 @@
   // import Footer from '../containerComponents/Footer.vue'
 
   import { onMounted, defineAsyncComponent } from 'vue'
+  import { useDisplay } from 'vuetify'
   import { useAppStore } from '@/stores/global.js'
+  const { mobile } = useDisplay()
   const MenuHoSo = defineAsyncComponent(() =>
     import('./MenuHoSo.vue')
   )
   const appStore = useAppStore()
   onMounted(() => {
-    
+    console.log('isMobile', mobile.value)
   })
 </script>
 
@@ -20,7 +22,7 @@
     <!-- <AppBar></AppBar> -->
     <v-main>
       <div class="container wrap-content-page">
-        <v-card class="mx-auto pa-3" style="box-shadow: none !important;">
+        <v-card class="mx-auto pa-3" style="box-shadow: none !important;" v-if="!mobile">
           <v-row>
             <v-col style="max-width: 300px !important;flex: 0 0 300px;">
               <MenuHoSo></MenuHoSo>
@@ -29,6 +31,22 @@
               <router-view></router-view>
             </v-col>
           </v-row>
+        </v-card>
+        <v-card class="mx-auto pa-3" style="box-shadow: none !important;" v-else>
+          <v-row class="mx-0 my-0" style="">
+            <v-menu>
+              <template v-slot:activator="{ props }">
+                <v-btn size="small" color="#1E7D30" v-bind="props" style="position: absolute;top: 12px; right: 12px;z-index: 100;">
+                  <v-icon size="24" color="#FFFFFF">mdi-menu</v-icon>
+                </v-btn>
+              </template>
+              <MenuHoSo style="min-width: 350px;max-width: 600px"></MenuHoSo>
+            </v-menu>
+          </v-row>
+          
+          <div>
+            <router-view></router-view>
+          </div>
         </v-card>
       </div>
       <!-- <Footer></Footer> -->
@@ -44,11 +62,5 @@
     
   }
   @media screen and (max-width: 1024px){
-    main.v-main {
-      padding-top: 75px !important
-    }
-    .wrap-content-page {
-      padding-bottom: 75px !important
-    }
   }
 </style>

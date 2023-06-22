@@ -1,8 +1,10 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
+  import { useCookies } from 'vue3-cookies'
   import { onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
+  const { cookies } = useCookies()
   const hosoDvcStore = useHosoDvcStore()
   const appStore = useAppStore()
   const route = useRoute()
@@ -46,7 +48,13 @@
     getThongTinHoSo()
   })
   onMounted(() => {
-
+    if (cookies.get('Token')) {
+      appStore.SET_ISSIGNED(true)
+    } else {
+      appStore.SET_ISSIGNED(false)
+      appStore.SET_USERINFO('')
+      router.push({ path: '/login' })
+    }
   })
 </script>
 <template>

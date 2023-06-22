@@ -80,22 +80,14 @@
     hosoDvcStore.getDanhMucCmon(filter).then(function(result) {
       dsTinhThanh.value = result.content
     }).catch(function(){})
+
     let filter2 = {
       maDanhMuc: 'loaidoituongthuchien'
     }
     hosoDvcStore.getDanhMuc(filter2).then(function(result) {
       dsLoaiDoiTuongThucHien.value = result.content
     }).catch(function(){
-      dsLoaiDoiTuongThucHien.value = [
-        {'TenMuc': 'Công dân Việt Nam', 'MaMuc': '01'},
-        {'TenMuc': 'Người Việt Nam định cư ở nước ngoài', 'MaMuc': '02'},
-        {'TenMuc': 'Người nước ngoài', 'MaMuc': '03'},
-        {'TenMuc': 'Doanh nghiệp', 'MaMuc': '05'},
-        {'TenMuc': 'Doanh nghiệp có vốn đầu tư nước ngoài', 'MaMuc': '06'},
-        {'TenMuc': 'Tổ chức trong nước (không bao gồm doanh nghiệp, HTX)', 'MaMuc': '07'},
-        {'TenMuc': 'Tổ chức nước ngoài', 'MaMuc': '08'},
-        {'TenMuc': 'Hợp tác xã', 'MaMuc': '09'}
-      ]
+      dsLoaiDoiTuongThucHien.value = []
     })
 	}
 	initForm()

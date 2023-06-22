@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import $ from 'jquery'
 import { useCookies } from 'vue3-cookies'
+import axios from 'axios'
 const { cookies } = useCookies()
 export const useHosoDvcStore = defineStore('hosoDvcStore', {
   state: () => ({
@@ -14,6 +15,21 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       let settings = {
         method: 'get',
         url: `${this.baseURL}/publicadministrativemgt/internal/${filter.maDanhMuc}/1.0/filter`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        },
+        data: filter.hasOwnProperty('data') ? filter.data : {},
+        params: filter.hasOwnProperty('params') ? filter.params : {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
+    async getDanhMucEform (filter) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/eformmgt/internal/${filter.maDanhMuc}/1.0/filter`,
         headers: { 
           'Accept': 'application/json', 
           'Content-Type': 'application/json',
@@ -190,20 +206,38 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       return jsonData
     },
     async taiTep (file) {
-      let settings = {
+      // let settings = {
+      //   method: 'get',
+      //   url: `${this.baseURL}/storagemgt/internal/tepdulieu/1.0/download/${file.MaDinhDanh}`,
+      //   headers: { 
+      //     'Content-Type': 'application/octet-stream',
+      //     'Authorization': 'Bearer ' + cookies.get('Token')
+      //   },
+      //   data: {},
+      //   params: {},
+      //   responseType: 'blob'
+      // }
+      // let data = await $.ajax(settings)
+      // var blob = new Blob([data], { type: "application/pdf" })
+      // let urlFile = window.URL.createObjectURL(blob)
+      // console.log('urlFile123', urlFile)
+      // return urlFile
+
+
+      let config = {
         method: 'get',
         url: `${this.baseURL}/storagemgt/internal/tepdulieu/1.0/download/${file.MaDinhDanh}`,
         headers: { 
-          'Accept': 'application/json', 
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/octet-stream',
           'Authorization': 'Bearer ' + cookies.get('Token')
         },
-        data: {},
-        params: {},
-        responeType: Blob
+        responseType: 'blob'
       }
-      let data = await $.ajax(settings)
-      return data
+
+      let response = await axios(config)
+      var urlFile = window.URL.createObjectURL(response.data)
+      console.log('urlFile', urlFile)
+      return urlFile
     }
-  },
+  }
 })

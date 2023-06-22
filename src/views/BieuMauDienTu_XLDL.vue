@@ -72,17 +72,12 @@
   // 
   const getData = function () {
     let filter = {
-      maDanhMuc: 'LoaiBenDGTD'
+      maDanhMuc: 'loaibendgtd'
     }
-    hosoDvcStore.getDanhMuc(filter).then(function(result) {
+    hosoDvcStore.getDanhMucEform(filter).then(function(result) {
       dsLoaiDoiTuongBVDLCN.value = result.content
     }).catch(function(){
-      dsLoaiDoiTuongBVDLCN.value = [
-        {'TenMuc': 'Bên kiểm soát dữ liệu cá nhân', 'MaMuc': 'ks'},
-        {'TenMuc': 'Bên xử lý dữ liệu cá nhân', 'MaMuc': 'xl'},
-        {'TenMuc': 'Bên kiểm soát và xử lý dữ liệu cá nhân', 'MaMuc': 'ksxl'},
-        {'TenMuc': 'Bên thứ ba', 'MaMuc': 'khac'}
-      ]
+      dsLoaiDoiTuongBVDLCN.value = []
     })
   }
   getData()
@@ -527,7 +522,7 @@
       <v-tab :hide-slider="true"  value="nhapdon" id="top-menu">
         <span style="font-size: 18px;">1.</span> Chủ hồ sơ
       </v-tab>
-      <v-tab :hide-slider="true"  value="noidung"><span style="font-size: 18px;">2.</span> Nội dung hồ sơ</v-tab>
+      <v-tab :hide-slider="true"  value="noidung"><span style="font-size: 18px;">2.</span> Thông tin hồ sơ</v-tab>
       <v-tab :hide-slider="true"  value="dinhkem"><span style="font-size: 18px;">3.</span> Thành phần hồ sơ</v-tab>
       <v-tab :hide-slider="true"  value="xemlai" @click="reviewTab"><span style="font-size: 18px;">4.</span> Gửi hồ sơ</v-tab>
     </v-tabs>
@@ -746,7 +741,7 @@
             </v-col>
             <v-col cols="12" class="py-0 mb-10">
               <TableSelect ref="loainguycoruiroRef" :headers="[{type: 'select',sortable: false,title: 'Chọn', key: 'selected',class: 'selected' },{sortable: false,title: 'Loại đánh giá tác động',key: 'TenMuc' }]" 
-              :maDanhMuc="'loainguycoruiro'" :selected="dataFormBieuMau['LoaiDanhGiaTacDong']"></TableSelect>
+              :maDanhMuc="'loaidanhgiatacdong'" :selected="dataFormBieuMau['LoaiDanhGiaTacDong']"></TableSelect>
             </v-col>
 
             <v-col cols="12" class="py-0 mb-10">

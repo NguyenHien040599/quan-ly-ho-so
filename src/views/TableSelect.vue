@@ -29,7 +29,7 @@
     let filter = {
       maDanhMuc: props.maDanhMuc
     }
-    hosoDvcStore.getDanhMuc(filter).then(function(result) {
+    hosoDvcStore.getDanhMucEform(filter).then(function(result) {
       let danhMuc = result.content
       if (danhSachSelected && danhSachSelected.length) {
         danhMuc.forEach(element => {
@@ -45,11 +45,7 @@
       }
       danhSachDanhMuc.value = danhMuc
     }).catch(function(){
-      let danhMuc = [
-        {'TenMuc': 'DLCNCB 1', 'MaMuc': 'f1', 'Selected': false},
-        {'TenMuc': 'DLCNCB 2', 'MaMuc': 'f2', 'Selected': false},
-        {'TenMuc': 'DLCNCB 3', 'MaMuc': 'f3', 'Selected': false}
-      ]
+      let danhMuc = []
       if (danhSachSelected && danhSachSelected.length) {
         danhMuc.forEach(element => {
           let exits = danhSachSelected.find(function (item) {

@@ -479,7 +479,7 @@
               "type": "obj-date"
             },
             {
-              "title": "Nơi cấp giấy chứng nhận",
+              "title": "- Nơi cấp giấy chứng nhận",
               "value": "GiayChungNhan",
               "mapping": "NoiCap",
               "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0",
@@ -507,7 +507,7 @@
               "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
             },
             {
-              "title": "Website",
+              "title": "- Website",
               "value": "Website",
               "mapping": "",
               "type": "",
@@ -528,7 +528,7 @@
               "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
             },
             {
-              "title": "Chức danh",
+              "title": "- Chức danh",
               "value": "ChucDanh",
               "type": "",
               "mapping": "",
@@ -542,7 +542,7 @@
               "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
             },
             {
-              "title": "Số điện thoại",
+              "title": "- Số điện thoại",
               "value": "SoDienThoai",
               "type": "",
               "mapping": "",
