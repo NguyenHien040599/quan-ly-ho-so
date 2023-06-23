@@ -30,16 +30,6 @@
     let date = new Date(dateInput)
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
-  const convertDataView = function (itemHeader, item) {
-    let output = ''
-    try {
-      let calu = itemHeader['calculator'].replace(/dataInput/g, 'item')
-      output = eval(calu)
-    } catch (error) {
-      output = ''
-    }
-    return output
-  }
   const convertDataArray = function (itemHeader, array) {
     let output = ''
     if (array) {

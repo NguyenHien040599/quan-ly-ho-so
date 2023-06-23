@@ -60,6 +60,7 @@
     }
     loading.value = true
     hosoDvcStore.taiTep(file).then(function(result) {
+      console.log('resultFile', result)
       loading.value = false
       if (action == 'preview') {
         urlPreview.value = result
@@ -73,6 +74,7 @@
         a.click()
       }
     }).catch(function(error){
+      console.log('error-resultFile', error)
       loading.value = false
     })
   }
@@ -106,7 +108,7 @@
         <template v-slot:item="{ item }">
           <tr>
             <td class="align-left">{{ item.raw.TenGiayTo }}</td>
-            <td class="align-center" width="350">
+            <td class="align-left" width="350">
               <div class="py-1" @click="taiXuongFile(item.raw.TepDuLieu, 'preview')" v-if="item.raw.TepDuLieu.KichThuocTep">
                 <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
                 <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>

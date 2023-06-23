@@ -12,7 +12,7 @@
   )
   const appStore = useAppStore()
   onMounted(() => {
-    console.log('isMobile', mobile.value)
+    // console.log('isMobile', mobile.value)
   })
 </script>
 

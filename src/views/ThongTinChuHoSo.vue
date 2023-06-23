@@ -159,7 +159,6 @@
   watch(
     () => doiTuongThucHien.DiaChiHoatDong.TinhThanh,
     (newValue, oldValue) => {
-      console.log('newValue', newValue.MaMuc)
       if (newValue.MaMuc) {
         let filter = {
           maDanhMuc: 'huyenquan',
@@ -179,7 +178,6 @@
   watch(
     () => doiTuongThucHien.DiaChiHoatDong.HuyenQuan,
     (newValue, oldValue) => {
-      console.log('newValue', newValue.MaMuc)
       if (newValue.MaMuc) {
         let filter = {
           maDanhMuc: 'xaphuong',
@@ -199,7 +197,6 @@
   watch(
     () => doiTuongThucHien.DiaChiLienHe.TinhThanh,
     (newValue, oldValue) => {
-      console.log('newValue', newValue.MaMuc)
       if (newValue.MaMuc) {
         let filter = {
           maDanhMuc: 'huyenquan',
@@ -219,7 +216,6 @@
   watch(
     () => doiTuongThucHien.DiaChiLienHe.HuyenQuan,
     (newValue, oldValue) => {
-      console.log('newValue', newValue.MaMuc)
       if (newValue.MaMuc) {
         let filter = {
           maDanhMuc: 'xaphuong',

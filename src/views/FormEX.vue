@@ -242,16 +242,6 @@ export default {
       
     },
     methods: {
-      processRules (rulesStr) {
-        let rulesInput = []
-        try {
-          if (rulesStr) {
-            rulesInput = eval('( ' + rulesStr + ' )')
-          }
-        } catch (error) {
-        }
-        return rulesInput
-      },
       pickFileUpload () {
         document.getElementById('file_upload').value = ''
         document.getElementById('file_upload').click()

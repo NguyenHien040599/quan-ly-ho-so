@@ -63,8 +63,8 @@
     {
       "sortable": false,
       "title": "Thông tin hồ sơ",
-      "align": "center",
-      "key": "MaSoQuanLy",
+      "align": "left",
+      "key": "MaDinhDanh",
       "class": "td-left"
     },
     {
@@ -89,7 +89,10 @@
     })
     if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
       let filter = {
-        data: thuTucTaoMoi.thongTinHoSo
+        data: Object.assign(thuTucTaoMoi.thongTinHoSo, {
+          TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
+          DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"}
+        })
       }
       hosoDvcStore.themMoiHoSo(filter).then(function(result) {
         let dataHs = result.resp
@@ -160,7 +163,7 @@
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
   }
   const rutHoSo = function (item) {
-    console.log('ruthoso', item)
+    // console.log('ruthoso', item)
     appStore.SET_SHOWCONFIRM(true)
     let confirm = {
       auth: false,
@@ -199,46 +202,8 @@
     //   })
     // }
   }
-  const showAdvanceSearch = function () {
-    advanceSearch.value = !advanceSearch.value
-    setTimeout(function () {
-      if (advanceSearch.value) {
-        advanceSearchReference.value.initForm()
-      }
-    }, 100)
-  }
-  const submitAdvanceSearch = function (dataSearch) {
-    console.log('dataSearch', dataSearch)
-  }
-  const submitFormCrud = async function () {
-    let valid = await crudFormReference.value.validateForm()
-    console.log('validForm', valid)
-    if (valid) {
-      let dataOutput = crudFormReference.value.submit()
-      console.log('dataOutputCrud', dataOutput)
-    }
-  }
   const changePage = function (page) {
     console.log('page_pagination', page)
-  }
-  const showConfirm = function () {
-    appStore.SET_SHOWCONFIRM(true)
-    let confirm = {
-      auth: false,
-      title: 'Xóa sinh viên',
-      message: 'Bạn có chắc chắn muốn xóa',
-      button: {
-        yes: 'Có',
-        no: 'Không'
-      },
-      callback: () => {
-        console.log("Tôi đồng ý")
-      }
-    }
-    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
-  }
-  const showDialog = function (type, data) {
-    console.log('dataItem', data)
   }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
@@ -256,16 +221,6 @@
     let date = new Date(dateInput)
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
-  const convertDataView = function (itemHeader, item) {
-    let output = ''
-    try {
-      let calu = itemHeader['calculator'].replace(/dataInput/g, 'item')
-      output = eval(calu)
-    } catch (error) {
-      output = ''
-    }
-    return output
-  }
   const convertDataArray = function (itemHeader, array) {
     let output = ''
     if (array) {
@@ -281,7 +236,7 @@
   //   getDanhSachHoSo()
   // })
   watch(menuSelected, async (val) => {
-    console.log('run watch-routes menuSelected:', val)
+    // console.log('run watch-routes menuSelected:', val)
     getDanhSachHoSo()
   })
   onMounted(() => {
@@ -292,7 +247,7 @@
       appStore.SET_USERINFO('')
       router.push({ path: '/login' })
     }
-    console.log('isMobile', mobile.value)
+    // console.log('isMobile', mobile.value)
   })
 </script>
 <template>
@@ -357,9 +312,6 @@
                 <div v-else-if="itemHeader.type == 'array'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
                   {{ item.raw.hasOwnProperty(itemHeader.key) ? convertDataArray(itemHeader, item.raw[itemHeader.key]) : '' }}
                 </div>
-                <div v-else-if="itemHeader.type == 'calculator'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
-                  {{ convertDataView(itemHeader, item.raw) }}
-                </div>
                 <div v-else-if="itemHeader.type == 'action'" :style="itemHeader.hasOwnProperty('style') ? itemHeader.style : ''">
                   <v-menu>
                     <template v-slot:activator="{ props }">
@@ -409,7 +361,22 @@
     
     <v-row class="mx-0 my-0" v-if="mobile">
       <v-col cols="12" class="px-0 py-0">
-        <div class="text-sub-header mx-0 px-0 mb-3" style="text-transform: uppercase;">{{ menuSelected.dossierName }}</div>
+        <div class="text-sub-header mx-0 px-0 mb-2" style="text-transform: uppercase;">{{ menuSelected.dossierName }}</div>
+        <v-row class="mx-0 my-0" style="justify-content: flex-end;">
+          <v-col class="px-0 py-0 pt-1" style="font-weight: 600; color: #1E7D30">
+            <span>Số lượng hồ sơ: </span>
+            <span>{{ total }}</span>
+          </v-col>
+          <v-btn
+            size="small"
+            :color="baseColor"
+            @click.stop="themMoiHoSo" class="mx-0 mb-2"
+          >
+          <v-icon size="18" class="">mdi-plus</v-icon>
+            <span style="padding-top: 2px;">Thêm mới hồ sơ</span>
+          </v-btn>
+        </v-row>
+        
         <v-data-table
           :headers="headersMobile"
           :items="dsHoSo"
@@ -425,8 +392,8 @@
                 <div>{{ (page+1) * itemsPerPage - itemsPerPage + index + 1 }}</div>
               </td>
               <td class="pt-2">
-                <div class="mb-1" style="color: #1E7D30">{{ item.raw.MaSoQuanLy }}</div>
-                <div class="mb-1"><span>Mã hồ sơ: </span>{{ item.raw.MaSoQuanLy }}</div>
+                <div class="mb-1" style="color: #1E7D30">{{ item.raw.MaDinhDanh }}</div>
+                <div class="mb-1"><span>Mã hồ sơ: </span>{{ item.raw.MaDinhDanh }}</div>
                 <div class="mb-1">
                   <span>Ngày tạo: </span>
                   <span style="color: #1E7D30">{{ dateLocaleTime(item.raw.ThoiGianTao) }}</span>
@@ -476,60 +443,6 @@
         <Pagination v-if="pageCount && pageCount > 1" :pageInput="page+1" :pageCount="pageCount" :total="total" @changePage="changePage" style="margin-bottom: 50px;"></Pagination>
       </v-col>
     </v-row>
-    <!-- dialog -->
-    <v-dialog
-      max-width="1000"
-      v-model="dialog"
-      persistent
-      absolute
-    >
-      <v-card>
-        <v-toolbar
-          dark
-          :color="baseColor" class="px-0"
-        >
-          <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
-            <div class="sub-header-content">
-              Thêm mới hồ sơ
-            </div>
-            <div class="triangle-header"></div>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn variant="flat" size="small" icon color="#E9FFF2" @click="dialog = false" >
-              <v-icon size="20">mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-        <v-card-text class="mt-2 px-3">
-          <!-- Content dialog -->
-        </v-card-text>
-        <v-card-actions class="justify-center pb-3 px-3">
-          <v-btn
-            size="small" variant="elevated"
-            :loading="loading"
-            :disabled="loading"
-            color="error"
-            prepend-icon="mdi-close"
-            @click.stop="dialog = false"
-            class="mr-2"
-          >
-            Thoát
-          </v-btn>
-          <v-btn
-            size="small" variant="elevated"
-            :loading="loading"
-            :disabled="loading"
-            :color="baseColor"
-            prepend-icon="mdi-content-save"
-            @click.stop="submitFormCrud"
-          >
-            Thêm mới
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!--  -->
 
   </v-card>
 </template>

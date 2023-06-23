@@ -3,7 +3,7 @@
   import { ref, reactive, computed, onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
-
+  import { useDisplay } from 'vuetify'
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
   import toastr from 'toastr'
@@ -12,6 +12,7 @@
     'timeOut': '5000',
     "positionClass": "toast-top-center"
   }
+  const { mobile } = useDisplay()
   const route = useRoute()
   const router = useRouter()
   const appStore = useAppStore()
@@ -26,7 +27,7 @@
   const dossierName = ref('Đánh giá tác động xử lý dữ liệu cá nhân')
   const tabSelected = ref(null)
   if (router.currentRoute.value.query && router.currentRoute.value.query.hasOwnProperty('id_update')) {
-    console.log('router', router)
+    // console.log('router', router)
     hoSoThayDoiNoiDung.value = true
     dossierName.value = 'Thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu cá nhân'
     tabSelected.value = 'thongtinthaydoi'
@@ -93,7 +94,7 @@
   const nextTab = async function (tabSelect) {
     if (tabSelect == 'nhapdon') {
       const { valid } = await formNoiDungThayDoi.value.validate()
-      console.log('formNoiDungThayDoi', valid)
+      // console.log('formNoiDungThayDoi', valid)
       if (!valid) {
         document.getElementById("top-menu").scrollIntoView()
         return
@@ -104,7 +105,7 @@
         let nguoiLienHe = thongtinchuhoso.value.nguoiLienHe
         let validThongTinCaNhan = await thongtinchuhoso.value.validateForm()
         if (validThongTinCaNhan && doiTuongThucHien.GiayChungNhan.NgayCap) {
-          console.log('doiTuongThucHienCaNhan', doiTuongThucHien)
+          // console.log('doiTuongThucHienCaNhan', doiTuongThucHien)
           doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
           appStore.$patch((state) => {
             state.thongTinHoSo['ChuHoSo'] = {
@@ -146,7 +147,7 @@
         return
       }
       const { valid } = await formTomTatNoiDung.value.validate()
-      console.log('validFormTomTat', valid)
+      // console.log('validFormTomTat', valid)
       if (!valid) {
         document.getElementById("top-menu").scrollIntoView()
         return
@@ -388,8 +389,8 @@
       toastr.error('Vui lòng xác nhận cam kết')
       return
     }
-    console.log('dataFormBieuMau', dataFormBieuMau.value)
-    let dataBm = Object.assign(dataFormBieuMau.value, {"BieuMauDienTu": {"MaMuc": "BM_DGTD_XLDLCN", "TenMuc": "Biểu mẫu DGTD_XLDLCN"}})
+    // console.log('dataFormBieuMau', dataFormBieuMau.value)
+    let dataBm = Object.assign(dataFormBieuMau.value, {"BieuMauDienTu": {"MaMuc": "BM_XLDLCN", "TenMuc": "Biểu mẫu DGTD_XLDLCN"}})
     let filter = {
       data: dataBm
     }
@@ -408,6 +409,10 @@
         state.thongTinHoSo['TrangThaiHoSo'] = {
           'MaMuc': '01',
           'TenMuc': 'Mới đăng ký'
+        }
+        state.thongTinHoSo['TrangThaiDuLieu'] = {
+          'MaMuc': '02',
+          'TenMuc': 'Chính thức'
         }
       })
       console.log('thongTinHoSo', thongTinHoSo.value)
@@ -509,10 +514,10 @@
           Thêm mới hồ sơ
         </div>
         <div class="triangle-header"></div>
-        <div class="text-sub-header pl-2" style="text-transform: uppercase;">{{ dossierName }}</div>
+        <div v-if="!mobile" class="text-sub-header pl-2" style="text-transform: uppercase;">{{ dossierName }}</div>
       </v-col>
     </v-row>
-
+    <div v-if="mobile" class="text-sub-header mx-0 my-0 mb-2" style="text-transform: uppercase;">{{ dossierName }}</div>
     <v-tabs
       v-if="!hoSoThayDoiNoiDung"
       v-model="tabSelected"
@@ -546,7 +551,7 @@
 
     <v-card-text class="px-0 py-0">
       <v-window v-model="tabSelected" >
-        <v-window-item :transition="false" value="thongtinthaydoi" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+        <v-window-item :class="!mobile ? 'window-tab' : 'window-tab-mobile'" :transition="false" value="thongtinthaydoi">
           <v-form ref="formNoiDungThayDoi" lazy-validation class="py-0">
             <v-row class="mx-0 my-0">
               <v-col cols="12" class="py-0 mb-10">
@@ -603,7 +608,7 @@
           </v-row>
         </v-window-item>
 
-        <v-window-item :transition="false" value="nhapdon" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+        <v-window-item :class="!mobile ? 'window-tab' : 'window-tab-mobile'" :transition="false" value="nhapdon" >
           <v-row class="mx-0 my-0">
             <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 mb-3">
               <div class="sub-header-content">
@@ -640,7 +645,7 @@
           </v-row>
         </v-window-item>
 
-        <v-window-item :transition="false" value="noidung" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+        <v-window-item :class="!mobile ? 'window-tab' : 'window-tab-mobile'" :transition="false" value="noidung" >
           <v-form ref="formTomTatNoiDung" lazy-validation class="py-0">
           <v-row class="mx-0 my-0">
             <v-col cols="12" class="sub-header d-flex align-center justify-start py-0 mb-3">
@@ -698,6 +703,16 @@
             <v-col cols="12" class="py-0 mb-10">
               <TableSelect ref="loaidlcnnhaycamRef" :headers="[{type: 'select',sortable: false,title: 'Chọn', key: 'selected',class: 'selected' },{sortable: false,title: 'Loại dữ liệu cá nhân nhạy cảm',key: 'TenMuc' }]" 
               :maDanhMuc="'loaidlcnnhaycam'" :selected="dataFormBieuMau['LoaiDLCNNhayCam']"></TableSelect>
+            </v-col>
+            <v-col cols="12" class="py-0 mb-10">
+              <div class="text-label">Số lượng xử lý dữ liệu</div>
+              <v-text-field
+                class="flex input-form"
+                v-model="dataFormBieuMau.SoLuongDuLieu"
+                solo
+                dense
+                hide-details="auto"
+              ></v-text-field>
             </v-col>
             <v-col cols="12" class="py-0 mb-10">
               <div class="text-label">Có sự đồng ý của chủ thể dữ liệu không?</div>
@@ -779,7 +794,7 @@
           </v-row>
         </v-window-item>
 
-        <v-window-item :transition="false" value="dinhkem" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;padding-left: 5px;">
+        <v-window-item :class="!mobile ? 'window-tab' : 'window-tab-mobile'" :transition="false" value="dinhkem" >
           <TepTinDinhKem></TepTinDinhKem>
           <v-row class="mx-0 mb-3 mt-5" justify="center">
             <v-btn
@@ -805,7 +820,7 @@
             </v-btn>
           </v-row>
         </v-window-item>
-        <v-window-item :transition="false" value="xemlai" style="padding: 15px; border: 1px solid #DADADA; border-top: 0px;margin-top: -5px">
+        <v-window-item :class="!mobile ? 'window-tab' : 'window-tab-mobile'" :transition="false" value="xemlai" style="margin-top: -5px">
           <ThongTinBieuMau></ThongTinBieuMau>
           <v-row class="mx-0 my-2 mt-5" justify="center">
             <v-col cols="12" class="py-0 mb-10 px-0">
@@ -852,6 +867,17 @@
 </template>
 
 <style scoped>
+  .window-tab {
+    padding: 15px; 
+    border: 1px solid #DADADA;
+    border-top: 0px;
+    padding-left: 5px;
+  }
+  .window-tab-mobile {
+    padding: 15px 0px; 
+    border: 1px solid #DADADA;
+    border-top: 0px;
+  }
   .check-cam-ket .v-checkbox .v-selection-control {
     min-height: 0px;
   }

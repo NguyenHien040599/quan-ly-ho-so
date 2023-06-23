@@ -4,6 +4,8 @@
   import { ref, reactive, watch, onMounted} from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
+  import { useDisplay } from 'vuetify'
+  const { mobile } = useDisplay()
   const appStore = useAppStore()
   const hosoDvcStore = useHosoDvcStore()
   const route = useRoute()
@@ -110,18 +112,17 @@
   })
 </script>
 <template>
-  <v-card class="wrap-c-tracuu mx-auto mt-3">
+  <v-card :class="!mobile ? 'wrap-c-tracuu mx-auto mt-3' : 'wrap-c-tracuu  wrap-c-tracuu-mobile mx-auto'">
     <v-row justify="center" class="mx-0 my-0">
       <v-col cols="12" class="px-0 py-0 text-header">
-				TRA CỨU HỒ SƠ THỦ TỤC HÀNH CHÍNH
+				TRA CỨU HỒ SƠ 
 			</v-col>
     </v-row>
-		<v-row class="mx-auto" style="margin-top: 12px !important;margin-bottom: 24px !important;max-width: 700px;">
-      <v-col cols="12"  class="px-0 py-0" style="line-height: 32px;">
+		<v-row class="mx-0" style="margin-top: 12px !important;margin-bottom: 24px !important;margin: 0 auto">
+      <v-col cols="12"  class="px-0 py-0" style="line-height: 32px; max-width: 700px; margin: 0 auto">
 				<span style="font-weight: 600;">Mã hồ sơ/ Số CCCD/ Mã số thuế/ Mã số doanh nghiệp </span>
-				<span style="color: #EB0202">(*)</span>
 			</v-col>
-			<v-col cols="12"  class="px-0 py-0">
+			<v-col cols="12" class="px-0 py-0" style="max-width: 700px;margin: 0 auto;">
 				<v-text-field
           prepend-inner-icon="mdi-file-document-edit-outline"
 					class="flex input-form"
@@ -181,7 +182,7 @@
 			</v-btn>
     </v-row>
     <!-- table -->
-    <div v-if="kqTraCuu" class="mx-0 mt-3">
+    <div v-if="kqTraCuu" class="mx-0 mt-3" style="max-width: 900px; margin: 0 auto">
       <v-row class="my-0 mx-0">
 				<v-col cols="12" class="px-0 py-0 text-header-ho-so py-2">
           <v-icon size="28" color="#1E7D30" class="mr-2">mdi-text-box-search-outline</v-icon>
@@ -195,7 +196,7 @@
 					</v-col>
 					<v-col class="py-0">
 						<div>
-							<span style="font-weight: 600;">{{ item.MaSoQuanLy }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
+							<span style="font-weight: 600;">{{ item.MaDinhDanh }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
 						</div>
 						<div style="font-style: italic;">
 							<span>Chủ hồ sơ: </span> <span style="font-weight: 600;">{{ item.ChuHoSo['TenGoi'] }}</span> - 
@@ -206,7 +207,7 @@
         <div v-if="kqTraCuu && !total" style="height: 45px;padding: 10px 0;">KHÔNG CÓ HỒ SƠ NÀO ĐƯỢC TÌM THẤY</div>
 			</div>
     </div>
-    <div class="mt-4">
+    <div class="mt-4" style="max-width: 900px; margin: 0 auto">
 			<v-row class="my-0 mx-0">
 				<v-col cols="12" class="px-0 py-0 text-header-ho-so py-2">
           <v-icon size="28" color="#1E7D30" class="mr-2">mdi-text-box-check-outline</v-icon>
@@ -220,7 +221,7 @@
 					</v-col>
 					<v-col class="py-0">
 						<div>
-							<span style="font-weight: 600;">{{ item.MaSoQuanLy }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
+							<span style="font-weight: 600;">{{ item.MaDinhDanh }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
 						</div>
 						<div style="font-style: italic;">
 							<span>Chủ hồ sơ: </span> <span style="font-weight: 600;">{{ item.ChuHoSo['TenGoi'] }}</span> - 
@@ -237,7 +238,7 @@
               </v-col>
               <v-col class="py-0">
                 <div>
-                  <span style="font-weight: 600;">{{ item.MaSoQuanLy }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
+                  <span style="font-weight: 600;">{{ item.MaDinhDanh }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
                 </div>
                 <div style="font-style: italic;">
                   <span>Chủ hồ sơ: </span> <span style="font-weight: 600;">{{ item.ChuHoSo['TenGoi'] }}</span> - 
@@ -265,6 +266,14 @@
 		border: 1px solid #DADADA;
 		padding: 25px 57px;
 	}
+  .wrap-c-tracuu-mobile {
+    box-shadow: none !important;
+    width: 100%;
+		max-width: 1200px;
+		background: #FFFFFF;
+		border: 1px solid #DADADA;
+		padding: 15px 15px;
+  }
 	.wrap-c-tracuu .text-header {
 		font-family: 'Roboto';
 		font-style: normal;

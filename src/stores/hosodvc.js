@@ -228,15 +228,14 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
         method: 'get',
         url: `${this.baseURL}/storagemgt/internal/tepdulieu/1.0/download/${file.MaDinhDanh}`,
         headers: { 
-          'Content-Type': 'application/octet-stream',
-          'Authorization': 'Bearer ' + cookies.get('Token')
+          'Content-Type': 'application/octet-stream'
         },
         responseType: 'blob'
       }
 
       let response = await axios(config)
-      var urlFile = window.URL.createObjectURL(response.data)
-      console.log('urlFile', urlFile)
+      console.log('ressssssHandleResponse', response, response.status)
+      let urlFile = window.URL.createObjectURL(response.data)
       return urlFile
     }
   }

@@ -345,9 +345,9 @@
     height: 16px;
   }
   @media screen and (max-width: 426px) {
-    .action-title {
-      display: none;
-    }
+    // .action-title {
+    //   display: none;
+    // }
     .img-login-logo {
       width: 50px;
     }

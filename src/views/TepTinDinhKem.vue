@@ -230,7 +230,7 @@
       >
         <template v-slot:item="{ item, index }">
           <tr>
-            <td class="align-left">{{ item.raw.TenGiayTo }} 
+            <td class="align-left">{{ index+1 }}. {{ item.raw.TenGiayTo }} 
               <span v-if="item.raw.MaThanhPhanHoSo" style="color:red">(*)</span>
               <v-btn v-if="!item.raw.MaThanhPhanHoSo"
                 class="mx-0 ml-2"
@@ -244,7 +244,7 @@
                 <span style="font-size: 14px; text-transform: none;">Xóa</span>
               </v-btn>
             </td>
-            <td class="align-center" width="450">
+            <td class="align-left" width="350">
               <div class="py-1" @click="taiXuongFile(item.raw.TepDuLieu, 'preview')" v-if="item.raw.TepDuLieu.KichThuocTep">
                 <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
                 <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
@@ -284,7 +284,7 @@
           </tr>
         </template>
       </v-data-table>
-      <v-row class="mx-0 my-0" style="justify-content: flex-end;">
+      <!-- <v-row class="mx-0 my-0" style="justify-content: flex-end;">
         <v-btn
           size="small"
           color="#1E7D30"
@@ -294,7 +294,7 @@
         >
           Thêm giấy tờ khác
         </v-btn>
-      </v-row>
+      </v-row> -->
     </v-row>
     <v-row class="mx-0 my-0 mt-2" v-if="mobile">
       <v-data-table
@@ -368,7 +368,7 @@
           </tr>
         </template>
       </v-data-table>
-      <v-row class="mx-0 my-0" style="justify-content: flex-end;">
+      <!-- <v-row class="mx-0 my-0" style="justify-content: flex-end;">
         <v-btn
           size="small"
           color="#1E7D30"
@@ -378,7 +378,7 @@
         >
           Thêm giấy tờ khác
         </v-btn>
-      </v-row>
+      </v-row> -->
     </v-row>
     <input type="file" id="file_upload_tep_dinh_kem" :multiple="false" @input="uploadFile()" style="display:none"/>
   </v-card>

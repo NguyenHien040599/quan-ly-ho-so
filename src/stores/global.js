@@ -27,6 +27,7 @@ export const useAppStore = defineStore('appStore', {
       HoatDongXLDLCN: '',
       LoaiDLCNCoBan: [],
       LoaiDLCNNhayCam: [],
+      SoLuongDuLieu: '',
       DongYChuTheDLCN: false,
       ChuyenDLCNRaNuocNgoai: false,
       ThoiGianXuLy: '',
@@ -48,6 +49,7 @@ export const useAppStore = defineStore('appStore', {
       HoatDongXLDLCN: '',
       LoaiDLCNCoBan: [],
       LoaiDLCNNhayCam: [],
+      SoLuongDuLieu: '',
       DongYChuTheDLCN: false,
       ChuyenDLCNRaNuocNgoai: false,
       ThoiGianXuLy: '',
@@ -59,7 +61,73 @@ export const useAppStore = defineStore('appStore', {
       NoiDungThayDoi: '',
       LyDoThayDoi: ''
     },
-    thanhPhanHoSoXldl: []
+    dataFormBieuMauCdlcnrnn: {
+      DoiTuongThucHien: {
+        LoaiDoiTuongThucHien: null
+      },
+      LoaiBenDGTD: null,
+      NguoiLienHe: null,
+      MucDichCDLCNRNN: '',
+      HoatDongCDLCNRNN: '',
+      LoaiDLCNCoBan: [],
+      LoaiDLCNNhayCam: [],
+      SoLuongDuLieu: '',
+      DongYChuTheDLCN: false,
+      ChuyenDLCNRaNuocNgoai: false,
+      ThoiGianXuLy: '',
+      ThoiGianHuyXoa: '',
+      LoaiBienPhapBVDLCN: [],
+      LoaiDanhGiaTacDong: [],
+      LayYKienDanhGia: false,
+      MaHoSoThayDoi: '',
+      NoiDungThayDoi: '',
+      LyDoThayDoi: ''
+    },
+    dataFormBieuMauCdlcnrnnDefault: {
+      DoiTuongThucHien: {
+        LoaiDoiTuongThucHien: null
+      },
+      LoaiBenDGTD: null,
+      NguoiLienHe: null,
+      MucDichCDLCNRNN: '',
+      HoatDongCDLCNRNN: '',
+      LoaiDLCNCoBan: [],
+      LoaiDLCNNhayCam: [],
+      SoLuongDuLieu: '',
+      DongYChuTheDLCN: false,
+      ChuyenDLCNRaNuocNgoai: false,
+      ThoiGianXuLy: '',
+      ThoiGianHuyXoa: '',
+      LoaiBienPhapBVDLCN: [],
+      LoaiDanhGiaTacDong: [],
+      LayYKienDanhGia: false,
+      MaHoSoThayDoi: '',
+      NoiDungThayDoi: '',
+      LyDoThayDoi: ''
+    },
+    dataFormBieuMauTbvp: {
+      DoiTuongThucHien: {
+        LoaiDoiTuongThucHien: null
+      },
+      LoaiBenDGTD: null,
+      NguoiLienHe: null,
+      MucDichCDLCNRNN: '',
+      HoatDongCDLCNRNN: '',
+      LoaiDLCNCoBan: [],
+      LoaiDLCNNhayCam: [],
+      DongYChuTheDLCN: false,
+      ChuyenDLCNRaNuocNgoai: false,
+      ThoiGianXuLy: '',
+      ThoiGianHuyXoa: '',
+      LoaiBienPhapBVDLCN: [],
+      LoaiDanhGiaTacDong: [],
+      LayYKienDanhGia: false,
+      MaHoSoThayDoi: '',
+      NoiDungThayDoi: '',
+      LyDoThayDoi: ''
+    },
+    thanhPhanHoSoXldl: [],
+    thanhPhanHoSoCdlcnrnn: []
   }),
   getters: {
     getDialogConfirm: (state) => state.dialogConfirm,
@@ -71,7 +139,10 @@ export const useAppStore = defineStore('appStore', {
     getMenuSelected: (state) => state.menuSelected,
     getThongTinHoSo: (state) => state.thongTinHoSo,
     getDataFormBieuMauXldl: (state) => state.dataFormBieuMauXldl,
-    getThanhPhanHoSoXldl: (state) => state.thanhPhanHoSoXldl
+    getThanhPhanHoSoXldl: (state) => state.thanhPhanHoSoXldl,
+    getDataFormBieuMauCdlcnrnn: (state) => state.dataFormBieuMauCdlcnrnn,
+    getThanhPhanHoSoCdlcnrnn: (state) => state.thanhPhanHoSoCdlcnrnn,
+    getDataFormBieuMauTbvp: (state) => state.dataFormBieuMauTbvp
   },
   actions: {
     SET_USERINFO (val) {
@@ -100,6 +171,12 @@ export const useAppStore = defineStore('appStore', {
     },
     SET_TPHS_XLDL (val) {
       this.thanhPhanHoSoXldl = val
+    },
+    SET_DATA_FORM_BIEUMAU_CDL (val) {
+      this.dataFormBieuMauCdlcnrnn = val
+    },
+    SET_TPHS_CDL (val) {
+      this.thanhPhanHoSoCdlcnrnn = val
     },
     SET_ISSIGNED (val) {
       this.isSigned = val

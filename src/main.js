@@ -24,7 +24,7 @@ axios.interceptors.response.use((response) => {
     }
   }
   if (error.response) {
-    return parseError(error.response.data)
+    return error.response
   } else {
     return Promise.reject(error)
   }

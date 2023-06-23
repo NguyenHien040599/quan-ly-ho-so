@@ -27,14 +27,17 @@
       appStore.SET_MENU_SELECTED(menuItems[0])
     }
   }
-  console.log('menuSelected', menuSelected)
+  // console.log('menuSelected', menuSelected)
   const loading = ref(false)
   const themMoiHoSo = function () {
     router.push({ path: '/nop-ho-so' + menuSelected.value.to })
   }
   const thongKeSoLuong = function () {
     let filter = {
-      doiTuong: 'thutuchanhchinh'
+      doiTuong: 'thutuchanhchinh',
+      data: {
+        trangThaiDuLieu_MaMuc: '01,02'
+      }
     }
     hosoDvcStore.thongKeHoSo(filter).then(function(result) {
       menuItems[0].counter = 0
@@ -45,7 +48,7 @@
         return item.MaMuc == 'TBVP'
       })
       if (tbvp) {
-        menuItems[0].counter = tbvp.SoLuong
+        menuItems[2].counter = tbvp.SoLuong
       }
       let xldl = data.find(function(item) {
         return item.MaMuc == 'DGTD_XLDLCN'
@@ -54,10 +57,10 @@
         return item.MaMuc == 'TDND_DGTD_XLDLCN'
       })
       if (xldl) {
-        menuItems[1].counter += xldl.SoLuong
+        menuItems[0].counter += xldl.SoLuong
       }
       if (tdndxldl) {
-        menuItems[1].counter += tdndxldl.SoLuong
+        menuItems[0].counter += tdndxldl.SoLuong
       }
       let cdl = data.find(function(item) {
         return item.MaMuc == 'DGTD_CDLCN'
@@ -66,10 +69,10 @@
         return item.MaMuc == 'TDND_DGTD_CDLCN'
       })
       if (cdl) {
-        menuItems[2].counter += cdl.SoLuong
+        menuItems[1].counter += cdl.SoLuong
       }
       if (tdndcdl) {
-        menuItems[2].counter += tdndcdl.SoLuong
+        menuItems[1].counter += tdndcdl.SoLuong
       }
     }).catch(function(){
     })
@@ -82,7 +85,7 @@
   watch(route, async (val) => {
     thongKeSoLuong()
     if (val.name !== 'ThongTinHoSo' && val.name !== 'BieuMauDienTu') {
-      console.log('run watch-routes2:', val.name, val.params)
+      // console.log('run watch-routes2:', val.name, val.params)
       if (val && val.params.hasOwnProperty('thutuc') && val.params.thutuc) {
         let menu = menuItems.find(function (item) {
           return item.to.split('/')[1] === val.params.thutuc

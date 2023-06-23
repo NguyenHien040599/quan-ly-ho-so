@@ -39,16 +39,6 @@
     let date = new Date(dateInput)
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
-  const convertDataView = function (itemHeader, item) {
-    let output = ''
-    try {
-      let calu = itemHeader['calculator'].replace(/dataInput/g, 'item')
-      output = eval(calu)
-    } catch (error) {
-      output = ''
-    }
-    return output
-  }
   const convertDataArray = function (itemHeader, array) {
     let output = ''
     if (array) {
@@ -96,9 +86,6 @@
         <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
         </span>
-        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ convertDataView(itemChild, thongTinBieuMau.DoiTuongThucHien) }}
-        </span>
         <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ itemChild.value ? thongTinBieuMau.DoiTuongThucHien[itemChild.value] : '' }}
         </span>
@@ -135,9 +122,6 @@
         <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.DoiTuongThucHien.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau.DoiTuongThucHien[itemChild.value]) : '' }}
         </span>
-        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ convertDataView(itemChild, thongTinBieuMau.DoiTuongThucHien) }}
-        </span>
         <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ itemChild.value ? thongTinBieuMau.DoiTuongThucHien[itemChild.value] : '' }}
         </span>
@@ -170,9 +154,6 @@
         </span>
         <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.CaNhanPhuTrachBVDLCN.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value]) : '' }}
-        </span>
-        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ convertDataView(itemChild, thongTinBieuMau.CaNhanPhuTrachBVDLCN) }}
         </span>
         <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ itemChild.value ? thongTinBieuMau.CaNhanPhuTrachBVDLCN[itemChild.value] : '' }}
@@ -209,9 +190,6 @@
         </span>
         <span class="content-text" v-else-if="itemChild.type == 'array'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.hasOwnProperty(itemChild.value) ? convertDataArray(itemChild, thongTinBieuMau[itemChild.value]) : '' }}
-        </span>
-        <span class="content-text" v-else-if="itemChild.type == 'calculator'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
-          {{ convertDataView(itemChild, thongTinBieuMau) }}
         </span>
         <span class="content-text" v-else-if="itemChild.type == 'boolean'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
           {{ thongTinBieuMau.hasOwnProperty(itemChild.value) && thongTinBieuMau[itemChild.value] ? 'Có' : 'Không' }}
