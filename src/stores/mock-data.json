@@ -225,236 +225,398 @@
       "maThuTuc": "TBVP",
       "tenThuTuc": "Thông báo vi phạm quy định về bảo vệ dữ liệu cá nhân",
       "mauEform": "",
-      "mauHienThi": []
-    },
-    {
-      "maThuTuc": "DGTD_XLDLCN",
-      "tenThuTuc": "Hồ sơ đánh giá tác động xử lý dữ liệu",
-      "mauEform": "",
-      "mauHienThiHoSo": [
-        {
+      "mauHienThiBieuMau": {
+        "thongTinChuHoSo": {
           "group": true,
-          "title": "Thông tin chung hồ sơ",
+          "title": "Thông tin tổ chức, cá nhân thực hiện thông báo vi phạm",
           "content": [
             {
-              "title": "Mã hồ sơ",
-              "value": "MaThamChieu",
+              "title": "- Tên gọi của cá nhân, tổ chức",
+              "value": "TenGoi",
+              "mapping": "",
+              "class": "v-col-12 py-0 pt-2 px-0",
+              "type": ""
+            },
+            {
+              "title": "- Số giấy chứng nhận cá nhân, tổ chức",
+              "value": "GiayChungNhan",
+              "mapping": "SoGiay",
+              "class": "v-col-12 py-0 pt-2 px-0",
+              "type": "object"
+            },
+            {
+              "title": "- Ngày cấp giấy chứng nhận",
+              "value": "GiayChungNhan",
+              "mapping": "NgayCap",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0",
+              "type": "obj-date"
+            },
+            {
+              "title": "- Nơi cấp giấy chứng nhận",
+              "value": "GiayChungNhan",
+              "mapping": "NoiCap",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0",
+              "type": "object"
+            },
+            {
+              "title": "- Địa chỉ trụ sở chính / đăng ký thường trú",
+              "value": "DiaChiHoatDong",
+              "mapping": "",
+              "type": "fulladdress",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Địa chỉ trụ sở giao dịch / địa chỉ nơi ở hiện nay",
+              "value": "DiaChiLienHe",
+              "mapping": "",
+              "type": "fulladdress",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Số điện thoại",
+              "value": "SoDienThoai",
+              "mapping": "",
+              "type": "",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Email",
+              "value": "Email",
+              "mapping": "",
+              "type": "",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Website",
+              "value": "Website",
+              "mapping": "",
+              "type": "",
+              "class": "v-col-12 v-col-md-4 py-0 pt-2 px-0"
+            }
+          ],
+          "class": "v-col-12 py-0 px-0 pt-2"
+        },
+        "nguoiLienHe": {
+          "group": true,
+          "title": "Thông tin cá nhân phụ trách/ người liên hệ",
+          "content": [
+            {
+              "title": "- Họ và tên",
+              "value": "HoVaTen",
+              "type": "",
+              "mapping": "",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Chức danh",
+              "value": "ChucDanh",
+              "type": "",
+              "mapping": "",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Email",
+              "value": "Email",
+              "type": "",
+              "mapping": "",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Số điện thoại",
+              "value": "SoDienThoai",
+              "type": "",
+              "mapping": "",
+              "class": "v-col-12 v-col-md-6 py-0 pt-2 px-0"
+            }
+          ],
+          "class": "v-col-12 py-0 px-0 pt-2"
+        },
+        "noiDungDanhGia": {
+          "group": true,
+          "title": "Nội dung thông báo vi phạm xử lý dữ liệu cá nhân",
+          "content": [
+            {
+              "title": "- Nội dung báo cáo vi phạm",
+              "value": "NoiDungViPham",
+              "mapping": "TenMuc",
+              "type": "danhmucNdvp",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Thời gian vi phạm",
+              "value": "ThoiGianViPham",
+              "mapping": "",
+              "type": "date",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Địa điểm vi phạm",
+              "value": "DiaDiemViPham",
+              "mapping": "",
               "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Ngày nộp",
-              "value": "NgayNopHoSo",
-              "type": "datetime",
+              "title": "- Tổ chức, cá nhân liên quan",
+              "value": "ToChucCaNhanLienQuan",
+              "mapping": "",
+              "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Tình trạng hồ sơ",
-              "value": "TrangThaiHoSo",
-              "type": "object",
+              "title": "- Loại dữ liệu cá nhân cơ bản vi phạm liên quan",
+              "value": "LoaiDLCNCoBan",
               "mapping": "TenMuc",
+              "type": "danhmuc",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Cơ quan giải quyết",
-              "value": "DonViXuLy",
-              "type": "object",
+              "title": "- Loại dữ liệu cá nhân nhạy cảm vi phạm liên quan",
+              "value": "LoaiDLCNNhayCam",
               "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            }
-          ],
-          "class": "v-col-12 py-0 px-0 pt-2"
-        },
-        {
-          "group": true,
-          "title": "Thông tin về tổ chức, doanh nghiệp",
-          "content": [
-            {
-              "title": "Tên tổ chức, doanh nghiệp",
-              "value": "ChuHoSo",
-              "mapping": "TenGoi",
-              "type": "object",
+              "type": "danhmuc",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Địa chỉ trụ sở chính",
-              "value": "DiaChi",
-              "mapping": "SoNhaChiTiet",
-              "type": "object",
+              "title": "- Số lượng dữ liệu vi phạm liên quan",
+              "value": "SoLuongDuLieu",
+              "mapping": "",
+              "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Địa chỉ giao dịch",
-              "value": "DiaChi",
-              "mapping": "SoNhaChiTiet",
-              "type": "object",
+              "title": "- Hậu quả xảy ra",
+              "value": "HauQuaXayRa",
+              "mapping": "",
+              "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Quyết định thành lập/Giấy chứng nhận đăng ký doanh nghiệp/Giấy chứng nhận đăng ký kinh doanh/Giấy chứng nhận đầu tư số",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
+              "title": "- Biện pháp áp dụng",
+              "value": "BienPhapApDung",
+              "mapping": "",
+              "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Do",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
+              "title": "- Vi phạm đã xảy ra trước 72 tại thời điểm thông báo?",
+              "value": "ThongBaoSau72H",
+              "mapping": "",
+              "type": "boolean",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "Cấp ngày",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Tại",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Điện thoại",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Website",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Nhân sự chịu trách nhiệm bảo vệ dữ liệu cá nhân",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Họ và tên",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Chức danh",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Số điện thoại",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Email",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            }
-          ],
-          "class": "v-col-12 py-0 px-0 pt-2"
-        },
-        {
-          "group": true,
-          "title": "Mô tả hành vi vi phạm quy định bảo vệ dữ liệu cá nhân",
-          "content": [
-            {
-              "title": "Thời gian",
-              "value": "ChuHoSo",
-              "mapping": "TenGoi",
-              "type": "object",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Địa điểm",
-              "value": "DiaChi",
-              "mapping": "SoNhaChiTiet",
-              "type": "object",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Hành vi",
-              "value": "DiaChi",
-              "mapping": "SoNhaChiTiet",
-              "type": "object",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Tổ chức, cá nhân, các loại dữ liệu cá nhân và số lượng dữ liệu liên quan",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Nhân sự chịu trách nhiệm bảo vệ dữ liệu cá nhân",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Họ và tên",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Chức danh",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Số điện thoại liên lạc",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Email",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Hậu quả xảy ra",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
-              "title": "Biện pháp",
-              "value": "DonViXuLy",
-              "type": "object",
-              "mapping": "TenMuc",
+              "title": "- Lý do chậm muộn thực hiện thông báo sau 72h",
+              "value": "LyDoChamMuon",
+              "mapping": "",
+              "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             }
           ],
           "class": "v-col-12 py-0 px-0 pt-2"
         }
-      ],
+      },
+      "thongTinHoSo": {
+        "ThuTucHanhChinh": {
+          "MaMuc": "TBVP",
+          "TenMuc": "Thông báo vi phạm quy định về bảo vệ dữ liệu cá nhân"
+        },
+        "LinhVucThuTuc": [],
+        "KenhThucHienHoSo": {},
+        "ChuHoSo": {
+          "MaDinhDanh": "",
+          "LoaiDoiTuong": {
+            "MaMuc": "",
+            "TenMuc": ""
+          },
+          "MaDoiTuong": "",
+          "TenGoi": "",
+          "ThongTinKhac": "",
+          "DanhBaLienLac": {
+            "SoFax": "",
+            "ThuDienTu": "",
+            "SoDienThoai": ""
+          },
+          "DiaChi": {
+            "SoNhaChiTiet": "",
+            "TinhThanh": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "HuyenQuan": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "XaPhuong": {
+              "MaMuc": "",
+              "TenMuc": ""
+            }
+          }
+        },
+        "NguoiNopHoSo": {
+          "MaDinhDanh": "",
+          "TenGoi": "",
+          "ThongTinKhac": "",
+          "DanhBaLienLac": {
+            "SoFax": "",
+            "ThuDienTu": "",
+            "SoDienThoai": ""
+          },
+          "DiaChi": {
+            "SoNhaChiTiet": "",
+            "TinhThanh": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "HuyenQuan": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "XaPhuong": {
+              "MaMuc": "",
+              "TenMuc": ""
+            }
+          }
+        },
+        "TrichYeuHoSo": "",
+        "MaDinhDanh": "",
+        "NgayNopHoSo": "",
+        "NgayTiepNhan": "",
+        "NgayHenTra": "",
+        "NgayTra": "",
+        "ThongTinTra": "",
+        "HinhThucTraHoSo": {
+          "ThoiGianTao": "",
+          "ThoiGianCapNhat": "",
+          "TrangThaiDuLieu": {
+            "MaMuc": "",
+            "TenMuc": ""
+          },
+          "MaMuc": "",
+          "TenMuc": "",
+          "MaPhienBan": "",
+          "MaDinhDanh": ""
+        },
+        "NgayKetThucXuLy": "",
+        "NgayTuChoi": "",
+        "ThoiGianGiaiQuyet": "",
+        "SoNgayChamHan": "",
+        "LyDoChamHan": "",
+        "DonViXuLy": {
+          "MaMuc": "G01.105",
+          "TenMuc": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"
+        },
+        "TrangThaiHoSo": {
+          "MaMuc": "00",
+          "TenMuc": "Chưa gửi"
+        },
+        "GhiChuKetQua": "",
+        "MaTruongHop": "",
+        "HoSoCoThanhPhanSoHoa": true,
+        "ThanhPhanHoSo": [
+          {
+            "IDGiayTo": "BMDT_TBVP",
+            "TenGiayTo": "Biểu mẫu điện tử",
+            "SoBanGiay": 0,
+            "HinhThucGiayTo": {
+              "ThoiGianTao": "",
+              "ThoiGianCapNhat": "",
+              "TrangThaiDuLieu": {
+                "MaMuc": "",
+                "TenMuc": ""
+              },
+              "MaMuc": "",
+              "TenMuc": "",
+              "MaPhienBan": "",
+              "MaDinhDanh": ""
+            },
+            "NgayBoSung": "",
+            "MaThanhPhanHoSo": {
+              "MaMuc": "BMDT_TBVP",
+              "TenMuc": "Thành phần biểu mẫu điện tử"
+            },
+            "MaGiayToKetQua": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "DaHuyBoThayThe": false,
+            "TinhTrangSoHoa": 1,
+            "GiayToLuuTruSo": {
+              "MaDinhDanh": "",
+              "TenGiayTo": ""
+            },
+            "TepDuLieu": {
+              "MaDinhDanh": "",
+              "TenTep": "",
+              "DinhDangTep": "",
+              "KichThuocTep": 0,
+              "DuongDanURL": ""
+            },
+            "BieuMauDienTu": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "IDBanGhi": ""
+          },
+          {
+            "IDGiayTo": "TBVP_TP1",
+            "TenGiayTo": "Tài liệu kèm theo (hình ảnh, tài liệu, văn bản liên quan tới hành vi vi phạm)",
+            "SoBanGiay": 0,
+            "HinhThucGiayTo": {
+              "MaMuc": "true",
+              "TenMuc": "false"
+            },
+            "NgayBoSung": "",
+            "MaThanhPhanHoSo": {
+              "MaMuc": "TBVP_TP1",
+              "TenMuc": "Mã thành phần 1"
+            },
+            "MaGiayToKetQua": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "DaHuyBoThayThe": false,
+            "TinhTrangSoHoa": 1,
+            "GiayToLuuTruSo": {
+              "MaDinhDanh": "",
+              "TenGiayTo": ""
+            },
+            "TepDuLieu": {
+              "MaDinhDanh": "",
+              "TenTep": "",
+              "DinhDangTep": "",
+              "KichThuocTep": 0,
+              "DuongDanURL": ""
+            },
+            "BieuMauDienTu": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "IDBanGhi": ""
+          }
+        ],
+        "GiaHanHenTra": [],
+        "BoSungHoSo": [],
+        "PhiLePhi": [],
+        "GiayToKetQua": [],
+        "TrangThaiDuLieu": {
+          "MaMuc": "",
+          "TenMuc": ""
+        },
+        "PhanVungDuLieu": {
+          "MaMuc": "",
+          "TenMuc": ""
+        },
+        "HoSoLuuTruSo": {
+          "MaDinhDanh": ""
+        },
+        "NhatKyHoSo": []
+      }
+    },
+    {
+      "maThuTuc": "DGTD_XLDLCN",
+      "tenThuTuc": "Hồ sơ đánh giá tác động xử lý dữ liệu",
+      "mauEform": "",
       "mauHienThiBieuMau": {
         "thongTinChuHoSo": {
           "group": true,
@@ -608,14 +770,14 @@
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "- Thời gian xử lý dữ liệu",
+              "title": "- Thời gian bắt đầu",
               "value": "ThoiGianXuLy",
               "mapping": "",
               "type": "date",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "- Thời gian xóa/hủy dữ liệu (nếu có)",
+              "title": "- Thời gian kết thúc",
               "value": "ThoiGianHuyXoa",
               "mapping": "",
               "type": "date",
@@ -793,16 +955,8 @@
             "TenGiayTo": "Bản chính thuyết minh đánh giá tác động xử lý dữ liệu cá nhân",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "false",
+              "TenMuc": "true"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -837,16 +991,8 @@
             "TenGiayTo": "Giấy chứng nhận đăng kí hoạt động hoặc quyết định thành lập của tổ chức; căn cước công dân, chứng minh thư hoặc hộ chiếu của cá nhân",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "false",
+              "TenMuc": "true"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -881,16 +1027,8 @@
             "TenGiayTo": "Quyết định hoặc giấy tờ liên quan đến phân công bộ phận phụ trách bảo vệ dữ liệu cá nhân của tổ chức",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "false",
+              "TenMuc": "false"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -925,16 +1063,8 @@
             "TenGiayTo": "Hợp đồng hoặc văn bản thỏa thuận liên quan đến xử lý dữ liệu cá nhân và/hoặc chuyển dữ liệu cá nhân ra nước ngoài với các bên (nếu có)",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "true",
+              "TenMuc": "false"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -969,16 +1099,8 @@
             "TenGiayTo": "Giấy tờ khác (các phụ lục bảng biểu tính toán chi phí, lợi ích của các giải pháp)",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "true",
+              "TenMuc": "false"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -1192,14 +1314,14 @@
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "- Thời gian xử lý dữ liệu",
+              "title": "- Thời gian bắt đầu",
               "value": "ThoiGianXuLy",
               "mapping": "",
               "type": "date",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "- Thời gian xóa/hủy dữ liệu (nếu có)",
+              "title": "- Thời gian kết thúc",
               "value": "ThoiGianHuyXoa",
               "mapping": "",
               "type": "date",
@@ -1377,16 +1499,8 @@
             "TenGiayTo": "Bản chính thuyết minh đánh giá tác động chuyển dữ liệu cá nhân là công dân việt nam ra nước ngoài",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "false",
+              "TenMuc": "true"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -1421,16 +1535,8 @@
             "TenGiayTo": "Giấy chứng nhận đăng kí hoạt động hoặc quyết định thành lập của tổ chức; căn cước công dân, chứng minh thư hoặc hộ chiếu của cá nhân",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "false",
+              "TenMuc": "true"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -1465,16 +1571,8 @@
             "TenGiayTo": "Quyết định hoặc giấy tờ liên quan đến phân công bộ phận phụ trách bảo vệ dữ liệu cá nhân của tổ chức",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "false",
+              "TenMuc": "false"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -1509,16 +1607,8 @@
             "TenGiayTo": "Hợp đồng hoặc văn bản thỏa thuận liên quan đến chuyển dữ liệu cá nhân ra nước ngoài",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "true",
+              "TenMuc": "false"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {
@@ -1553,16 +1643,8 @@
             "TenGiayTo": "Giấy tờ khác (các phụ lục bảng biểu tính toán chi phí, lợi ích của các giải pháp)",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
-              "ThoiGianTao": "",
-              "ThoiGianCapNhat": "",
-              "TrangThaiDuLieu": {
-                "MaMuc": "",
-                "TenMuc": ""
-              },
-              "MaMuc": "",
-              "TenMuc": "",
-              "MaPhienBan": "",
-              "MaDinhDanh": ""
+              "MaMuc": "true",
+              "TenMuc": "false"
             },
             "NgayBoSung": "",
             "MaThanhPhanHoSo": {

@@ -74,9 +74,9 @@
 	})
 </script>
 <template>
-  <v-card class="mx-auto pa-0" style="box-shadow: none !important; overflow: inherit;">
-    <v-row class="mx-0">
-      <v-col cols="12" class="px-0">
+  <v-card class="mx-auto pa-0 select-danhmuc" style="box-shadow: none !important; overflow: inherit;">
+    <v-row class="mx-0 my-0">
+      <!-- <v-col cols="12" class="px-0">
         <v-data-table
           :headers="headers"
           :items="danhSachDanhMuc"
@@ -105,6 +105,15 @@
               </tr>
           </template>
         </v-data-table>
+      </v-col> -->
+      <v-col cols="12" md="6" class="px-2 py-1 col-select-dm" v-for="(item, index) in danhSachDanhMuc" :key="index">
+        <v-checkbox
+          v-model="item['Selected']"
+          :label="item['TenMuc']"
+          color="#1E7D30"
+          :value="true"
+          hide-details
+        ></v-checkbox>
       </v-col>
     </v-row>
 
@@ -112,12 +121,4 @@
 </template>
 
 <style scoped>
-  
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
 </style>

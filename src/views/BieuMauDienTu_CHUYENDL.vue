@@ -185,7 +185,7 @@
         return
       }
       if (!dataFormBieuMau.value['ThoiGianXuLy']) {
-        toastr.error('Vui lòng chọn "Thời gian xử lý"')
+        toastr.error('Vui lòng chọn "Thời gian bắt đầu"')
         return
       }
       appStore.$patch((state) => {
@@ -367,7 +367,7 @@
       return
     }
     if (!dataFormBieuMau.value['ThoiGianXuLy']) {
-      toastr.error('Vui lòng chọn "Thời gian xử lý"')
+      toastr.error('Vui lòng chọn "Thời gian bắt đầu"')
       tabSelected.value = 'noidung'
       return
     }
@@ -414,6 +414,7 @@
           'MaMuc': '02',
           'TenMuc': 'Chính thức'
         }
+        state.thongTinHoSo['TrichYeuHoSo'] = thongTinHoSo.value['ThuTucHanhChinh']['TenMuc'] + ' cho tổ chức/cá nhân ' + thongTinHoSo.value['ChuHoSo']['TenGoi']
       })
       console.log('thongTinHoSo', thongTinHoSo.value)
       let filterHs = {
@@ -729,7 +730,7 @@
               </v-radio-group>
             </v-col>
             <v-col cols="12" md="6" class="py-0 mb-10">
-              <div class="text-label">Thời gian xử lý <span style="color: red">(*)</span></div>
+              <div class="text-label">Thời gian bắt đầu <span style="color: red">(*)</span></div>
               <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
                 v-model="dataFormBieuMau['ThoiGianXuLy']" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
                 auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" @update:model-value="changeDatePicker('ThoiGianXuLy', dataFormBieuMau['ThoiGianXuLy'])"
@@ -737,7 +738,7 @@
                 </VueDatePicker>
             </v-col>
             <v-col cols="12" md="6" class="py-0 mb-10">
-              <div class="text-label">Thời gian xóa/hủy dữ liệu (nếu có)</div>
+              <div class="text-label">Thời gian kết thúc</div>
               <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
                 v-model="dataFormBieuMau['ThoiGianHuyXoa']" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
                 auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" @update:model-value="changeDatePicker('ThoiGianHuyXoa', dataFormBieuMau['ThoiGianHuyXoa'])"
@@ -857,7 +858,7 @@
               :disabled="loading"
             >
               <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
-              <span style="font-size: 16px">Nộp hồ sơ</span>
+              <span style="font-size: 16px">Gửi hồ sơ</span>
             </v-btn>
           </v-row>
         </v-window-item>
@@ -884,7 +885,7 @@
   .thongtinchung .label-text {
     font-family: 'Roboto';
     font-style: normal;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 14px;
     line-height: 18px;
     color: #000000;

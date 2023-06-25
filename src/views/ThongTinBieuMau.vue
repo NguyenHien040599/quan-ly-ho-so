@@ -22,7 +22,16 @@
     return appStore.thongTinHoSo
   })
   const thongTinBieuMau = computed(function () {
-    return appStore.dataFormBieuMauXldl
+    let hs = appStore.thongTinHoSo
+    if (hs['ThuTucHanhChinh']['MaMuc'] == 'DGTD_XLDLCN' || hs['ThuTucHanhChinh']['MaMuc'] == 'TDND_DGTD_XLDLCN') {
+      return appStore.dataFormBieuMauXldl
+    }
+    if (hs['ThuTucHanhChinh']['MaMuc'] == 'DGTD_CDLCN' || hs['ThuTucHanhChinh']['MaMuc'] == 'TDND_DGTD_CDLCN') {
+      return appStore.dataFormBieuMauCdlcnrnn
+    }
+    if (hs['ThuTucHanhChinh']['MaMuc'] == 'TBVP') {
+      return appStore.dataFormBieuMauTbvp
+    }
   })
   const ThanhPhanHoSo = defineAsyncComponent(() =>
     import('./ThanhPhanHoSo.vue')
@@ -44,7 +53,15 @@
         if (tpbm) {
           getDLDT(tpbm.DuLieuDienTu['MaDinhDanh'])
         } else {
-          appStore.SET_DATA_FORM_BIEUMAU_XLDL(appStore.dataFormBieuMauXldlDefault)
+          if (result.resp['ThuTucHanhChinh']['MaMuc'] == 'DGTD_XLDLCN' || result.resp['ThuTucHanhChinh']['MaMuc'] == 'TDND_DGTD_XLDLCN') {
+            appStore.SET_DATA_FORM_BIEUMAU_XLDL(appStore.dataFormBieuMauXldlDefault)
+          }
+          if (result.resp['ThuTucHanhChinh']['MaMuc'] == 'DGTD_CDLCN' || result.resp['ThuTucHanhChinh']['MaMuc'] == 'TDND_DGTD_CDLCN') {
+            appStore.SET_DATA_FORM_BIEUMAU_XLDL(appStore.dataFormBieuMauCdlcnrnnDefault)
+          }
+          if (result.resp['ThuTucHanhChinh']['MaMuc'] == 'TBVP') {
+            appStore.SET_DATA_FORM_BIEUMAU_XLDL(appStore.dataFormBieuMauTbvpDefault)
+          }
         }
       } else {
         appStore.SET_THONGTINHOSO(null)
@@ -59,7 +76,15 @@
     }
     hosoDvcStore.getChiTietBieuMauDienTu(filter).then(function(result) {
       if (result.resp) {
-        appStore.SET_DATA_FORM_BIEUMAU_XLDL(result.resp)
+        if (result.resp['BieuMauDienTu']['MaMuc'] == 'BM_XLDLCN') {
+          appStore.SET_DATA_FORM_BIEUMAU_XLDL(result.resp)
+        }
+        if (result.resp['BieuMauDienTu']['MaMuc'] == 'BM_CDLCN') {
+          appStore.SET_DATA_FORM_BIEUMAU_CDL(result.resp)
+        }
+        if (result.resp['BieuMauDienTu']['MaMuc'] == 'BM_TBVP') {
+          appStore.SET_DATA_FORM_BIEUMAU_TBVP(result.resp)
+        }
       }
     }).catch(function(){
     })
@@ -95,7 +120,7 @@
     let tinhThanh = item.TinhThanh ? item.TinhThanh.TenMuc : ''
     let huyenQuan = item.HuyenQuan ? item.HuyenQuan.TenMuc : ''
     let xaPhuong = item.XaPhuong ? item.XaPhuong.TenMuc : ''
-    let output = `${item.SoNhaChiTiet}, ${tinhThanh} - ${huyenQuan} - ${xaPhuong} `
+    let output = `${item.SoNhaChiTiet}, ${xaPhuong} - ${huyenQuan} -  ${tinhThanh}`
     return output
   }
   watch(thongTinHoSo, async (val) => {
@@ -280,6 +305,18 @@
               <span>{{ item1[itemChild.mapping] }}</span>
             </div>
           </div>
+          <div class="pl-2" v-else-if="itemChild.type == 'danhmucNdvp'" :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
+            <div class="my-1" v-for="(item1, index1) in thongTinBieuMau[itemChild.value]" v-bind:key="index1">
+              <div>
+                <v-icon size="18" color="#1E7D30" class="mr-2">mdi-check</v-icon>
+                <span>{{ item1['NhomHanhViVPHC']['TenMuc'] }}</span>
+              </div>
+              <div class="pl-4 mt-1" v-if="item1['MoTaHanhViVPHC']">
+                <i>- Mô tả vi phạm: {{ item1['MoTaHanhViVPHC'] }}</i>
+              </div>
+            </div>
+          </div>
+          
           <span class="content-text" v-else :style="itemChild.hasOwnProperty('style') ? itemChild.style : ''">
             {{ itemChild.value ? thongTinBieuMau[itemChild.value] : '' }}
           </span>

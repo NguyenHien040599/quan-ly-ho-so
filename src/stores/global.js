@@ -109,25 +109,39 @@ export const useAppStore = defineStore('appStore', {
       DoiTuongThucHien: {
         LoaiDoiTuongThucHien: null
       },
-      LoaiBenDGTD: null,
       NguoiLienHe: null,
-      MucDichCDLCNRNN: '',
-      HoatDongCDLCNRNN: '',
+      ThoiGianViPham: '',
+      DiaDiemViPham: '',
+      NoiDungViPham: [],
+      ToChucCaNhanLienQuan: '',
       LoaiDLCNCoBan: [],
       LoaiDLCNNhayCam: [],
-      DongYChuTheDLCN: false,
-      ChuyenDLCNRaNuocNgoai: false,
-      ThoiGianXuLy: '',
-      ThoiGianHuyXoa: '',
-      LoaiBienPhapBVDLCN: [],
-      LoaiDanhGiaTacDong: [],
-      LayYKienDanhGia: false,
-      MaHoSoThayDoi: '',
-      NoiDungThayDoi: '',
-      LyDoThayDoi: ''
+      SoLuongDuLieu: '',
+      HauQuaXayRa: '',
+      BienPhapApDung: '',
+      ThongBaoSau72H: false,
+      LyDoChamMuon: ''
+    },
+    dataFormBieuMauTbvpDefault: {
+      DoiTuongThucHien: {
+        LoaiDoiTuongThucHien: null
+      },
+      NguoiLienHe: null,
+      ThoiGianViPham: '',
+      DiaDiemViPham: '',
+      NoiDungViPham: [],
+      ToChucCaNhanLienQuan: '',
+      LoaiDLCNCoBan: [],
+      LoaiDLCNNhayCam: [],
+      SoLuongDuLieu: '',
+      HauQuaXayRa: '',
+      BienPhapApDung: '',
+      ThongBaoSau72H: false,
+      LyDoChamMuon: ''
     },
     thanhPhanHoSoXldl: [],
-    thanhPhanHoSoCdlcnrnn: []
+    thanhPhanHoSoCdlcnrnn: [],
+    thanhPhanHoSoTbvp: []
   }),
   getters: {
     getDialogConfirm: (state) => state.dialogConfirm,
@@ -142,7 +156,8 @@ export const useAppStore = defineStore('appStore', {
     getThanhPhanHoSoXldl: (state) => state.thanhPhanHoSoXldl,
     getDataFormBieuMauCdlcnrnn: (state) => state.dataFormBieuMauCdlcnrnn,
     getThanhPhanHoSoCdlcnrnn: (state) => state.thanhPhanHoSoCdlcnrnn,
-    getDataFormBieuMauTbvp: (state) => state.dataFormBieuMauTbvp
+    getDataFormBieuMauTbvp: (state) => state.dataFormBieuMauTbvp,
+    getThanhPhanHoSoTbvp: (state) => state.thanhPhanHoSoTbvp,
   },
   actions: {
     SET_USERINFO (val) {
@@ -177,6 +192,12 @@ export const useAppStore = defineStore('appStore', {
     },
     SET_TPHS_CDL (val) {
       this.thanhPhanHoSoCdlcnrnn = val
+    },
+    SET_DATA_FORM_BIEUMAU_TBVP (val) {
+      this.dataFormBieuMauTbvp = val
+    },
+    SET_TPHS_TBVP (val) {
+      this.thanhPhanHoSoTbvp = val
     },
     SET_ISSIGNED (val) {
       this.isSigned = val

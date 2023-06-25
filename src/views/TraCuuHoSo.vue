@@ -182,7 +182,7 @@
 			</v-btn>
     </v-row>
     <!-- table -->
-    <div v-if="kqTraCuu" class="mx-0 mt-3" style="max-width: 900px; margin: 0 auto">
+    <div v-if="kqTraCuu" class="mt-3" style="max-width: 900px; margin: 0 auto;margin-bottom: 30px;">
       <v-row class="my-0 mx-0">
 				<v-col cols="12" class="px-0 py-0 text-header-ho-so py-2">
           <v-icon size="28" color="#1E7D30" class="mr-2">mdi-text-box-search-outline</v-icon>

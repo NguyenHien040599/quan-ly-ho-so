@@ -244,8 +244,8 @@
     <v-row class="mx-0 my-0">
       <v-col cols="12" class="py-0">
         <div class="text-label">Chọn đối tượng thực hiện <span style="color: red">(*)</span></div>
-        <v-radio-group v-model="doiTuongThucHien['LoaiDoiTuongThucHien']">
-          <v-radio v-for="(item, index) in dsLoaiDoiTuongThucHien" :key="index" 
+        <v-radio-group v-model="doiTuongThucHien['LoaiDoiTuongThucHien']" inline>
+          <v-radio v-for="(item, index) in dsLoaiDoiTuongThucHien" :key="index" class="v-col-12 v-col-md-6 px-0 py-0"
           :label="item['TenMuc']" :value="item" color="#1E7D30"></v-radio>
         </v-radio-group>
       </v-col>
@@ -266,7 +266,7 @@
         <div class="text-label" style="color: #1E7D30;font-weight: 600;">Giấy chứng nhận cá nhân, tổ chức</div>
       </v-col>
       <v-col cols="12" md="4" class="py-0 mb-10">
-        <div class="text-label">Số giấy chứng nhận <span style="color: red">(*)</span></div>
+        <div class="text-label">Số giấy <span style="color: red">(*)</span></div>
         <v-text-field
           class="flex input-form"
           v-model="doiTuongThucHien['GiayChungNhan']['SoGiay']"
@@ -279,7 +279,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="4" class="py-0 mb-10">
-        <div class="text-label">Ngày cấp giấy chứng nhận <span style="color: red">(*)</span></div>
+        <div class="text-label">Ngày cấp <span style="color: red">(*)</span></div>
         <VueDatePicker class="flex" position="left" select-text="Chọn" cancel-text="Thoát"
           v-model="doiTuongThucHien['GiayChungNhan']['NgayCap']" text-input :format="formatDatePicker" placeholder="dd/mm/yyyy" :text-input-options="textInputOptions"
           auto-apply locale="vi" :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']"
@@ -288,7 +288,7 @@
         </VueDatePicker>
       </v-col>
       <v-col cols="12" md="4" class="py-0 mb-10">
-        <div class="text-label">Nơi cấp giấy chứng nhận <span style="color: red">(*)</span></div>
+        <div class="text-label">Nơi cấp <span style="color: red">(*)</span></div>
         <v-text-field
           class="flex input-form"
           v-model="doiTuongThucHien['GiayChungNhan']['NoiCap']"
@@ -314,7 +314,9 @@
           :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="4" class="py-0 mb-10">
+      <v-col cols="12" md="4" class="py-0 mb-10" v-if="doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02'
+      && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '08'"
+      >
         <div class="text-label">Tỉnh/ thành phố  <span style="color: red">(*)</span></div>
         <v-autocomplete
           class="flex input-form"
@@ -332,7 +334,8 @@
         >
         </v-autocomplete>
       </v-col>
-      <v-col cols="12" md="4" class="py-0 mb-10">
+      <v-col cols="12" md="4" class="py-0 mb-10" v-if="doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02'
+      && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '08'">
         <div class="text-label">Quận/ huyện/ thị xã <span style="color: red">(*)</span></div>
         <v-autocomplete
           class="flex input-form"
@@ -350,7 +353,8 @@
         >
         </v-autocomplete>
       </v-col>
-      <v-col cols="12" md="4" class="py-0 mb-10">
+      <v-col cols="12" md="4" class="py-0 mb-10" v-if="doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02'
+      && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '08'">
         <div class="text-label">Xã/phường/thị trấn  <span style="color: red">(*)</span></div>
         <v-autocomplete
           class="flex input-form"
@@ -441,6 +445,17 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="4" class="py-0 mb-10">
+        <div class="text-label">Email</div>
+        <v-text-field
+          class="flex input-form"
+          v-model="doiTuongThucHien['Email']"
+          solo
+          dense
+          hide-details="auto"
+          clearable
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" md="4" class="py-0 mb-10">
         <div class="text-label">Địa chỉ website</div>
         <v-text-field
           class="flex input-form"
@@ -451,58 +466,60 @@
           clearable
         ></v-text-field>
       </v-col>
-      
-      <v-col cols="12" class="py-0 mb-10 mt-2">
-        <div class="text-label" style="color: #1E7D30;font-weight: 600;">Thông tin cá nhân phụ trách (áp dụng cho tổ chức)/ người liên hệ</div>
-      </v-col>
-      <v-col cols="12" md="3" class="py-0 mb-10">
-        <div class="text-label">Họ và tên <span style="color: red">(*)</span></div>
-        <v-text-field
-          class="flex input-form"
-          v-model="nguoiLienHe['HoVaTen']"
-          solo
-          dense
-          hide-details="auto"
-          clearable
-          required
-          :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" md="3" class="py-0 mb-10">
-        <div class="text-label">Chức danh</div>
-        <v-text-field
-          class="flex input-form"
-          v-model="nguoiLienHe['ChucDanh']"
-          solo
-          dense
-          hide-details="auto"
-          clearable
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" md="3" class="py-0 mb-10">
-        <div class="text-label">Số điện thoại</div>
-        <v-text-field
-          class="flex input-form"
-          v-model="nguoiLienHe['SoDienThoai']"
-          solo
-          dense
-          hide-details="auto"
-          clearable
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" md="3" class="py-0 mb-10">
-        <div class="text-label">Thư điện tử  <span style="color: red">(*)</span></div>
-        <v-text-field
-          class="flex input-form"
-          v-model="nguoiLienHe['Email']"
-          solo
-          dense
-          hide-details="auto"
-          clearable
-          required
-          :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
-        ></v-text-field>
-      </v-col>
+      <v-row class="mx-0 my-0" v-if="doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '01'
+      && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03'">
+        <v-col cols="12" class="py-0 mb-10 mt-2">
+          <div class="text-label" style="color: #1E7D30;font-weight: 600;">Thông tin cá nhân phụ trách/ người liên hệ</div>
+        </v-col>
+        <v-col cols="12" md="3" class="py-0 mb-10">
+          <div class="text-label">Họ và tên <span style="color: red">(*)</span></div>
+          <v-text-field
+            class="flex input-form"
+            v-model="nguoiLienHe['HoVaTen']"
+            solo
+            dense
+            hide-details="auto"
+            clearable
+            required
+            :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" md="3" class="py-0 mb-10">
+          <div class="text-label">Chức danh</div>
+          <v-text-field
+            class="flex input-form"
+            v-model="nguoiLienHe['ChucDanh']"
+            solo
+            dense
+            hide-details="auto"
+            clearable
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" md="3" class="py-0 mb-10">
+          <div class="text-label">Số điện thoại</div>
+          <v-text-field
+            class="flex input-form"
+            v-model="nguoiLienHe['SoDienThoai']"
+            solo
+            dense
+            hide-details="auto"
+            clearable
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" md="3" class="py-0 mb-10">
+          <div class="text-label">Thư điện tử  <span style="color: red">(*)</span></div>
+          <v-text-field
+            class="flex input-form"
+            v-model="nguoiLienHe['Email']"
+            solo
+            dense
+            hide-details="auto"
+            clearable
+            required
+            :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-row>
   </v-form>
 </template>

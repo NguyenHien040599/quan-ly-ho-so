@@ -93,9 +93,9 @@ table td {
 .text-label {
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
-  line-height: 16px;
+  line-height: 18px;
   color: #000000;
   margin-bottom: 5px;
 }
@@ -283,7 +283,7 @@ table td {
 .text-sub-header {
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
   line-height: 16px;
   color: #1E7D30;
@@ -839,7 +839,22 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 .table-select .v-checkbox-btn, .table-select .v-checkbox .v-selection-control {
   min-height: 36px !important;
 }
-
+.select-danhmuc .v-checkbox .v-selection-control {
+  min-height: 42px !important;
+}
+.select-danhmuc .v-checkbox .v-label {
+  font-size: 14px;
+  line-height: 18px;
+  text-align: justify;
+}
+.select-danhmuc .col-select-dm {
+  border-bottom: 1px solid #DADADA;
+  border-right: 1px solid #DADADA
+}
+.select-danhmuc {
+  border-top: 1px solid #DADADA !important;
+  border-left: 1px solid #DADADA !important
+}
 
 
 

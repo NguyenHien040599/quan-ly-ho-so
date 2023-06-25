@@ -4,6 +4,7 @@
   import { onMounted, watch, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
+  const router = useRouter()
   const { cookies } = useCookies()
   const hosoDvcStore = useHosoDvcStore()
   const appStore = useAppStore()

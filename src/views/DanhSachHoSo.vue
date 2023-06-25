@@ -91,7 +91,8 @@
       let filter = {
         data: Object.assign(thuTucTaoMoi.thongTinHoSo, {
           TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
-          DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"}
+          DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
+          TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
         })
       }
       hosoDvcStore.themMoiHoSo(filter).then(function(result) {
@@ -109,7 +110,8 @@
         params: {
           page: page.value,
           size: itemsPerPage.value,
-          thuTucHanhChinh_MaMuc: menuSelected.value.thuTuc.maThuTuc
+          thuTucHanhChinh_MaMuc: menuSelected.value.thuTuc.maThuTuc,
+          trangThaiDuLieu_MaMuc: '01,02'
         }
       }
       loadingData.value = true

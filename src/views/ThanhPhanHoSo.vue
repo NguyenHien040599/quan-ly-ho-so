@@ -15,8 +15,20 @@
   const dialogPreview = ref(false)
   const urlPreview = ref('')
   const thanhPhanHoSo = computed(function () {
-    return appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
+    let tp = appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
       return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
+    })
+    tp.forEach((element, index) => {
+      if (element.HinhThucGiayTo['MaMuc'] == 'true') {
+        tp[index]['items'] = tp.filter(function (e) {
+          let j = e.IDGiayTo.split('-')
+          return j[0] == 'GTK' && j[1] == element['IDGiayTo']
+        })
+      }
+    })
+    console.log('tp', tp)
+    return tp.filter(function (item) {
+      return String(item.IDGiayTo).split('-')[0] !== 'GTK'
     })
   })
   const headers = reactive([
@@ -93,80 +105,52 @@
         <div class="text-sub-header">Thành phần hồ sơ</div>
       </v-col>
     </v-row>
-    <v-row v-if="!mobile" class="mx-0 my-0 mt-2">
-      <v-data-table
-        :headers="headers"
-        :items="thanhPhanHoSo"
-        items-per-page="20"
-        item-value="primKey"
-        hide-default-footer
-        class="table-base table-tphs"
-        no-data="Không có dữ liệu"
-        :loading="loadingData"
-        loading-text="Đang tải... "
-      >
-        <template v-slot:item="{ item }">
-          <tr>
-            <td class="align-left">{{ item.raw.TenGiayTo }}</td>
-            <td class="align-left" width="350">
-              <div class="py-1" @click="taiXuongFile(item.raw.TepDuLieu, 'preview')" v-if="item.raw.TepDuLieu.KichThuocTep">
-                <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                <v-icon size="18" color="red" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'png' || item.raw.TepDuLieu.DinhDangTep === 'jpg' || item.raw.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+    <v-row class="mx-0 my-0 mt-2" style="border-top: 1px dotted #DADADA; border-left: 1px dotted #DADADA;">
+      <v-row v-for="(item, index) in thanhPhanHoSo" :key="item.IDGiayTo" class="mx-0 my-0 px-2 py-2"
+        style="width: 100%;border-bottom: 1px dotted #DADADA; border-right: 1px dotted #DADADA;align-items: center;min-height: 42px">
+        <div style="font-weight: 600;width: 100%">
+          <span>{{ index + 1 }}. </span><span>{{ item.TenGiayTo }}</span> <span style="color:red" v-if="item.HinhThucGiayTo['TenMuc'] == 'true'">(*)</span>
+        </div>
+        <div class="py-1" @click="taiXuongFile(item.TepDuLieu, 'preview')" v-if="item.TepDuLieu.KichThuocTep" style="width: 100%">
+          <v-icon size="18" color="green" v-if="item.TepDuLieu.DinhDangTep === 'xls' || item.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'doc' || item.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
+          <v-icon size="18" color="red" v-else-if="item.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'png' || item.TepDuLieu.DinhDangTep === 'jpg' || item.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+          <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
+          <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.TepDuLieu.TenTep}}.{{item.TepDuLieu.Ext}}</a>
+          <v-tooltip location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn icon variant="flat" size="small" v-bind="props" class="mr-0" @click.stop="taiXuongFile(item.TepDuLieu, 'download')">
+                <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
+              </v-btn>
+            </template>
+            <span>Tải xuống</span>
+          </v-tooltip>
+        </div>
+        <div v-if="item.HinhThucGiayTo['MaMuc'] == 'true'" style="width: 100%">
+          <div v-for="(item2, index2) in item['items']" :key="index2">
+            <div style="width: 100%" class="pl-3">
+              <span>- </span><span>{{ item2.TenGiayTo }}: </span>
+              <span class="py-1" @click="taiXuongFile(item2.TepDuLieu, 'preview')" v-if="item2.TepDuLieu.KichThuocTep">
+                <v-icon size="18" color="green" v-if="item2.TepDuLieu.DinhDangTep === 'xls' || item2.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'doc' || item2.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
+                <v-icon size="18" color="red" v-else-if="item2.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'png' || item2.TepDuLieu.DinhDangTep === 'jpg' || item2.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
                 <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.raw.TepDuLieu.TenTep}}.{{item.raw.TepDuLieu.Ext}}</a>
+                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item2.TepDuLieu.TenTep}}.{{item2.TepDuLieu.Ext}}</a>
                 <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
-                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="taiXuongFile(item.raw.TepDuLieu, 'download')">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-0" @click.stop="taiXuongFile(item2.TepDuLieu, 'download')">
                       <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
                     </v-btn>
                   </template>
                   <span>Tải xuống</span>
                 </v-tooltip>
-              </div>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
-    </v-row>
-    <v-row v-else class="mx-0 my-0 mt-2">
-      <v-data-table
-        :headers="headersMobile"
-        :items="thanhPhanHoSo"
-        items-per-page="20"
-        item-value="primKey"
-        hide-default-footer
-        class="table-base table-tphs"
-        no-data="Không có dữ liệu"
-        :loading="loadingData"
-        loading-text="Đang tải... "
-      >
-        <template v-slot:item="{ item, index }">
-          <tr>
-            <td class="align-center" width="30">{{ index + 1 }}</td>
-            <td class="align-left">
-              <div class="pt-1">{{ item.raw.TenGiayTo }}</div>
-              <div class="py-1" @click="taiXuongFile(item.raw.TepDuLieu, 'preview')" v-if="item.raw.TepDuLieu.KichThuocTep">
-                <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                <v-icon size="18" color="red" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'png' || item.raw.TepDuLieu.DinhDangTep === 'jpg' || item.raw.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
-                <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.raw.TepDuLieu.TenTep}}.{{item.raw.TepDuLieu.Ext}}</a>
-                <v-tooltip location="top">
-                  <template v-slot:activator="{ props }">
-                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="taiXuongFile(item.raw.TepDuLieu, 'download')">
-                      <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Tải xuống</span>
-                </v-tooltip>
-              </div>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
+              </span>
+            </div>
+          </div>
+        </div>
+      </v-row>
     </v-row>
 
     <v-dialog

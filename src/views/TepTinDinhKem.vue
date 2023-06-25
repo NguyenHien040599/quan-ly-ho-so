@@ -4,6 +4,12 @@
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import { useDisplay } from 'vuetify'
+  import toastr from 'toastr'
+  toastr.options = {
+    'closeButton': true,
+    'timeOut': '5000',
+    "positionClass": "toast-top-center"
+  }
   const { mobile } = useDisplay()
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
   const props = defineProps({
@@ -22,8 +28,20 @@
   const formGiayToKhac = ref(null)
   const loading = ref(false)
   const thanhPhanHoSo = computed(function () {
-    return appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
+    let tp = appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
       return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
+    })
+    tp.forEach((element, index) => {
+      if (element.HinhThucGiayTo['MaMuc'] == 'true') {
+        tp[index]['items'] = tp.filter(function (e) {
+          let j = e.IDGiayTo.split('-')
+          return j[0] == 'GTK' && j[1] == element['IDGiayTo']
+        })
+      }
+    })
+    console.log('tp', tp)
+    return tp.filter(function (item) {
+      return String(item.IDGiayTo).split('-')[0] !== 'GTK'
     })
   })
   const tpUpdate = ref(null)
@@ -75,28 +93,65 @@
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
   const pickFileUpload = function (item, index) {
-    tpUpdate.value = item
-    tpUpdateIndex.value = index
-    document.getElementById('file_upload_tep_dinh_kem').value = ''
-    document.getElementById('file_upload_tep_dinh_kem').click()
+    // if (item.HinhThucGiayTo['MaMuc'] == 'false') {
+      tpUpdate.value = item
+      tpUpdateIndex.value = index
+      document.getElementById('file_upload_tep_dinh_kem').value = ''
+      document.getElementById('file_upload_tep_dinh_kem').click()
+    // } else {
+    //   tpUpdate.value = item
+    //   tpUpdateIndex.value = index
+      
+    // }
+  }
+  const validateFile = function (file) {
+    console.log('fileUpload', file)
+    let getFileType = file.name ? file.name.split('.') : ''
+    let fileType = getFileType ? getFileType[getFileType.length - 1] : ''
+    let fileTypeAllow = ['png', 'jpg', 'jpeg', 'pdf', 'docx', 'doc', 'xls', 'xlsx', 'txt', 'rtf']
+    let fileSizeAllow = 10
+    try {
+      fileSizeAllow = fileSizeAllowConfig ? fileSizeAllowConfig : 10
+    } catch (error) {
+    }
+    try {
+      fileTypeAllow = fileTypeAllowConfig ? fileTypeAllowConfig : ['png', 'jpg', 'jpeg', 'pdf', 'docx', 'doc', 'xls', 'xlsx', 'txt', 'rtf']
+    } catch (error) {
+    }
+    let fileTypeInput = fileTypeAllow ? fileTypeAllow.filter(function (item) {
+      return item === String(fileType).toLocaleLowerCase()
+    }) : ''
+    let validFileUpload = false
+    if (fileTypeInput && fileTypeInput.length > 0) {
+      if (Number(file.size) <= fileSizeAllow * 1048576) {
+        validFileUpload = true
+      } else {
+        toastr.error('Tài liệu tải lên dung lượng tối đa là ' + fileSizeAllow + ' MB')
+        validFileUpload = false
+      }
+    } else {
+      toastr.error('Tài liệu tải lên chỉ chấp nhận các định dạng ' + fileTypeAllow.toString())
+      validFileUpload = false
+    }
+    return validFileUpload
   }
   const uploadFile = function () {
     let file = $('#file_upload_tep_dinh_kem')[0].files[0]
-    hosoDvcStore.uploadTep(file).then(function(result) {
-      // appStore.thongTinHoSo.ThanhPhanHoSo.forEach((element, index) => {
-      //   if (element.MaThanhPhanHoSo.MaMuc === tpUpdate.value.MaThanhPhanHoSo.MaMuc) {
-      //     appStore.$patch((state) => {
-      //       state.thongTinHoSo['ThanhPhanHoSo'][index]['TepDuLieu'] = result.resp
-      //     })
-      //   }
-      // })
-      appStore.$patch((state) => {
-        state.thongTinHoSo['ThanhPhanHoSo'][tpUpdateIndex.value+1]['TepDuLieu'] = result.resp
+    let valid = validateFile(file)
+    if (!valid) {
+      return
+    }
+    if (tpUpdate.value.HinhThucGiayTo['MaMuc'] == 'false') {
+      hosoDvcStore.uploadTep(file).then(function(result) {
+        appStore.$patch((state) => {
+          state.thongTinHoSo['ThanhPhanHoSo'][tpUpdateIndex.value+1]['TepDuLieu'] = result.resp
+        })
+        // console.log('thongTinHoSo', appStore.thongTinHoSo)
+      }).catch(function(error){
       })
-      console.log('thongTinHoSo', appStore.thongTinHoSo)
-    }).catch(function(error){
-      console.log(error)
-    })
+    } else {
+      showFormGiayToKhac()
+    }
   }
   const taiXuongFile = function (file, action) {
     if (loading.value) {
@@ -156,46 +211,62 @@
     }
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
   }
+  const deleteGiayToKhac = function (indexChild, indexParent) {
+    appStore.SET_SHOWCONFIRM(true)
+    let confirm = {
+      auth: false,
+      title: 'Xóa giấy tờ',
+      message: 'Bạn có chắc chắn muốn xóa giấy tờ này',
+      button: {
+        yes: 'Có',
+        no: 'Không'
+      },
+      callback: () => {
+        appStore.$patch((state) => {
+          state.thongTinHoSo.ThanhPhanHoSo[indexParent+1]['items'].splice(indexChild, 1)
+        })
+      }
+    }
+    appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
+  }
   const submitTaoGiayToKhac = async function () {
     const { valid } = await formGiayToKhac.value.validate()
     if (valid) {
-      
-      let tphsAdd = {
-        "IDGiayTo": "",
-        "TenGiayTo": tenGiayToKhac.value,
-        "SoBanGiay": 0,
-        "HinhThucGiayTo": {
-          "MaMuc": "",
-          "TenMuc": ""
-        },
-        "NgayBoSung": null,
-        "MaThanhPhanHoSo": null,
-        "MaGiayToKetQua": null,
-        "DaHuyBoThayThe": false,
-        "TinhTrangSoHoa": 1,
-        "GiayToCaNhanToChuc": {
-          "MaDinhDanh": "",
-          "TenGiayTo": ""
-        },
-        "TepDuLieu": {
-          "MaDinhDanh": "",
-          "TenTep": "",
-          "DinhDangTep": "",
-          "KichThuocTep": 0,
-          "DuongDanURL": "",
-          "Ext": ""
-        },
-        "GiayToLuuTruSo": {
-          "MaDinhDanh": "",
-          "TenGiayTo": ""
-        },
-        "DuLieuDienTu": {
-          "MaDinhDanh": ""
+      let file = $('#file_upload_tep_dinh_kem')[0].files[0]
+      hosoDvcStore.uploadTep(file).then(function(result) {
+        dialog.value = false
+        let tphsAdd = {
+          "IDGiayTo": 'GTK-' + tpUpdate.value.IDGiayTo,
+          "TenGiayTo": tenGiayToKhac.value,
+          "SoBanGiay": 0,
+          "HinhThucGiayTo": {
+            "MaMuc": "",
+            "TenMuc": ""
+          },
+          "NgayBoSung": null,
+          "MaThanhPhanHoSo": null,
+          "MaGiayToKetQua": null,
+          "DaHuyBoThayThe": false,
+          "TinhTrangSoHoa": 1,
+          "GiayToCaNhanToChuc": {
+            "MaDinhDanh": "",
+            "TenGiayTo": ""
+          },
+          "TepDuLieu": result.resp,
+          "GiayToLuuTruSo": {
+            "MaDinhDanh": "",
+            "TenGiayTo": ""
+          },
+          "DuLieuDienTu": {
+            "MaDinhDanh": ""
+          }
         }
-      }
-      console.log('tphsAdd', tphsAdd)
-      appStore.$patch((state) => {
-        state.thongTinHoSo.ThanhPhanHoSo.push(tphsAdd)
+        appStore.$patch((state) => {
+          state.thongTinHoSo.ThanhPhanHoSo.push(tphsAdd)
+        })
+        console.log('tphsAddthanhPhanHoSo', thanhPhanHoSo.value)
+      }).catch(function(error){
+        toastr.error('Tải lên giấy tờ thất bại')
       })
       // console.log('appStore.thongTinHoSo', appStore.thongTinHoSo.ThanhPhanHoSo)
       // let hoSo = Object.assign(appStore.thongTinHoSo, {"ThanhPhanHoSo": tphs})
@@ -216,45 +287,50 @@
 </script>
 <template>
   <v-card class="pa-0 thanhphanhoso" style="box-shadow: none !important;width: 100%;">
-    <v-row class="mx-0 my-0 mt-2" v-if="!mobile">
-      <v-data-table
-        :headers="headers"
-        :items="thanhPhanHoSo"
-        items-per-page="20"
-        item-value="PrimKey"
-        hide-default-footer
-        class="table-base mb-5"
-        no-data="Không có dữ liệu"
-        :loading="loadingData"
-        loading-text="Đang tải... "
-      >
-        <template v-slot:item="{ item, index }">
-          <tr>
-            <td class="align-left">{{ index+1 }}. {{ item.raw.TenGiayTo }} 
-              <span v-if="item.raw.MaThanhPhanHoSo" style="color:red">(*)</span>
-              <v-btn v-if="!item.raw.MaThanhPhanHoSo"
-                class="mx-0 ml-2"
-                size="small"
-                variant="outlined"
-                color="red"
-                @click.stop="xoaGiayToKhac(item.raw, index)"
-                height="28px" width="50px"
-              >
-                <v-icon size="14" color="red">mdi-delete</v-icon>
-                <span style="font-size: 14px; text-transform: none;">Xóa</span>
+    <v-row class="mx-0 my-0" style="border-top: 1px dotted #DADADA; border-left: 1px dotted #DADADA;">
+      <v-row v-for="(item, index) in thanhPhanHoSo" :key="item.IDGiayTo" class="mx-0 my-0 px-2 py-2"
+        style="width: 100%;border-bottom: 1px dotted #DADADA; border-right: 1px dotted #DADADA;align-items: center;min-height: 42px">
+        <div style="font-weight: 600;width: 100%">
+          <span>{{ index + 1 }}. </span><span>{{ item.TenGiayTo }}</span> <span style="color:red" v-if="item.HinhThucGiayTo['TenMuc'] == 'true'">(*)</span>
+        </div>
+        <div class="py-1" @click="taiXuongFile(item.TepDuLieu, 'preview')" v-if="item.TepDuLieu.KichThuocTep" style="width: 100%">
+          <v-icon size="18" color="green" v-if="item.TepDuLieu.DinhDangTep === 'xls' || item.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'doc' || item.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
+          <v-icon size="18" color="red" v-else-if="item.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'png' || item.TepDuLieu.DinhDangTep === 'jpg' || item.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+          <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
+          <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.TepDuLieu.TenTep}}.{{item.TepDuLieu.Ext}}</a>
+          <v-tooltip location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn icon variant="flat" size="small" v-bind="props" class="mr-0" @click.stop="taiXuongFile(item.TepDuLieu, 'download')">
+                <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
               </v-btn>
-            </td>
-            <td class="align-left" width="350">
-              <div class="py-1" @click="taiXuongFile(item.raw.TepDuLieu, 'preview')" v-if="item.raw.TepDuLieu.KichThuocTep">
-                <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                <v-icon size="18" color="red" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'png' || item.raw.TepDuLieu.DinhDangTep === 'jpg' || item.raw.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+            </template>
+            <span>Tải xuống</span>
+          </v-tooltip>
+          <v-tooltip location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteFileAttack(item, index)">
+                <v-icon size="18" color="red">mdi-close</v-icon>
+              </v-btn>
+            </template>
+            <span>Xóa</span>
+          </v-tooltip>
+        </div>
+        <div v-if="item.HinhThucGiayTo['MaMuc'] == 'true'" style="width: 100%">
+          <div v-for="(item2, index2) in item['items']" :key="index2">
+            <div style="width: 100%" class="pl-3">
+              <span>- </span><span>{{ item2.TenGiayTo }}: </span>
+              <span class="py-1" @click="taiXuongFile(item2.TepDuLieu, 'preview')" v-if="item2.TepDuLieu.KichThuocTep">
+                <v-icon size="18" color="green" v-if="item2.TepDuLieu.DinhDangTep === 'xls' || item2.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'doc' || item2.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
+                <v-icon size="18" color="red" v-else-if="item2.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'png' || item2.TepDuLieu.DinhDangTep === 'jpg' || item2.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
                 <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.raw.TepDuLieu.TenTep}}.{{item.raw.TepDuLieu.Ext}}</a>
+                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item2.TepDuLieu.TenTep}}.{{item2.TepDuLieu.Ext}}</a>
                 <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
-                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="taiXuongFile(item.raw.TepDuLieu, 'download')">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-0" @click.stop="taiXuongFile(item2.TepDuLieu, 'download')">
                       <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
                     </v-btn>
                   </template>
@@ -262,123 +338,30 @@
                 </v-tooltip>
                 <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
-                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteFileAttack(item.raw, index)">
+                    <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteGiayToKhac(index2, index)">
                       <v-icon size="18" color="red">mdi-close</v-icon>
                     </v-btn>
                   </template>
                   <span>Xóa</span>
                 </v-tooltip>
-              </div>
-              <v-btn v-else
-                class="mx-0"
-                size="small"
-                variant="outlined"
-                color="#1E7D30"
-                @click.stop="pickFileUpload(item.raw, index )"
-                height="32px" width="120px"
-              >
-                <v-icon size="22" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>
-                <span style="font-size: 14px; text-transform: none;">Tải lên tệp</span>
-              </v-btn>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
-      <!-- <v-row class="mx-0 my-0" style="justify-content: flex-end;">
-        <v-btn
-          size="small"
-          color="#1E7D30"
-          prepend-icon="mdi-plus"
-          class="mx-0"
-          @click.stop="showFormGiayToKhac"
-        >
-          Thêm giấy tờ khác
-        </v-btn>
-      </v-row> -->
-    </v-row>
-    <v-row class="mx-0 my-0 mt-2" v-if="mobile">
-      <v-data-table
-        :headers="headersMobile"
-        :items="thanhPhanHoSo"
-        items-per-page="20"
-        item-value="PrimKey"
-        hide-default-footer
-        class="table-base mb-5"
-        no-data="Không có dữ liệu"
-        :loading="loadingData"
-        loading-text="Đang tải... "
-      >
-        <template v-slot:item="{ item, index }">
-          <tr>
-            <td class="align-center" width="30">{{ index + 1 }}</td>
-            <td class="align-left">
-              <div class="pt-1">
-                {{ item.raw.TenGiayTo }} 
-                <span v-if="item.raw.MaThanhPhanHoSo" style="color:red">(*)</span>
-                <v-btn v-if="!item.raw.MaThanhPhanHoSo"
-                  class="mx-0 ml-2"
-                  size="small"
-                  variant="outlined"
-                  color="red"
-                  @click.stop="xoaGiayToKhac(item.raw, index)"
-                  height="28px" width="50px"
-                >
-                  <v-icon size="14" color="red">mdi-delete</v-icon>
-                  <span style="font-size: 14px; text-transform: none;">Xóa</span>
-                </v-btn>
-              </div>
-              <div>
-                <div class="py-1" @click="taiXuongFile(item.raw.TepDuLieu, 'preview')" v-if="item.raw.TepDuLieu.KichThuocTep">
-                  <v-icon size="18" color="green" v-if="item.raw.TepDuLieu.DinhDangTep === 'xls' || item.raw.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                  <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'doc' || item.raw.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                  <v-icon size="18" color="red" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                  <v-icon size="18" color="blue" v-else-if="item.raw.TepDuLieu.DinhDangTep === 'png' || item.raw.TepDuLieu.DinhDangTep === 'jpg' || item.raw.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
-                  <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-                  <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.raw.TepDuLieu.TenTep}}.{{item.raw.TepDuLieu.Ext}}</a>
-                  <v-tooltip location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="taiXuongFile(item.raw.TepDuLieu, 'download')">
-                        <v-icon size="18" :color="baseColor">mdi-cloud-download-outline</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Tải xuống</span>
-                  </v-tooltip>
-                  <v-tooltip location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteFileAttack(item.raw, index)">
-                        <v-icon size="18" color="red">mdi-close</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Xóa</span>
-                  </v-tooltip>
-                </div>
-                <v-btn v-else
-                  class="mx-0"
-                  size="small"
-                  variant="outlined"
-                  color="#1E7D30"
-                  @click.stop="pickFileUpload(item.raw, index )"
-                  height="28px" width="80px"
-                >
-                  <v-icon size="22" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>
-                  <span style="font-size: 14px; text-transform: none;">Tải lên tệp</span>
-                </v-btn>
-              </div>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
-      <!-- <v-row class="mx-0 my-0" style="justify-content: flex-end;">
-        <v-btn
-          size="small"
-          color="#1E7D30"
-          prepend-icon="mdi-plus"
-          class="mx-0"
-          @click.stop="showFormGiayToKhac"
-        >
-          Thêm giấy tờ khác
-        </v-btn>
-      </v-row> -->
+              </span>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%;">
+          <v-btn v-if="item.HinhThucGiayTo['MaMuc'] == 'true' || (item.HinhThucGiayTo['MaMuc'] == 'false') && !item.TepDuLieu.KichThuocTep"
+            class="mx-0 ml-2 mt-2"
+            size="small"
+            variant="outlined"
+            color="#1E7D30"
+            @click.stop="pickFileUpload(item, index )"
+            height="28px" width="120px"
+          >
+            <v-icon size="22" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>
+            <span style="font-size: 14px; text-transform: none;">Tải lên tệp</span>
+          </v-btn>
+        </div>
+      </v-row>
     </v-row>
     <input type="file" id="file_upload_tep_dinh_kem" :multiple="false" @input="uploadFile()" style="display:none"/>
   </v-card>
@@ -386,7 +369,6 @@
     max-width="900"
     v-model="dialog"
     persistent
-    absolute
   >
     <v-card>
       <v-toolbar
