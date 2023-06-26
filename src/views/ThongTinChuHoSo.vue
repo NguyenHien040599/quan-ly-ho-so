@@ -1,17 +1,23 @@
 <script setup>
-  import { ref, reactive, watch} from 'vue'
+  import { ref, reactive, computed, watch} from 'vue'
+  import { useAppStore } from '@/stores/global.js'
 	import { useHosoDvcStore } from '@/stores/hosodvc.js'
-  import VueDatePicker from '@vuepic/vue-datepicker';
+  import VueDatePicker from '@vuepic/vue-datepicker'
   import '@vuepic/vue-datepicker/dist/main.css'
 
 	const props = defineProps({
     dataInput: {
       type: Object,
       default: {}
+    },
+    action: {
+      type: String,
+      default: ''
     }
   })
+  const appStore = useAppStore()
   const hosoDvcStore = useHosoDvcStore()
-  const dataInputForm = reactive(props.dataInput)
+  const thongTinNguoiDung = computed(() => appStore.userInfo)
   const doiTuongThucHien = reactive(
     {
       "LoaiDoiTuongThucHien": null,
@@ -53,9 +59,60 @@
         }
       },
       "SoDienThoai": "",
-      "Website": ""
+      "Website": "",
+      "Email": ""
     }
   )
+  if (props.action === 'create' && thongTinNguoiDung.value.LoaiDoiTuong && thongTinNguoiDung.value.LoaiDoiTuong === 'CaNhan') {
+    doiTuongThucHien.MaDinhDanh = thongTinNguoiDung.value.MaDinhDanh
+    doiTuongThucHien.TenGoi = thongTinNguoiDung.value.HoVaTen
+    try {
+      doiTuongThucHien.GiayChungNhan = {
+        SoGiay: thongTinNguoiDung.value.GiayToTuyThan[0]['SoGiay'],
+        NgayCap: thongTinNguoiDung.value.GiayToTuyThan[0]['NgayCap'],
+        NoiCap: thongTinNguoiDung.value.GiayToTuyThan[0]['NoiCap'] ? thongTinNguoiDung.value.GiayToTuyThan[0]['NoiCap']['TenGoi'] : ''
+      }
+    } catch (error) {
+    }
+    try {
+      doiTuongThucHien.SoDienThoai = thongTinNguoiDung.value.DanhBaLienLac[0]['SoDienThoai']
+      doiTuongThucHien.Email = thongTinNguoiDung.value.DanhBaLienLac[0]['ThuDienTu']
+    } catch (error) {
+    }
+    doiTuongThucHien.DiaChiHoatDong = thongTinNguoiDung.value.DiaChiThuongTru
+  }
+  if (props.action === 'create' && thongTinNguoiDung.value.LoaiDoiTuong && thongTinNguoiDung.value.LoaiDoiTuong === 'DonViKinhDoanh') {
+    doiTuongThucHien.MaDinhDanh = thongTinNguoiDung.value.MaDinhDanh
+    doiTuongThucHien.TenGoi = thongTinNguoiDung.value.TenGoi
+    try {
+      doiTuongThucHien.GiayChungNhan = thongTinNguoiDung.value.GiayDangKyKinhDoanh
+    } catch (error) {
+    }
+    try {
+      doiTuongThucHien.SoDienThoai = thongTinNguoiDung.value.DanhBaLienLac[0]['SoDienThoai']
+      doiTuongThucHien.Email = thongTinNguoiDung.value.DanhBaLienLac[0]['ThuDienTu']
+    } catch (error) {
+    }
+    doiTuongThucHien.DiaChiHoatDong = thongTinNguoiDung.value.DiaChiHoatDong
+  }
+  if (props.action === 'create' && thongTinNguoiDung.value.LoaiDoiTuong && thongTinNguoiDung.value.LoaiDoiTuong === 'CoQuanDonvi') {
+    doiTuongThucHien.MaDinhDanh = thongTinNguoiDung.value.MaDinhDanh
+    doiTuongThucHien.TenGoi = thongTinNguoiDung.value.TenGoi
+    try {
+      doiTuongThucHien.GiayChungNhan = {
+        SoGiay: thongTinNguoiDung.value.SoQuyetDinh,
+        NgayCap: thongTinNguoiDung.value.NgayThanhLap,
+        NoiCap: thongTinNguoiDung.value.CoQuanThanhLap && thongTinNguoiDung.value.CoQuanThanhLap['TenGoi'] ? thongTinNguoiDung.value.CoQuanThanhLap['TenGoi'] : ''
+      }
+    } catch (error) {
+    }
+    try {
+      doiTuongThucHien.SoDienThoai = thongTinNguoiDung.value.DanhBaLienLac[0]['SoDienThoai']
+      doiTuongThucHien.Email = thongTinNguoiDung.value.DanhBaLienLac[0]['ThuDienTu']
+    } catch (error) {
+    }
+    doiTuongThucHien.DiaChiHoatDong = thongTinNguoiDung.value.DiaChiHoatDong
+  }
   const nguoiLienHe = reactive(
     {
       "HoVaTen": "",
@@ -73,6 +130,9 @@
   const formThongTinDoanhNghiepToChuc = ref(null)
   const emit = defineEmits(['submitForm'])
   // 
+  console.log('action', props.action)
+  console.log('thongTinNguoiDung', thongTinNguoiDung.value)
+  console.log('doiTuongThucHien', doiTuongThucHien)
   const initForm = function (type) {
     let filter = {
       maDanhMuc: 'tinhthanh'
@@ -124,21 +184,6 @@
   const textInputOptions = ref({
     format: 'dd/MM/yyyy'
   })
-	const formatBirthDate = function (name) {
-		let lengthDate = String(thongTinDoanhNghiepToChuc[name]).trim().length
-		let splitDate = String(thongTinDoanhNghiepToChuc[name]).split('/')
-		let splitDate2 = String(thongTinDoanhNghiepToChuc[name]).split('-')
-		if (lengthDate && lengthDate > 4 && splitDate.length === 3 && splitDate[2]) {
-			thongTinDoanhNghiepToChuc[name] = translateDate(thongTinDoanhNghiepToChuc[name])
-		} else if (lengthDate && lengthDate === 8) {
-			let date = String(thongTinDoanhNghiepToChuc[name])
-			thongTinDoanhNghiepToChuc[name] = date.slice(0,2) + '/' + date.slice(2,4) + '/' + date.slice(4,8)
-		} else if (splitDate2[1]) {
-			thongTinDoanhNghiepToChuc[name] = dateLocale(thongTinDoanhNghiepToChuc[name])
-		} else {
-			// data[name] = ''
-		}
-	}
 	const translateDate = function (date) {
 		if (!date) return null
 		const [day, month, year] = date.split('/')
@@ -273,7 +318,7 @@
           solo
           dense
           hide-details="auto"
-          clearable
+          readonly
           required
           :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
         ></v-text-field>
@@ -314,64 +359,63 @@
           :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="4" class="py-0 mb-10" v-if="doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02'
-      && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '08'"
-      >
-        <div class="text-label">Tỉnh/ thành phố  <span style="color: red">(*)</span></div>
-        <v-autocomplete
-          class="flex input-form"
-          hide-no-data
-          v-model="doiTuongThucHien['DiaChiHoatDong']['TinhThanh']"
-          :items="dsTinhThanh"
-          item-title="TenMuc"
-          item-value="MaMuc"
-          dense
-          solo
-          hide-details="auto"
-          return-object
-          required
-          :rules="[v => (v !== '' && v !== null && v !== undefined && (v && v.MaMuc !== '')) || 'Thông tin bắt buộc']"
-        >
-        </v-autocomplete>
-      </v-col>
-      <v-col cols="12" md="4" class="py-0 mb-10" v-if="doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02'
-      && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '08'">
-        <div class="text-label">Quận/ huyện/ thị xã <span style="color: red">(*)</span></div>
-        <v-autocomplete
-          class="flex input-form"
-          hide-no-data
-          v-model="doiTuongThucHien['DiaChiHoatDong']['HuyenQuan']"
-          :items="dsQuanHuyen"
-          item-title="TenMuc"
-          item-value="MaMuc"
-          dense
-          solo
-          hide-details="auto"
-          return-object
-          required
-          :rules="[v => (v !== '' && v !== null && v !== undefined && (v && v.MaMuc !== '')) || 'Thông tin bắt buộc']"
-        >
-        </v-autocomplete>
-      </v-col>
-      <v-col cols="12" md="4" class="py-0 mb-10" v-if="doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02'
-      && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '08'">
-        <div class="text-label">Xã/phường/thị trấn  <span style="color: red">(*)</span></div>
-        <v-autocomplete
-          class="flex input-form"
-          hide-no-data
-          v-model="doiTuongThucHien['DiaChiHoatDong']['XaPhuong']"
-          :items="dsXaPhuong"
-          item-title="TenMuc"
-          item-value="MaMuc"
-          dense
-          solo
-          hide-details="auto"
-          return-object
-          required
-          :rules="[v => (v !== '' && v !== null && v !== undefined && (v && v.MaMuc !== '')) || 'Thông tin bắt buộc']"
-        >
-        </v-autocomplete>
-      </v-col>
+      <v-row class="mx-0 my-0" v-if="!doiTuongThucHien['LoaiDoiTuongThucHien'] || (doiTuongThucHien['LoaiDoiTuongThucHien'] && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '02'
+        && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '03' && doiTuongThucHien['LoaiDoiTuongThucHien']['MaMuc'] !== '08')">
+        <v-col cols="12" md="4" class="py-0 mb-10">
+          <div class="text-label">Tỉnh/ thành phố  <span style="color: red">(*)</span></div>
+          <v-autocomplete
+            class="flex input-form"
+            hide-no-data
+            v-model="doiTuongThucHien['DiaChiHoatDong']['TinhThanh']"
+            :items="dsTinhThanh"
+            item-title="TenMuc"
+            item-value="MaMuc"
+            dense
+            solo
+            hide-details="auto"
+            return-object
+            required
+            :rules="[v => (v !== '' && v !== null && v !== undefined && (v && v.MaMuc !== '')) || 'Thông tin bắt buộc']"
+          >
+          </v-autocomplete>
+        </v-col>
+        <v-col cols="12" md="4" class="py-0 mb-10">
+          <div class="text-label">Quận/ huyện/ thị xã <span style="color: red">(*)</span></div>
+          <v-autocomplete
+            class="flex input-form"
+            hide-no-data
+            v-model="doiTuongThucHien['DiaChiHoatDong']['HuyenQuan']"
+            :items="dsQuanHuyen"
+            item-title="TenMuc"
+            item-value="MaMuc"
+            dense
+            solo
+            hide-details="auto"
+            return-object
+            required
+            :rules="[v => (v !== '' && v !== null && v !== undefined && (v && v.MaMuc !== '')) || 'Thông tin bắt buộc']"
+          >
+          </v-autocomplete>
+        </v-col>
+        <v-col cols="12" md="4" class="py-0 mb-10">
+          <div class="text-label">Xã/phường/thị trấn  <span style="color: red">(*)</span></div>
+          <v-autocomplete
+            class="flex input-form"
+            hide-no-data
+            v-model="doiTuongThucHien['DiaChiHoatDong']['XaPhuong']"
+            :items="dsXaPhuong"
+            item-title="TenMuc"
+            item-value="MaMuc"
+            dense
+            solo
+            hide-details="auto"
+            return-object
+            required
+            :rules="[v => (v !== '' && v !== null && v !== undefined && (v && v.MaMuc !== '')) || 'Thông tin bắt buộc']"
+          >
+          </v-autocomplete>
+        </v-col>
+      </v-row>
       <v-col cols="12" class="py-0 mb-10">
         <div class="text-label">Địa chỉ trụ sở giao dịch / Địa chỉ nơi ở hiện nay</div>
         <v-text-field

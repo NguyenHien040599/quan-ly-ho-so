@@ -86,6 +86,20 @@ export const useHosoDvcStore = defineStore('hosoDvcStore', {
       let data = await $.ajax(settings)
       return data
     },
+    async getTraCuuHoSo (filter) {
+      let settings = {
+        method: 'get',
+        url: `${this.baseURL}/publicadministrativemgt/internal/hosodichvucong/1.0/tracuu`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json'
+        },
+        data: filter.hasOwnProperty('params') ? filter.params : {},
+        params: {}
+      }
+      let data = await $.ajax(settings)
+      return data
+    },
     async getChiTietHoSo (filter) {
       let settings = {
         method: 'get',

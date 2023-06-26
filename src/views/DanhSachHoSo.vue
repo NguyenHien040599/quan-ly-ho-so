@@ -88,29 +88,39 @@
       return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
     })
     if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
-      let filter = {
-        data: Object.assign(thuTucTaoMoi.thongTinHoSo, {
+      // let filter = {
+      //   data: Object.assign(thuTucTaoMoi.thongTinHoSo, {
+      //     TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
+      //     DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
+      //     TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
+      //   })
+      // }
+      // hosoDvcStore.themMoiHoSo(filter).then(function(result) {
+      //   let dataHs = result.resp
+      //   router.push({ path: `/nop-ho-so${menuSelected.value.to}/${dataHs.primKey}` })
+      // }).catch(function(){
+      //   alert('Thêm mới hồ sơ thất bại')
+      // })
+      appStore.$patch((state) => {
+        state.thongTinHoSo = Object.assign(thuTucTaoMoi.thongTinHoSo, {
           TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
           DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
           TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
         })
-      }
-      hosoDvcStore.themMoiHoSo(filter).then(function(result) {
-        let dataHs = result.resp
-        router.push({ path: `/nop-ho-so${menuSelected.value.to}/${dataHs.primKey}` })
-      }).catch(function(){
-        alert('Thêm mới hồ sơ thất bại')
       })
+      router.push({ path: `/nop-ho-so${menuSelected.value.to}/0` })
     }
     
   }
   const getDanhSachHoSo = function () {
     if (menuSelected.value && menuSelected.value.thuTuc && menuSelected.value.thuTuc.maThuTuc) {
+      let maThuTuc = menuSelected.value.hasOwnProperty('thuTucThayDoi') ? menuSelected.value.thuTuc.maThuTuc + ',' + menuSelected.value.thuTucThayDoi.maThuTuc : menuSelected.value.thuTuc.maThuTuc
       let filter = {
         params: {
           page: page.value,
           size: itemsPerPage.value,
-          thuTucHanhChinh_MaMuc: menuSelected.value.thuTuc.maThuTuc,
+          thuTucHanhChinh_MaMuc: maThuTuc,
+          // thuTucHanhChinh_MaMuc: menuSelected.value.thuTuc.maThuTuc,
           trangThaiDuLieu_MaMuc: '01,02'
         }
       }
@@ -176,13 +186,18 @@
         no: 'Không'
       },
       callback: () => {
-        // let filter = {
-        //   data: item
-        // }
-        // hosoDvcStore.xoaHoSo(filter).then(function(result) {
-        //   getDanhSachHoSo()
-        // }).catch(function(){
-        // })
+        let filter = {
+          data: Object.assign(item, {
+            TrangThaiHoSo: {
+              'MaMuc': '08',
+              'TenMuc': 'Dừng xử lý'
+            }
+          })
+        }
+        hosoDvcStore.capNhatHoSo(filter).then(function(result) {
+          getDanhSachHoSo()
+        }).catch(function(){
+        })
       }
     }
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
@@ -323,12 +338,12 @@
                     </template>
 
                     <v-list>
-                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '00'" @click="suaHoSo(item.raw)">
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == ''" @click="suaHoSo(item.raw)">
                         <v-list-item-title>
                           <v-icon size="24" :color="baseColor" class="mr-2">mdi-playlist-edit</v-icon> Sửa hồ sơ
                         </v-list-item-title>
                       </v-list-item>
-                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '00'" @click="xoaHoSo(item.raw)">
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == ''" @click="xoaHoSo(item.raw)">
                         <v-list-item-title>
                           <v-icon size="22" color="#FF0000" class="mr-2">mdi-close</v-icon> Xóa hồ sơ
                         </v-list-item-title>
@@ -338,7 +353,7 @@
                           <v-icon size="22" color="#FF0000" class="mr-2">mdi-file-refresh-outline</v-icon>Rút hồ sơ
                         </v-list-item-title>
                       </v-list-item>
-                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '09' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')"
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '10' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')"
                         @click="lapHoSoThayDoi(item.raw)"
                       >
                         <v-list-item-title>
@@ -413,12 +428,12 @@
                     </v-btn>
                   </template>
                   <v-list>
-                    <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '00'" @click="suaHoSo(item.raw)">
+                    <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == ''" @click="suaHoSo(item.raw)">
                       <v-list-item-title>
                         <v-icon size="24" :color="baseColor" class="mr-2">mdi-playlist-edit</v-icon> Sửa hồ sơ
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '00'" @click="xoaHoSo(item.raw)">
+                    <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == ''" @click="xoaHoSo(item.raw)">
                       <v-list-item-title>
                         <v-icon size="22" color="#FF0000" class="mr-2">mdi-close</v-icon> Xóa hồ sơ
                       </v-list-item-title>
@@ -428,7 +443,7 @@
                         <v-icon size="22" color="#FF0000" class="mr-2">mdi-file-refresh-outline</v-icon>Rút hồ sơ
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '09' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')"
+                    <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '10' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')"
                       @click="lapHoSoThayDoi(item.raw)"
                     >
                       <v-list-item-title>

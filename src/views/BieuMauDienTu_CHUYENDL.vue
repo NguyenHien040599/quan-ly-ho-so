@@ -24,16 +24,16 @@
   })
   const menuSelected = computed(() => appStore.getMenuSelected)
   const hoSoThayDoiNoiDung = ref(false)
-  const dossierName = ref('Đánh giá tác động xử lý dữ liệu cá nhân')
+  const dossierName = ref('Đánh giá tác động chuyển dữ liệu cá nhân ra nước ngoài')
   const tabSelected = ref(null)
   if (router.currentRoute.value.query && router.currentRoute.value.query.hasOwnProperty('id_update')) {
     console.log('router', router)
     hoSoThayDoiNoiDung.value = true
-    dossierName.value = 'Thay đổi nội dung hồ sơ đánh giá tác động xử lý dữ liệu cá nhân'
+    dossierName.value = 'Thay đổi nội dung hồ sơ đánh giá tác động chuyển dữ liệu cá nhân ra nước ngoài'
     tabSelected.value = 'thongtinthaydoi'
   } else {
     hoSoThayDoiNoiDung.value = false
-    dossierName.value = 'Đánh giá tác động xử lý dữ liệu cá nhân'
+    dossierName.value = 'Đánh giá tác động tác động chuyển dữ liệu cá nhân ra nước ngoài'
     tabSelected.value = 'nhapdon'
   }
   const ThongTinChuHoSo = defineAsyncComponent(() =>
@@ -106,13 +106,13 @@
         let validThongTinCaNhan = await thongtinchuhoso.value.validateForm()
         if (validThongTinCaNhan && doiTuongThucHien.GiayChungNhan.NgayCap) {
           console.log('doiTuongThucHienCaNhan', doiTuongThucHien)
-          doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
+          // doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
           appStore.$patch((state) => {
             state.thongTinHoSo['ChuHoSo'] = {
-              DanhBaLienLac: {SoFax: '', ThuDienTu: '', SoDienThoai: doiTuongThucHien['SoDienThoai']},
+              DanhBaLienLac: {SoFax: '', ThuDienTu: doiTuongThucHien['ThuDienTu'], SoDienThoai: doiTuongThucHien['SoDienThoai']},
               DiaChi: doiTuongThucHien['DiaChiHoatDong'],
               LoaiDoiTuong: doiTuongThucHien['LoaiDoiTuongThucHien'],
-              MaDinhDanh: doiTuongThucHien['GiayChungNhan']['SoGiay'],
+              MaDinhDanh: doiTuongThucHien["MaDinhDanh"],
               MaDoiTuong: '',
               TenGoi: doiTuongThucHien['TenGoi'],
               ThongTinKhac: ''
@@ -120,10 +120,10 @@
           })
           appStore.$patch((state) => {
             state.thongTinHoSo['NguoiNopHoSo'] = {
-              DanhBaLienLac: {SoFax: '', ThuDienTu: nguoiLienHe['Email'], SoDienThoai: nguoiLienHe['SoDienThoai']},
-              MaDinhDanh: '',
+              DanhBaLienLac: {SoFax: '', ThuDienTu: doiTuongThucHien['ThuDienTu'], SoDienThoai: doiTuongThucHien['SoDienThoai']},
+              MaDinhDanh: doiTuongThucHien["MaDinhDanh"],
               MaDoiTuong: '',
-              TenGoi: nguoiLienHe['HoVaTen'],
+              TenGoi: doiTuongThucHien['TenGoi'],
               ThongTinKhac: ''
             }
           })
@@ -208,13 +208,13 @@
   const fillData = function () {
     let doiTuongThucHien = thongtinchuhoso.value.doiTuongThucHien
     let nguoiLienHe = thongtinchuhoso.value.nguoiLienHe
-    doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
+    // doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
     appStore.$patch((state) => {
       state.thongTinHoSo['ChuHoSo'] = {
-        DanhBaLienLac: {SoFax: '', ThuDienTu: '', SoDienThoai: doiTuongThucHien['SoDienThoai']},
+        DanhBaLienLac: {SoFax: '', ThuDienTu: doiTuongThucHien['ThuDienTu'], SoDienThoai: doiTuongThucHien['SoDienThoai']},
         DiaChi: doiTuongThucHien['DiaChiHoatDong'],
         LoaiDoiTuong: doiTuongThucHien['LoaiDoiTuongThucHien'],
-        MaDinhDanh: doiTuongThucHien['GiayChungNhan']['SoGiay'],
+        MaDinhDanh: doiTuongThucHien["MaDinhDanh"],
         MaDoiTuong: '',
         TenGoi: doiTuongThucHien['TenGoi'],
         ThongTinKhac: ''
@@ -222,10 +222,10 @@
     })
     appStore.$patch((state) => {
       state.thongTinHoSo['NguoiNopHoSo'] = {
-        DanhBaLienLac: {SoFax: '', ThuDienTu: nguoiLienHe['Email'], SoDienThoai: nguoiLienHe['SoDienThoai']},
-        MaDinhDanh: '',
+        DanhBaLienLac: {SoFax: '', ThuDienTu: doiTuongThucHien['ThuDienTu'], SoDienThoai: doiTuongThucHien['SoDienThoai']},
+        MaDinhDanh: doiTuongThucHien["MaDinhDanh"],
         MaDoiTuong: '',
-        TenGoi: nguoiLienHe['HoVaTen'],
+        TenGoi: doiTuongThucHien['TenGoi'],
         ThongTinKhac: ''
       }
     })
@@ -263,7 +263,7 @@
   const reviewTab = function () {
     fillData()
   }
-  const submitNopHoSo = async function () {
+  const submitNopHoSo = async function (type) {
     // validation
     if (hoSoThayDoiNoiDung.value) {
       const { valid } = await formNoiDungThayDoi.value.validate()
@@ -279,13 +279,13 @@
     let nguoiLienHe = thongtinchuhoso.value.nguoiLienHe
     let validThongTinCaNhan = await thongtinchuhoso.value.validateForm()
     if (validThongTinCaNhan && doiTuongThucHien.GiayChungNhan.NgayCap) {
-      doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
+      // doiTuongThucHien.MaDinhDanh = doiTuongThucHien['GiayChungNhan']['SoGiay']
       appStore.$patch((state) => {
         state.thongTinHoSo['ChuHoSo'] = {
-          DanhBaLienLac: {SoFax: '', ThuDienTu: '', SoDienThoai: doiTuongThucHien['SoDienThoai']},
+          DanhBaLienLac: {SoFax: '', ThuDienTu: doiTuongThucHien['ThuDienTu'], SoDienThoai: doiTuongThucHien['SoDienThoai']},
           DiaChi: doiTuongThucHien['DiaChiHoatDong'],
           LoaiDoiTuong: doiTuongThucHien['LoaiDoiTuongThucHien'],
-          MaDinhDanh: doiTuongThucHien['GiayChungNhan']['SoGiay'],
+          MaDinhDanh: doiTuongThucHien["MaDinhDanh"],
           MaDoiTuong: '',
           TenGoi: doiTuongThucHien['TenGoi'],
           ThongTinKhac: ''
@@ -293,10 +293,10 @@
       })
       appStore.$patch((state) => {
         state.thongTinHoSo['NguoiNopHoSo'] = {
-          DanhBaLienLac: {SoFax: '', ThuDienTu: nguoiLienHe['Email'], SoDienThoai: nguoiLienHe['SoDienThoai']},
-          MaDinhDanh: '',
+          DanhBaLienLac: {SoFax: '', ThuDienTu: doiTuongThucHien['ThuDienTu'], SoDienThoai: doiTuongThucHien['SoDienThoai']},
+          MaDinhDanh: doiTuongThucHien["MaDinhDanh"],
           MaDoiTuong: '',
-          TenGoi: nguoiLienHe['HoVaTen'],
+          TenGoi: doiTuongThucHien['TenGoi'],
           ThongTinKhac: ''
         }
       })
@@ -395,7 +395,13 @@
       data: dataBm
     }
     loading.value = true
-    hosoDvcStore.themMoiDLDT(filter).then(function(result) {
+    let eventDLDT = 'themMoiDLDT'
+    let eventHoSo = 'themMoiHoSo'
+    if (props.action == 'update') {
+      eventDLDT = 'capNhatDLDT'
+      eventHoSo = 'capNhatHoSo'
+    }
+    hosoDvcStore[eventDLDT](filter).then(function(result) {
       loading.value = false
       let dataDldt = result.resp
       thongTinHoSo.value.ThanhPhanHoSo.forEach((element, index) => {
@@ -405,24 +411,55 @@
           })
         }
       })
-      appStore.$patch((state) => {
-        state.thongTinHoSo['TrangThaiHoSo'] = {
-          'MaMuc': '01',
-          'TenMuc': 'Mới đăng ký'
-        }
-        state.thongTinHoSo['TrangThaiDuLieu'] = {
-          'MaMuc': '02',
-          'TenMuc': 'Chính thức'
-        }
-        state.thongTinHoSo['TrichYeuHoSo'] = thongTinHoSo.value['ThuTucHanhChinh']['TenMuc'] + ' cho tổ chức/cá nhân ' + thongTinHoSo.value['ChuHoSo']['TenGoi']
-      })
+      if (type === 'send') {
+        appStore.$patch((state) => {
+          state.thongTinHoSo['TrangThaiHoSo'] = {
+            'MaMuc': '01',
+            'TenMuc': 'Mới đăng ký'
+          }
+          state.thongTinHoSo['TrangThaiDuLieu'] = {
+            'MaMuc': '02',
+            'TenMuc': 'Chính thức'
+          }
+          state.thongTinHoSo['TrichYeuHoSo'] = thongTinHoSo.value['ThuTucHanhChinh']['TenMuc'] + ' cho tổ chức/cá nhân ' + thongTinHoSo.value['ChuHoSo']['TenGoi']
+        })
+      } else {
+        appStore.$patch((state) => {
+          state.thongTinHoSo['TrangThaiHoSo'] = {
+            'MaMuc': '',
+            'TenMuc': 'Chưa gửi'
+          }
+          state.thongTinHoSo['TrangThaiDuLieu'] = {
+            'MaMuc': '01',
+            'TenMuc': 'Bản thảo'
+          }
+          state.thongTinHoSo['TrichYeuHoSo'] = thongTinHoSo.value['ThuTucHanhChinh']['TenMuc'] + ' cho tổ chức/cá nhân ' + thongTinHoSo.value['ChuHoSo']['TenGoi']
+        })
+      }
       console.log('thongTinHoSo', thongTinHoSo.value)
       let filterHs = {
         data: thongTinHoSo.value
       }
-      hosoDvcStore.capNhatHoSo(filterHs).then(function(result) {
-        toastr.success('Gửi hồ sơ thành công')
+      // hosoDvcStore.capNhatHoSo(filterHs).then(function(result) {
+      //   toastr.success('Gửi hồ sơ thành công')
+      //   router.push({ path: menuSelected.value.to })
+      // }).catch(function(){
+      //   toastr.error('Cập nhật hồ sơ thất bại')
+      // })
+      hosoDvcStore[eventHoSo](filterHs).then(function(resultHs) {
+        if (type = 'send') {
+          dataDldt = Object.assign(dataDldt, {'MaHoSo': resultHs.resp['MaDinhDanh']})
+          let filterBm = {
+            data: dataDldt
+          }
+          hosoDvcStore.capNhatDLDT(filterBm).then(function() {
+          })
+          toastr.success('Gửi hồ sơ thành công')
+        } else {
+          toastr.success('Cập nhật hồ sơ thành công')
+        }
         router.push({ path: menuSelected.value.to })
+
       }).catch(function(){
         toastr.error('Cập nhật hồ sơ thất bại')
       })
@@ -850,9 +887,21 @@
             </v-btn>
             <v-btn
               size="small"
+              color="#be7b00"
+              class="mx-0 mr-3"
+              @click.stop="submitNopHoSo('draf')"
+              height="32px" width="130px"
+              :loading="loading"
+              :disabled="loading"
+            >
+              <v-icon size="20" color="#ffffff" class="mr-2">mdi-content-save-all</v-icon>
+              <span style="font-size: 16px">Lưu nháp</span>
+            </v-btn>
+            <v-btn
+              size="small"
               color="#1E7D30"
               class="mx-0"
-              @click.stop="submitNopHoSo()"
+              @click.stop="submitNopHoSo('send')"
               height="32px" width="130px"
               :loading="loading"
               :disabled="loading"

@@ -1,9 +1,10 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router'
   import { useCookies } from 'vue3-cookies'
-  import { onMounted, watch, defineAsyncComponent } from 'vue'
+  import { ref, reactive, onMounted, watch, computed, defineAsyncComponent } from 'vue'
   import { useAppStore } from '@/stores/global.js'
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
+  import jsondata from '../stores/mock-data.json'
   const router = useRouter()
   const { cookies } = useCookies()
   const hosoDvcStore = useHosoDvcStore()
@@ -19,6 +20,8 @@
       default: ''
     }
   })
+  const typeAction = ref('create')
+  const menuSelected = computed(() => appStore.getMenuSelected)
   const BieuMauDienTu_XLDL = defineAsyncComponent(() =>
     import('./BieuMauDienTu_XLDL.vue')
   )
@@ -43,10 +46,49 @@
     }).catch(function(){
     })
   }
-  getThongTinHoSo()
-  watch(route, async (val) => {
-    console.log('run watch-routes BMDT:', val.name)
+  if (props.id && props.id != '0') {
+    typeAction.value = 'update'
     getThongTinHoSo()
+  } else {
+    typeAction.value = 'create'
+    // console.log('menuSelected.value:', menuSelected.value)
+    if (menuSelected.value.thuTuc) {
+      let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
+        return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+      })
+      if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
+        appStore.$patch((state) => {
+          state.thongTinHoSo = Object.assign(thuTucTaoMoi.thongTinHoSo, {
+            TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
+            DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
+            TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
+          })
+        })
+      }
+    }
+  }
+  watch(route, async (val) => {
+    // console.log('run watch-routes BMDT:', val.name)
+    if (props.id && props.id != '0') {
+      typeAction.value = 'update'
+      getThongTinHoSo()
+    } else {
+      typeAction.value = 'create'
+      if (menuSelected.value) {
+        let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
+          return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+        })
+        if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
+          appStore.$patch((state) => {
+            state.thongTinHoSo = Object.assign(thuTucTaoMoi.thongTinHoSo, {
+              TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
+              DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
+              TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
+            })
+          })
+        }
+      }
+    }
   })
   onMounted(() => {
     if (cookies.get('Token')) {
@@ -59,9 +101,9 @@
   })
 </script>
 <template>
-  <BieuMauDienTu_TBVP v-if="props.thutuc === 'thong-bao-vi-pham'"></BieuMauDienTu_TBVP>
-  <BieuMauDienTu_XLDL v-if="props.thutuc === 'xu-ly-du-lieu'"></BieuMauDienTu_XLDL>
-  <BieuMauDienTu_CHUYENDL v-if="props.thutuc === 'chuyen-du-lieu'"></BieuMauDienTu_CHUYENDL>
+  <BieuMauDienTu_TBVP :action="typeAction" v-if="props.thutuc === 'thong-bao-vi-pham'"></BieuMauDienTu_TBVP>
+  <BieuMauDienTu_XLDL :action="typeAction" v-if="props.thutuc === 'xu-ly-du-lieu'"></BieuMauDienTu_XLDL>
+  <BieuMauDienTu_CHUYENDL :action="typeAction" v-if="props.thutuc === 'chuyen-du-lieu'"></BieuMauDienTu_CHUYENDL>
 </template>
 
 <style scoped>

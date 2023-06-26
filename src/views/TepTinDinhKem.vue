@@ -39,7 +39,7 @@
         })
       }
     })
-    console.log('tp', tp)
+    // console.log('tp', tp)
     return tp.filter(function (item) {
       return String(item.IDGiayTo).split('-')[0] !== 'GTK'
     })

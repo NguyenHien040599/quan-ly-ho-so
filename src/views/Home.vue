@@ -6,11 +6,43 @@
   import { onMounted, defineAsyncComponent } from 'vue'
   import { useDisplay } from 'vuetify'
   import { useAppStore } from '@/stores/global.js'
+  import { authorizationStore } from '@/stores/authorization'
   const { mobile } = useDisplay()
   const MenuHoSo = defineAsyncComponent(() =>
     import('./MenuHoSo.vue')
   )
   const appStore = useAppStore()
+  const authorization = authorizationStore()
+  const getThongTinTk = function () {
+    let filter = {}
+    authorization.getThongTinTaiKhoan(filter).then(function (result) {
+      let data = {}
+      if (result && result.CaNhan) {
+        data = Object.assign(result.CaNhan, {
+          LoaiDoiTuong: 'CaNhan',
+          TenDinhDanh: result.TenDinhDanh,
+          id: result.id
+        })
+      }
+      if (result && result.DonViKinhDoanh) {
+        data = Object.assign(result.DonViKinhDoanh, {
+          LoaiDoiTuong: 'DonViKinhDoanh',
+          TenDinhDanh: result.TenDinhDanh,
+          id: result.id
+        })
+      }
+      if (result && result.CoQuanDonVi) {
+        data = Object.assign(result.CoQuanDonVi, {
+          LoaiDoiTuong: 'CoQuanDonVi',
+          TenDinhDanh: result.TenDinhDanh,
+          id: result.id
+        })
+      }
+      appStore.SET_USERINFO(data)
+    }).catch(function () {
+    })
+  }
+  getThongTinTk()
   onMounted(() => {
     // console.log('isMobile', mobile.value)
   })
@@ -55,9 +87,6 @@
 </template>
 
 <style lang="scss">
-  main.v-main {
-    // padding-top: 120px !important
-  }
   @media screen and (max-width: 426px){
     
   }

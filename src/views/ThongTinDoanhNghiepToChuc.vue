@@ -113,21 +113,6 @@
   const textInputOptions = ref({
     format: 'dd/MM/yyyy'
   })
-	const formatBirthDate = function (name) {
-		let lengthDate = String(thongTinDoanhNghiepToChuc[name]).trim().length
-		let splitDate = String(thongTinDoanhNghiepToChuc[name]).split('/')
-		let splitDate2 = String(thongTinDoanhNghiepToChuc[name]).split('-')
-		if (lengthDate && lengthDate > 4 && splitDate.length === 3 && splitDate[2]) {
-			thongTinDoanhNghiepToChuc[name] = translateDate(thongTinDoanhNghiepToChuc[name])
-		} else if (lengthDate && lengthDate === 8) {
-			let date = String(thongTinDoanhNghiepToChuc[name])
-			thongTinDoanhNghiepToChuc[name] = date.slice(0,2) + '/' + date.slice(2,4) + '/' + date.slice(4,8)
-		} else if (splitDate2[1]) {
-			thongTinDoanhNghiepToChuc[name] = dateLocale(thongTinDoanhNghiepToChuc[name])
-		} else {
-			// data[name] = ''
-		}
-	}
 	const translateDate = function (date) {
 		if (!date) return null
 		const [day, month, year] = date.split('/')

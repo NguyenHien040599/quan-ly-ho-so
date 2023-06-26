@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import $ from 'jquery'
+import { useCookies } from 'vue3-cookies'
+const { cookies } = useCookies()
 export const authorizationStore = defineStore('authorization', {
   state: () => ({
     baseURL: import.meta.env.VITE_APP_PATH_API
@@ -22,20 +24,18 @@ export const authorizationStore = defineStore('authorization', {
       let data = await $.ajax(settings)
       return data
     },
-    async getThongTinUserDangNhap (filter) {
+    async getThongTinTaiKhoan () {
       let settings = {
         method: 'get',
-        url: `${this.baseURL}/v1/datasharing/canbo/token`,
+        url: `${this.baseURL}/idpmgt/internal/security/profile`,
         headers: { 
           'Accept': 'application/json', 
           'Content-Type': 'application/json',
-          'Authorization': filter.token
-        },
-        data: {},
-        params: {}
+          'Authorization': 'Bearer ' + cookies.get('Token')
+        }
       }
       let data = await $.ajax(settings)
       return data
-    },
+    }
   },
 })

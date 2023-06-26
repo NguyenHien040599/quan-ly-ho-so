@@ -21,8 +21,8 @@
   const overlay = ref(false)
   const loading = ref(false)
   const valid = ref(true)
-  const userName = ref('admin')
-  const password = ref('Thanhtra2022')
+  const userName = ref('')
+  const password = ref('')
   const signed = ref(false)
 
   const login = function () {

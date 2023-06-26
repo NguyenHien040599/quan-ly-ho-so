@@ -60,11 +60,11 @@
       params: {
         page: 0,
         size: 20,
-        keywordChinhXac: String(keywordSearch.value).trim()
+        keyword: String(keywordSearch.value).trim()
       }
     }
     loadingData.value = true
-    hosoDvcStore.getDanhSachHoSo(filter).then(function(result) {
+    hosoDvcStore.getTraCuuHoSo(filter).then(function(result) {
       loadingData.value = false
       dsHsTraCuu.value = result.content
       total.value = result.totalElements
@@ -84,7 +84,7 @@
       }
     }
     loadingData.value = true
-    hosoDvcStore.getDanhSachHoSo(filter).then(function(result) {
+    hosoDvcStore.getTraCuuHoSo(filter).then(function(result) {
       loadingData.value = false
       if (result.content.length) {
         counter.value += 1
