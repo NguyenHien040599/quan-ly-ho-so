@@ -23,7 +23,7 @@ const router = createRouter({
         {
           path: '/thong-tin-ho-so/:id',
           name: 'ThongTinHoSo',
-          component: () => import('@/views/ThongTinBieuMau.vue'),
+          component: () => import('@/views/ThongTinHoSo.vue'),
           props: true
         },
         {

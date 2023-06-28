@@ -202,6 +202,9 @@
     }
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
   }
+  const boSungHoSo = function (item) {
+    router.push({ path: `/nop-ho-so${menuSelected.value.to}/${item.primKey}`,  query: { action: 'bosung' } })
+  }
   const lapHoSoThayDoi = function (item) {
     router.push({ path: `/nop-ho-so${menuSelected.value.to}/${item.primKey}`, query: { id_update: item.primKey } })
     // let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
@@ -353,6 +356,11 @@
                           <v-icon size="22" color="#FF0000" class="mr-2">mdi-file-refresh-outline</v-icon>Rút hồ sơ
                         </v-list-item-title>
                       </v-list-item>
+                      <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '05'" @click="boSungHoSo(item.raw)">
+                      <v-list-item-title>
+                        <v-icon size="22" color="#1E7D30" class="mr-2">mdi-file-document-plus-outline</v-icon>Bổ sung hồ sơ
+                      </v-list-item-title>
+                    </v-list-item>
                       <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '10' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')"
                         @click="lapHoSoThayDoi(item.raw)"
                       >
@@ -441,6 +449,11 @@
                     <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '01'" @click="rutHoSo(item.raw)">
                       <v-list-item-title>
                         <v-icon size="22" color="#FF0000" class="mr-2">mdi-file-refresh-outline</v-icon>Rút hồ sơ
+                      </v-list-item-title>
+                    </v-list-item>
+                    <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '05'" @click="boSungHoSo(item.raw)">
+                      <v-list-item-title>
+                        <v-icon size="22" color="#1E7D30" class="mr-2">mdi-file-document-plus-outline</v-icon>Bổ sung hồ sơ
                       </v-list-item-title>
                     </v-list-item>
                     <v-list-item v-if="item.raw.TrangThaiHoSo.MaMuc == '10' && (menuSelected.id == 'xulydulieu' || menuSelected.id == 'chuyendulieu')"

@@ -17,7 +17,19 @@
   const router = useRouter()
   const appStore = useAppStore()
   const hosoDvcStore = useHosoDvcStore()
-  appStore.SET_DATA_FORM_BIEUMAU_TBVP(appStore.dataFormBieuMauTbvpDefault)
+  const props = defineProps({
+    dataInput: {
+      type: Object,
+      default: {}
+    },
+    action: {
+      type: String,
+      default: ''
+    }
+  })
+  if (props.action == 'create') {
+    appStore.SET_DATA_FORM_BIEUMAU_TBVP(appStore.dataFormBieuMauTbvpDefault)
+  }
   const dataFormBieuMau = computed(() => appStore.dataFormBieuMauTbvp)
   const thongTinHoSo = computed(function () {
     return appStore.thongTinHoSo
@@ -50,12 +62,6 @@
   )
   const formTomTatNoiDung = ref(null)
   const formNoiDungThayDoi = ref(null)
-  const props = defineProps({
-    dataInput: {
-      type: Object,
-      default: {}
-    }
-  })
   const loaidlcnnhaycamRef = ref(null)
   const loaidlcncobanRef = ref(null)
   const nhomhvvphcRef = ref(null)
@@ -236,16 +242,23 @@
     let exitsDlnc = loaidlcnnhaycamRef.value ? loaidlcnnhaycamRef.value.danhSachDanhMuc.filter(function (item) {
       return item['Selected']
     }): []
-    appStore.$patch((state) => {
-      state.dataFormBieuMauTbvp['LoaiDLCNCoBan'] = exitsDlcb
-    })
-    appStore.$patch((state) => {
-      state.dataFormBieuMauTbvp['LoaiDLCNNhayCam'] = exitsDlnc
-    })
-    appStore.$patch((state) => {
-      state.dataFormBieuMauTbvp['NoiDungViPham'] = exitsNhomhvvp
-    })
-    console.log('exitsNhomhvvp123', exitsNhomhvvp)
+    if (loaidlcncobanRef.value) {
+      appStore.$patch((state) => {
+        state.dataFormBieuMauTbvp['LoaiDLCNCoBan'] = exitsDlcb
+      })
+    }
+    if (loaidlcnnhaycamRef.value) {
+      appStore.$patch((state) => {
+        state.dataFormBieuMauTbvp['LoaiDLCNNhayCam'] = exitsDlnc
+      })
+    }
+    if (dsNoiDungVPHC.value) {
+      appStore.$patch((state) => {
+        state.dataFormBieuMauTbvp['NoiDungViPham'] = exitsNhomhvvp
+      })
+    }
+    
+    // console.log('exitsNhomhvvp123', exitsNhomhvvp)
   }
   const reviewTab = function () {
     fillData()
@@ -301,6 +314,12 @@
     }
     // 
     // valid noidunghoso
+    if (!formTomTatNoiDung.value) {
+      toastr.error('Vui lòng kiểm tra lại "Nội dung hồ sơ"')
+      tabSelected.value = 'noidung'
+      document.getElementById("top-menu").scrollIntoView()
+      return
+    }
     const { valid } = await formTomTatNoiDung.value.validate()
     if (!valid) {
       toastr.error('Vui lòng nhập đầy đủ thông tin "Nội dung hồ sơ"')
@@ -391,6 +410,14 @@
             'TenMuc': 'Chính thức'
           }
           state.thongTinHoSo['TrichYeuHoSo'] = thongTinHoSo.value['ThuTucHanhChinh']['TenMuc'] + ' cho tổ chức/cá nhân ' + thongTinHoSo.value['ChuHoSo']['TenGoi']
+          state.thongTinHoSo['NgayNopHoSo'] = dateIsoLocal(new Date())
+        })
+      } else if (type === 'bosung') {
+        appStore.$patch((state) => {
+          state.thongTinHoSo['TrangThaiHoSo'] = {
+            'MaMuc': '04',
+            'TenMuc': 'Đang xử lý'
+          }
         })
       } else {
         appStore.$patch((state) => {
@@ -409,12 +436,6 @@
       let filterHs = {
         data: thongTinHoSo.value
       }
-      // hosoDvcStore.capNhatHoSo(filterHs).then(function(result) {
-      //   toastr.success('Gửi hồ sơ thành công')
-      //   router.push({ path: menuSelected.value.to })
-      // }).catch(function(){
-      //   toastr.error('Cập nhật hồ sơ thất bại')
-      // })
       hosoDvcStore[eventHoSo](filterHs).then(function(resultHs) {
         if (type = 'send') {
           dataDldt = Object.assign(dataDldt, {'MaHoSo': resultHs.resp['MaDinhDanh']})
@@ -623,7 +644,7 @@
               <div class="triangle-header"></div>
               <div class="text-sub-header">THÔNG TIN CÁ NHÂN, TỔ CHỨC THỰC HIỆN THÔNG BÁO VI PHẠM</div>
             </v-col>
-            <ThongTinChuHoSo ref="thongtinchuhoso"></ThongTinChuHoSo>
+            <ThongTinChuHoSo ref="thongtinchuhoso" :action="props.action" :thuTuc="'tbvp'"></ThongTinChuHoSo>
           </v-row>
           <v-row class="mx-0 my-2" justify="center">
             <v-btn
@@ -878,6 +899,7 @@
               <span style="font-size: 16px; text-transform: none;">Bước trước</span>
             </v-btn>
             <v-btn
+              v-if="!thongTinHoSo['TrangThaiHoSo'] || thongTinHoSo['TrangThaiHoSo']['MaMuc'] !== '05'"
               size="small"
               color="#be7b00"
               class="mx-0 mr-3"
@@ -890,6 +912,7 @@
               <span style="font-size: 16px">Lưu nháp</span>
             </v-btn>
             <v-btn
+              v-if="!thongTinHoSo['TrangThaiHoSo'] || thongTinHoSo['TrangThaiHoSo']['MaMuc'] !== '05'"
               size="small"
               color="#1E7D30"
               class="mx-0"
@@ -900,6 +923,19 @@
             >
               <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
               <span style="font-size: 16px">Gửi hồ sơ</span>
+            </v-btn>
+            <v-btn
+              v-if="thongTinHoSo['TrangThaiHoSo'] && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '05'"
+              size="small"
+              color="#1E7D30"
+              class="mx-0"
+              @click.stop="submitNopHoSo('bosung')"
+              height="32px"
+              :loading="loading"
+              :disabled="loading"
+            >
+              <v-icon size="20" color="#ffffff" class="mr-2">mdi-page-next-outline</v-icon>
+              <span style="font-size: 16px">Gửi bổ sung hồ sơ</span>
             </v-btn>
           </v-row>
         </v-window-item>

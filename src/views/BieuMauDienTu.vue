@@ -38,11 +38,38 @@
     }
     hosoDvcStore.getChiTietHoSo(filter).then(function(result) {
       if (result.resp) {
+        if (result.resp && result.resp.TrangThaiHoSo['MaMuc'] !== '' && result.resp.TrangThaiHoSo['MaMuc'] !== '05') {
+          router.push({ path: '/thong-tin-ho-so/' + result.resp.primKey })
+          return
+        }
         appStore.SET_THONGTINHOSO(result.resp)
+        let tpbm = result.resp.ThanhPhanHoSo.find(function (item) {
+          return item.DuLieuDienTu.hasOwnProperty('MaDinhDanh') && item.DuLieuDienTu['MaDinhDanh']
+        })
+        if (tpbm) {
+          getDLDT(tpbm.DuLieuDienTu['MaDinhDanh'])
+        }
       } else {
         appStore.SET_THONGTINHOSO(null)
       }
       
+    }).catch(function(){
+    })
+  }
+  const getDLDT = function (id) {
+    let filter = {
+      maDinhDanh: id
+    }
+    hosoDvcStore.getChiTietBieuMauDienTu(filter).then(function(result) {
+      if (result.resp) {
+        if (result.resp['BieuMauDienTu']['MaMuc'] == 'BM_DGTDDLCN') {
+          appStore.SET_DATA_FORM_BIEUMAU_XLDL(result.resp)
+          appStore.SET_DATA_FORM_BIEUMAU_CDL(result.resp)
+        } else if (result.resp['BieuMauDienTu']['MaMuc'] == 'BM_TBVP') {
+          appStore.SET_DATA_FORM_BIEUMAU_TBVP(result.resp)
+        } else {
+        }
+      }
     }).catch(function(){
     })
   }
@@ -102,8 +129,8 @@
 </script>
 <template>
   <BieuMauDienTu_TBVP :action="typeAction" v-if="props.thutuc === 'thong-bao-vi-pham'"></BieuMauDienTu_TBVP>
-  <BieuMauDienTu_XLDL :action="typeAction" v-if="props.thutuc === 'xu-ly-du-lieu'"></BieuMauDienTu_XLDL>
-  <BieuMauDienTu_CHUYENDL :action="typeAction" v-if="props.thutuc === 'chuyen-du-lieu'"></BieuMauDienTu_CHUYENDL>
+  <BieuMauDienTu_XLDL :action="typeAction" v-if="props.thutuc === 'xu-ly-du-lieu' || props.thutuc === 'chuyen-du-lieu'"></BieuMauDienTu_XLDL>
+  <!-- <BieuMauDienTu_CHUYENDL :action="typeAction" v-if="props.thutuc === 'chuyen-du-lieu'"></BieuMauDienTu_CHUYENDL> -->
 </template>
 
 <style scoped>

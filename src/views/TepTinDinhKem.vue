@@ -27,21 +27,34 @@
   const tenGiayToKhac = ref('')
   const formGiayToKhac = ref(null)
   const loading = ref(false)
+  const thongTinHoSo = computed(function () {
+    return appStore.thongTinHoSo
+  })
   const thanhPhanHoSo = computed(function () {
     let tp = appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
       return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
     })
-    tp.forEach((element, index) => {
-      if (element.HinhThucGiayTo['MaMuc'] == 'true') {
-        tp[index]['items'] = tp.filter(function (e) {
+    if (appStore.thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '05') {
+      tp.forEach((element, index) => {
+        tp[index]['itemsGiayTo'] = tp.filter(function (e) {
           let j = e.IDGiayTo.split('-')
-          return j[0] == 'GTK' && j[1] == element['IDGiayTo']
+          return (j[0] == 'GTK' || j[0] == 'GTBS') && j[1] == element['IDGiayTo']
         })
-      }
-    })
+      })
+    } else {
+      tp.forEach((element, index) => {
+        if (element.HinhThucGiayTo['MaMuc'] == 'true') {
+          tp[index]['itemsGiayTo'] = tp.filter(function (e) {
+            let j = e.IDGiayTo.split('-')
+            return (j[0] == 'GTK' || j[0] == 'GTBS') && j[1] == element['IDGiayTo']
+          })
+        }
+      })
+    }
+    
     // console.log('tp', tp)
     return tp.filter(function (item) {
-      return String(item.IDGiayTo).split('-')[0] !== 'GTK'
+      return String(item.IDGiayTo).split('-')[0] !== 'GTK' && String(item.IDGiayTo).split('-')[0] !== 'GTBS'
     })
   })
   const tpUpdate = ref(null)
@@ -82,6 +95,15 @@
   }
   const downloadFile = function () {
 
+  }
+  const dateIsoLocal = function (date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
   const dateLocale = function (dateInput) {
 		if (!dateInput) return ''
@@ -141,16 +163,57 @@
     if (!valid) {
       return
     }
-    if (tpUpdate.value.HinhThucGiayTo['MaMuc'] == 'false') {
+    if (tpUpdate.value.HinhThucGiayTo['MaMuc'] == 'true') {
+      showFormGiayToKhac()
+    } else {
       hosoDvcStore.uploadTep(file).then(function(result) {
-        appStore.$patch((state) => {
-          state.thongTinHoSo['ThanhPhanHoSo'][tpUpdateIndex.value+1]['TepDuLieu'] = result.resp
-        })
-        // console.log('thongTinHoSo', appStore.thongTinHoSo)
+        if (thongTinHoSo.value['TrangThaiHoSo']['MaMuc'] == '05') {
+          let tphsAdd = {
+            "IDGiayTo": 'GTBS-' + tpUpdate.value.IDGiayTo,
+            "TenGiayTo": tpUpdate.value.TenGiayTo,
+            "SoBanGiay": 0,
+            "HinhThucGiayTo": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "NgayBoSung": dateIsoLocal(new Date()),
+            "MaThanhPhanHoSo": tpUpdate.value['MaThanhPhanHoSo'],
+            "MaGiayToKetQua": null,
+            "DaHuyBoThayThe": false,
+            "TinhTrangSoHoa": 1,
+            "GiayToCaNhanToChuc": {
+              "MaDinhDanh": "",
+              "TenGiayTo": ""
+            },
+            "TepDuLieu": result.resp,
+            "GiayToLuuTruSo": {
+              "MaDinhDanh": "",
+              "TenGiayTo": ""
+            },
+            "DuLieuDienTu": {
+              "MaDinhDanh": ""
+            },
+            "editting": true
+          }
+          appStore.$patch((state) => {
+            state.thongTinHoSo.ThanhPhanHoSo[tpUpdateIndex.value + 1]['DaHuyBoThayThe'] = true
+          })
+          appStore.$patch((state) => {
+            state.thongTinHoSo.ThanhPhanHoSo.push(tphsAdd)
+          })
+          
+          appStore.$patch((state) => {
+            state.thongTinHoSo['ThanhPhanHoSo'][tpUpdateIndex.value+1]['block'] = true
+          })
+          
+        } else {
+          appStore.$patch((state) => {
+            state.thongTinHoSo['ThanhPhanHoSo'][tpUpdateIndex.value+1]['TepDuLieu'] = result.resp
+          })
+        }
+        console.log('tphsAddthanhPhanHoSo', thanhPhanHoSo.value)
       }).catch(function(error){
       })
-    } else {
-      showFormGiayToKhac()
     }
   }
   const taiXuongFile = function (file, action) {
@@ -192,6 +255,93 @@
     tenGiayToKhac.value = ''
     dialog.value = true
   }
+  const submitTaoGiayToKhac = async function () {
+    const { valid } = await formGiayToKhac.value.validate()
+    if (valid) {
+      let file = $('#file_upload_tep_dinh_kem')[0].files[0]
+      hosoDvcStore.uploadTep(file).then(function(result) {
+        dialog.value = false
+        let tphsAdd = {
+          "IDGiayTo": 'GTK-' + tpUpdate.value.IDGiayTo,
+          "TenGiayTo": tenGiayToKhac.value,
+          "SoBanGiay": 0,
+          "HinhThucGiayTo": {
+            "MaMuc": "",
+            "TenMuc": ""
+          },
+          "NgayBoSung": null,
+          "MaThanhPhanHoSo": null,
+          "MaGiayToKetQua": null,
+          "DaHuyBoThayThe": false,
+          "TinhTrangSoHoa": 1,
+          "GiayToCaNhanToChuc": {
+            "MaDinhDanh": "",
+            "TenGiayTo": ""
+          },
+          "TepDuLieu": result.resp,
+          "GiayToLuuTruSo": {
+            "MaDinhDanh": "",
+            "TenGiayTo": ""
+          },
+          "DuLieuDienTu": {
+            "MaDinhDanh": ""
+          },
+          "editting": true
+        }
+        if (thongTinHoSo.value['TrangThaiHoSo']['MaMuc'] == '05') {
+          tphsAdd = {
+            "IDGiayTo": 'GTBS-' + tpUpdate.value.IDGiayTo,
+            "TenGiayTo": tenGiayToKhac.value,
+            "SoBanGiay": 0,
+            "HinhThucGiayTo": {
+              "MaMuc": "",
+              "TenMuc": ""
+            },
+            "NgayBoSung": dateIsoLocal(new Date()),
+            "MaThanhPhanHoSo": tpUpdate.value['MaThanhPhanHoSo'],
+            "MaGiayToKetQua": null,
+            "DaHuyBoThayThe": false,
+            "TinhTrangSoHoa": 1,
+            "GiayToCaNhanToChuc": {
+              "MaDinhDanh": "",
+              "TenGiayTo": ""
+            },
+            "TepDuLieu": result.resp,
+            "GiayToLuuTruSo": {
+              "MaDinhDanh": "",
+              "TenGiayTo": ""
+            },
+            "DuLieuDienTu": {
+              "MaDinhDanh": ""
+            },
+            "editting": true
+          }
+          // 
+          // appStore.$patch((state) => {
+          //   state.thongTinHoSo.ThanhPhanHoSo[tpUpdateIndex.value + 1]['DaHuyBoThayThe'] = true
+          // })
+          // 
+        }
+        appStore.$patch((state) => {
+          state.thongTinHoSo.ThanhPhanHoSo.push(tphsAdd)
+        })
+        console.log('tphsAddthanhPhanHoSo', thanhPhanHoSo.value)
+      }).catch(function(error){
+        toastr.error('Tải lên giấy tờ thất bại')
+      })
+      // console.log('appStore.thongTinHoSo', appStore.thongTinHoSo.ThanhPhanHoSo)
+      // let hoSo = Object.assign(appStore.thongTinHoSo, {"ThanhPhanHoSo": tphs})
+      
+      // let filter = {
+      //   data: hoSo
+      // }
+      // hosoDvcStore.capNhatHoSo(filter).then(function(result) {
+      //   appStore.SET_THONGTINHOSO(result.resp)
+      // }).catch(function(){
+      //   alert('Thêm giấy tờ khác thất bại')
+      // })
+    }
+  }
   const xoaGiayToKhac = function (item, index) {
     console.log('item', item, index)
     appStore.SET_SHOWCONFIRM(true)
@@ -223,83 +373,37 @@
       },
       callback: () => {
         appStore.$patch((state) => {
-          state.thongTinHoSo.ThanhPhanHoSo[indexParent+1]['items'].splice(indexChild, 1)
+          state.thongTinHoSo.ThanhPhanHoSo[indexParent+1]['itemsGiayTo'].splice(indexChild, 1)
+        })
+        
+        appStore.$patch((state) => {
+          state.thongTinHoSo['ThanhPhanHoSo'][indexParent+1]['block'] = false
         })
       }
     }
     appStore.SET_CONFIG_CONFIRM_DIALOG(confirm)
-  }
-  const submitTaoGiayToKhac = async function () {
-    const { valid } = await formGiayToKhac.value.validate()
-    if (valid) {
-      let file = $('#file_upload_tep_dinh_kem')[0].files[0]
-      hosoDvcStore.uploadTep(file).then(function(result) {
-        dialog.value = false
-        let tphsAdd = {
-          "IDGiayTo": 'GTK-' + tpUpdate.value.IDGiayTo,
-          "TenGiayTo": tenGiayToKhac.value,
-          "SoBanGiay": 0,
-          "HinhThucGiayTo": {
-            "MaMuc": "",
-            "TenMuc": ""
-          },
-          "NgayBoSung": null,
-          "MaThanhPhanHoSo": null,
-          "MaGiayToKetQua": null,
-          "DaHuyBoThayThe": false,
-          "TinhTrangSoHoa": 1,
-          "GiayToCaNhanToChuc": {
-            "MaDinhDanh": "",
-            "TenGiayTo": ""
-          },
-          "TepDuLieu": result.resp,
-          "GiayToLuuTruSo": {
-            "MaDinhDanh": "",
-            "TenGiayTo": ""
-          },
-          "DuLieuDienTu": {
-            "MaDinhDanh": ""
-          }
-        }
-        appStore.$patch((state) => {
-          state.thongTinHoSo.ThanhPhanHoSo.push(tphsAdd)
-        })
-        console.log('tphsAddthanhPhanHoSo', thanhPhanHoSo.value)
-      }).catch(function(error){
-        toastr.error('Tải lên giấy tờ thất bại')
-      })
-      // console.log('appStore.thongTinHoSo', appStore.thongTinHoSo.ThanhPhanHoSo)
-      // let hoSo = Object.assign(appStore.thongTinHoSo, {"ThanhPhanHoSo": tphs})
-      
-      // let filter = {
-      //   data: hoSo
-      // }
-      // hosoDvcStore.capNhatHoSo(filter).then(function(result) {
-      //   appStore.SET_THONGTINHOSO(result.resp)
-      // }).catch(function(){
-      //   alert('Thêm giấy tờ khác thất bại')
-      // })
-    }
-  }
+  }  
   onMounted(() => {
 
   })
 </script>
 <template>
   <v-card class="pa-0 thanhphanhoso" style="box-shadow: none !important;width: 100%;">
-    <v-row class="mx-0 my-0" style="border-top: 1px dotted #DADADA; border-left: 1px dotted #DADADA;">
+    <v-row class="mx-0 my-0" style="border-top: 1px solid #DADADA; border-left: 1px solid #DADADA;">
       <v-row v-for="(item, index) in thanhPhanHoSo" :key="item.IDGiayTo" class="mx-0 my-0 px-2 py-2"
-        style="width: 100%;border-bottom: 1px dotted #DADADA; border-right: 1px dotted #DADADA;align-items: center;min-height: 42px">
+        style="width: 100%;border-bottom: 1px solid #DADADA; border-right: 1px solid #DADADA;align-items: center;min-height: 42px">
         <div style="font-weight: 600;width: 100%">
           <span>{{ index + 1 }}. </span><span>{{ item.TenGiayTo }}</span> <span style="color:red" v-if="item.HinhThucGiayTo['TenMuc'] == 'true'">(*)</span>
         </div>
-        <div class="py-1" @click="taiXuongFile(item.TepDuLieu, 'preview')" v-if="item.TepDuLieu.KichThuocTep" style="width: 100%">
-          <v-icon size="18" color="green" v-if="item.TepDuLieu.DinhDangTep === 'xls' || item.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'doc' || item.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-          <v-icon size="18" color="red" v-else-if="item.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'png' || item.TepDuLieu.DinhDangTep === 'jpg' || item.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+        <div class="py-1" @click="taiXuongFile(item.TepDuLieu, 'preview')" v-if="item.TepDuLieu.KichThuocTep" 
+          :style="item.DaHuyBoThayThe ? 'width: 100%; opacity: 0.8': 'width: 100%'">
+          <v-icon size="18" color="green" v-if="item.TepDuLieu.Ext === 'xls' || item.TepDuLieu.Ext === 'xlsx'">mdi-file-excel-outline</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.Ext === 'doc' || item.TepDuLieu.Ext === 'docx'">mdi-file-word-outline</v-icon>
+          <v-icon size="18" color="red" v-else-if="item.TepDuLieu.Ext === 'pdf'">mdi-file-pdf-box</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.Ext === 'png' || item.TepDuLieu.Ext === 'jpg' || item.TepDuLieu.Ext === 'jpeg'">mdi-file-image</v-icon>
           <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-          <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.TepDuLieu.TenTep}}.{{item.TepDuLieu.Ext}}</a>
+          <a class="ml-2" :style="item.DaHuyBoThayThe ? 'color: grey;text-decoration: underline;cursor: pointer' : 'text-decoration: underline;color: #1E7D30;cursor: pointer'"
+          >{{item.TepDuLieu.TenTep}}.{{item.TepDuLieu.Ext}}</a>
           <v-tooltip location="top">
             <template v-slot:activator="{ props }">
               <v-btn icon variant="flat" size="small" v-bind="props" class="mr-0" @click.stop="taiXuongFile(item.TepDuLieu, 'download')">
@@ -308,7 +412,8 @@
             </template>
             <span>Tải xuống</span>
           </v-tooltip>
-          <v-tooltip location="top">
+          <v-tooltip location="top" v-if="(thongTinHoSo && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '') ||
+          item.hasOwnProperty('editting')">
             <template v-slot:activator="{ props }">
               <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteFileAttack(item, index)">
                 <v-icon size="18" color="red">mdi-close</v-icon>
@@ -316,18 +421,19 @@
             </template>
             <span>Xóa</span>
           </v-tooltip>
+          <i>{{ item.DaHuyBoThayThe ? '(Đã hủy bỏ/thay thế)' : '' }}</i>
         </div>
-        <div v-if="item.HinhThucGiayTo['MaMuc'] == 'true'" style="width: 100%">
-          <div v-for="(item2, index2) in item['items']" :key="index2">
-            <div style="width: 100%" class="pl-3">
-              <span>- </span><span>{{ item2.TenGiayTo }}: </span>
+        <div v-if="item.HinhThucGiayTo['MaMuc'] == 'true' || (item.hasOwnProperty('itemsGiayTo') && item['itemsGiayTo'])" style="width: 100%">
+          <div v-for="(item2, index2) in item['itemsGiayTo']" :key="index2">
+            <div style="width: 100%" class="">
+              <span v-if="item.HinhThucGiayTo['MaMuc'] == 'true'">- {{ item2.TenGiayTo }}: </span>
               <span class="py-1" @click="taiXuongFile(item2.TepDuLieu, 'preview')" v-if="item2.TepDuLieu.KichThuocTep">
-                <v-icon size="18" color="green" v-if="item2.TepDuLieu.DinhDangTep === 'xls' || item2.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'doc' || item2.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                <v-icon size="18" color="red" v-else-if="item2.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'png' || item2.TepDuLieu.DinhDangTep === 'jpg' || item2.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+                <v-icon size="18" color="green" v-if="item2.TepDuLieu.Ext === 'xls' || item2.TepDuLieu.Ext === 'xlsx'">mdi-file-excel-outline</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.Ext === 'doc' || item2.TepDuLieu.Ext === 'docx'">mdi-file-word-outline</v-icon>
+                <v-icon size="18" color="red" v-else-if="item2.TepDuLieu.Ext === 'pdf'">mdi-file-pdf-box</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.Ext === 'png' || item2.TepDuLieu.Ext === 'jpg' || item2.TepDuLieu.Ext === 'jpeg'">mdi-file-image</v-icon>
                 <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item2.TepDuLieu.TenTep}}.{{item2.TepDuLieu.Ext}}</a>
+                <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30;cursor: pointer">{{item2.TepDuLieu.TenTep}}.{{item2.TepDuLieu.Ext}}</a>
                 <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
                     <v-btn icon variant="flat" size="small" v-bind="props" class="mr-0" @click.stop="taiXuongFile(item2.TepDuLieu, 'download')">
@@ -336,7 +442,7 @@
                   </template>
                   <span>Tải xuống</span>
                 </v-tooltip>
-                <v-tooltip location="top">
+                <v-tooltip location="top" v-if="(thongTinHoSo && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '') || item2.hasOwnProperty('editting')">
                   <template v-slot:activator="{ props }">
                     <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteGiayToKhac(index2, index)">
                       <v-icon size="18" color="red">mdi-close</v-icon>
@@ -344,21 +450,26 @@
                   </template>
                   <span>Xóa</span>
                 </v-tooltip>
+                <i>(Ngày bổ sung: {{ item2.NgayBoSung ? dateLocaleTime(item2.NgayBoSung) : '' }})</i>
               </span>
             </div>
           </div>
         </div>
         <div style="width: 100%;">
-          <v-btn v-if="item.HinhThucGiayTo['MaMuc'] == 'true' || (item.HinhThucGiayTo['MaMuc'] == 'false') && !item.TepDuLieu.KichThuocTep"
+          <v-btn v-if="item.HinhThucGiayTo['MaMuc'] == 'true' || (item.HinhThucGiayTo['MaMuc'] == 'false' && !item.TepDuLieu.KichThuocTep) || 
+            (thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '05' && !item.block)
+          "
             class="mx-0 ml-2 mt-2"
             size="small"
             variant="outlined"
             color="#1E7D30"
             @click.stop="pickFileUpload(item, index )"
-            height="28px" width="120px"
+            height="28px"
           >
             <v-icon size="22" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>
-            <span style="font-size: 14px; text-transform: none;">Tải lên tệp</span>
+            <span style="font-size: 14px; text-transform: none;">
+              {{thongTinHoSo['TrangThaiHoSo'] && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '05' ? 'Bổ sung giấy tờ' : 'Tải lên tệp'}}
+            </span>
           </v-btn>
         </div>
       </v-row>
@@ -404,6 +515,7 @@
             clearable
             required
             :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
+            @keyup.enter="() => {return}"
           ></v-text-field>
         </v-form>
       </v-card-text>

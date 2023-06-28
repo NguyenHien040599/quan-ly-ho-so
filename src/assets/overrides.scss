@@ -628,7 +628,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   width: 0;
   height: 0;
   border: none;
-  border-bottom: 30px solid #1E7D30;
+  border-bottom: 32px solid #1E7D30;
   border-right: 20px solid transparent;
   border-radius: 0px !important;
   opacity: 1;
@@ -642,7 +642,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   width: 0;
   height: 0;
   border: none;
-  border-top: 30px solid #1E7D30;
+  border-top: 32px solid #1E7D30;
   border-left: 20px solid transparent;
   opacity: 1;
 }
@@ -654,7 +654,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   width: 0;
   height: 0;
   border: none;
-  border-bottom: 30px solid #E3E3E3;
+  border-bottom: 32px solid #E3E3E3;
   border-right: 20px solid transparent;
   opacity: 1;
   margin-right: 5px;
@@ -671,7 +671,7 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
   width: 0;
   height: 0;
   border: none;
-  border-top: 30px solid #E3E3E3;
+  border-top: 32px solid #E3E3E3;
   border-left: 20px solid transparent;
   opacity: 1;
 }
@@ -854,6 +854,9 @@ button.v-btn--size-small:not(.v-btn--variant-outlined) .v-icon {
 .select-danhmuc {
   border-top: 1px solid #DADADA !important;
   border-left: 1px solid #DADADA !important
+}
+.madinhdanh-input input {
+  cursor: not-allowed;
 }
 
 

@@ -52,7 +52,7 @@
   const totalTiepNhan = ref(0)
   const pageCountTiepNhan = ref(0)
 	const traCuuHoSo = function () {
-    if (!String(keywordSearch.value).trim()) {
+    if (!keywordSearch.value || !String(keywordSearch.value).trim()) {
       return
     }
 		kqTraCuu.value = true
@@ -104,6 +104,11 @@
       done('empty')
     })
   }
+  const dateLocale = function (dateInput) {
+		if (!dateInput) return ''
+		let date = new Date(dateInput)
+		return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
+	}
   watch(route, async (val) => {
     getHsTiepNhan()
   })
@@ -132,6 +137,7 @@
 					dense
 					hide-details="auto"
 					clearable
+          @keyup.enter="traCuuHoSo"
 				></v-text-field>
 			</v-col>
     </v-row>
@@ -198,8 +204,9 @@
 						<div>
 							<span style="font-weight: 600;">{{ item.MaDinhDanh }}</span> - <span>{{ item.TrichYeuHoSo }}</span>
 						</div>
-						<div style="font-style: italic;">
+						<div>
 							<span>Chủ hồ sơ: </span> <span style="font-weight: 600;">{{ item.ChuHoSo['TenGoi'] }}</span> - 
+              <span>Ngày nộp: </span> <span style="font-weight: 600;">{{ item['NgayNopHoSo'] ? dateLocale(item['NgayNopHoSo']) : '' }}</span> - 
               <span>Trạng thái hồ sơ: </span> <span style="font-weight: 600;">{{ item.TrangThaiHoSo['TenMuc'] }}</span>
 						</div>
 					</v-col>

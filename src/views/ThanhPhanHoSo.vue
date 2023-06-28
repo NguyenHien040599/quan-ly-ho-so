@@ -6,6 +6,12 @@
   import { useHosoDvcStore } from '@/stores/hosodvc.js'
   import { useDisplay } from 'vuetify'
   const { mobile } = useDisplay()
+  const props = defineProps({
+    chiTietHoSo: {
+      type: Boolean,
+      default: false
+    }
+  })
   const baseColor = ref(import.meta.env.VITE_APP_BASE_COLOR)
 
   const appStore = useAppStore()
@@ -19,16 +25,16 @@
       return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
     })
     tp.forEach((element, index) => {
-      if (element.HinhThucGiayTo['MaMuc'] == 'true') {
-        tp[index]['items'] = tp.filter(function (e) {
+      // if (element.HinhThucGiayTo['MaMuc'] == 'true') {
+        tp[index]['itemsGiayTo'] = tp.filter(function (e) {
           let j = e.IDGiayTo.split('-')
-          return j[0] == 'GTK' && j[1] == element['IDGiayTo']
+          return (j[0] == 'GTK' || j[0] == 'GTBS') && j[1] == element['IDGiayTo']
         })
-      }
+      // }
     })
     // console.log('tp', tp)
     return tp.filter(function (item) {
-      return String(item.IDGiayTo).split('-')[0] !== 'GTK'
+      return String(item.IDGiayTo).split('-')[0] !== 'GTK' && String(item.IDGiayTo).split('-')[0] !== 'GTBS'
     })
   })
   const headers = reactive([
@@ -63,9 +69,6 @@
       "class": "td-left"
     }
   ])
-  const viewFileUpload = function () {
-
-  }
   const taiXuongFile = function (file, action) {
     if (loading.value) {
       return
@@ -90,13 +93,17 @@
       loading.value = false
     })
   }
+  const dateLocaleTime = function(dateInput) {
+    let date = new Date(dateInput)
+    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  }
   onMounted(() => {
 
   })
 </script>
 <template>
   <v-card class="pa-0 thanhphanhoso" style="box-shadow: none !important;width: 100%;">
-    <v-row class="mx-0 my-0 mt-3">
+    <v-row class="mx-0 my-0 mt-3 mb-2" v-if="!chiTietHoSo">
       <v-col class="sub-header d-flex align-center justify-start py-0 px-0">
         <div class="sub-header-content">
           <v-icon size="22" color="#ffffff">mdi-view-dashboard-outline</v-icon>
@@ -105,19 +112,21 @@
         <div class="text-sub-header">Thành phần hồ sơ</div>
       </v-col>
     </v-row>
-    <v-row class="mx-0 my-0 mt-2" style="border-top: 1px dotted #DADADA; border-left: 1px dotted #DADADA;">
+    <v-row class="mx-0 my-0" style="border-top: 1px solid #DADADA; border-left: 1px solid #DADADA;">
       <v-row v-for="(item, index) in thanhPhanHoSo" :key="item.IDGiayTo" class="mx-0 my-0 px-2 py-2"
-        style="width: 100%;border-bottom: 1px dotted #DADADA; border-right: 1px dotted #DADADA;align-items: center;min-height: 42px">
+        style="width: 100%;border-bottom: 1px solid #DADADA; border-right: 1px solid #DADADA;align-items: center;min-height: 42px">
         <div style="font-weight: 600;width: 100%">
           <span>{{ index + 1 }}. </span><span>{{ item.TenGiayTo }}</span> <span style="color:red" v-if="item.HinhThucGiayTo['TenMuc'] == 'true'">(*)</span>
         </div>
-        <div class="py-1" @click="taiXuongFile(item.TepDuLieu, 'preview')" v-if="item.TepDuLieu.KichThuocTep" style="width: 100%">
-          <v-icon size="18" color="green" v-if="item.TepDuLieu.DinhDangTep === 'xls' || item.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'doc' || item.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-          <v-icon size="18" color="red" v-else-if="item.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.DinhDangTep === 'png' || item.TepDuLieu.DinhDangTep === 'jpg' || item.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+        <div class="py-1" @click="taiXuongFile(item.TepDuLieu, 'preview')" v-if="item.TepDuLieu.KichThuocTep" style="width: 100%; cursor: pointer;">
+          <v-icon size="18" color="green" v-if="item.TepDuLieu.Ext === 'xls' || item.TepDuLieu.Ext === 'xlsx'">mdi-file-excel-outline</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.Ext === 'doc' || item.TepDuLieu.Ext === 'docx'">mdi-file-word-outline</v-icon>
+          <v-icon size="18" color="red" v-else-if="item.TepDuLieu.Ext === 'pdf'">mdi-file-pdf-box</v-icon>
+          <v-icon size="18" color="blue" v-else-if="item.TepDuLieu.Ext === 'png' || item.TepDuLieu.Ext === 'jpg' || item.TepDuLieu.Ext === 'jpeg'">mdi-file-image</v-icon>
           <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
-          <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item.TepDuLieu.TenTep}}.{{item.TepDuLieu.Ext}}</a>
+          <a class="ml-2" :style="item.DaHuyBoThayThe ? 'color: grey;text-decoration: underline;cursor: pointer' : 'text-decoration: underline;color: #1E7D30;cursor: pointer'">
+            {{item.TepDuLieu.TenTep}}.{{item.TepDuLieu.Ext}}
+          </a>
           <v-tooltip location="top">
             <template v-slot:activator="{ props }">
               <v-btn icon variant="flat" size="small" v-bind="props" class="mr-0" @click.stop="taiXuongFile(item.TepDuLieu, 'download')">
@@ -126,16 +135,17 @@
             </template>
             <span>Tải xuống</span>
           </v-tooltip>
+          <i>{{ item.DaHuyBoThayThe ? '(Đã hủy bỏ/thay thế)' : '' }}</i>
         </div>
-        <div v-if="item.HinhThucGiayTo['MaMuc'] == 'true'" style="width: 100%">
-          <div v-for="(item2, index2) in item['items']" :key="index2">
-            <div style="width: 100%" class="pl-3">
-              <span>- </span><span>{{ item2.TenGiayTo }}: </span>
+        <div v-if="item.HinhThucGiayTo['MaMuc'] == 'true' || (item.hasOwnProperty('itemsGiayTo') && item['itemsGiayTo'])" style="width: 100%">
+          <div v-for="(item2, index2) in item['itemsGiayTo']" :key="index2">
+            <div style="width: 100%" class="">
+              <span v-if="item.HinhThucGiayTo['MaMuc'] == 'true'">- {{ item2.TenGiayTo }}: </span>
               <span class="py-1" @click="taiXuongFile(item2.TepDuLieu, 'preview')" v-if="item2.TepDuLieu.KichThuocTep">
-                <v-icon size="18" color="green" v-if="item2.TepDuLieu.DinhDangTep === 'xls' || item2.TepDuLieu.DinhDangTep === 'xlsx'">mdi-file-excel-outline</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'doc' || item2.TepDuLieu.DinhDangTep === 'docx'">mdi-file-word-outline</v-icon>
-                <v-icon size="18" color="red" v-else-if="item2.TepDuLieu.DinhDangTep === 'pdf'">mdi-file-pdf-box</v-icon>
-                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.DinhDangTep === 'png' || item2.TepDuLieu.DinhDangTep === 'jpg' || item2.TepDuLieu.DinhDangTep === 'jpeg'">mdi-file-image</v-icon>
+                <v-icon size="18" color="green" v-if="item2.TepDuLieu.Ext === 'xls' || item2.TepDuLieu.Ext === 'xlsx'">mdi-file-excel-outline</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.Ext === 'doc' || item2.TepDuLieu.Ext === 'docx'">mdi-file-word-outline</v-icon>
+                <v-icon size="18" color="red" v-else-if="item2.TepDuLieu.Ext === 'pdf'">mdi-file-pdf-box</v-icon>
+                <v-icon size="18" color="blue" v-else-if="item2.TepDuLieu.Ext === 'png' || item2.TepDuLieu.Ext === 'jpg' || item2.TepDuLieu.Ext === 'jpeg'">mdi-file-image</v-icon>
                 <v-icon size="18" color="#2161b1" v-else>mdi-paperclip</v-icon>
                 <a class="ml-2" style="font-size: 14px;text-decoration: underline;color: #1E7D30">{{item2.TepDuLieu.TenTep}}.{{item2.TepDuLieu.Ext}}</a>
                 <v-tooltip location="top">
@@ -146,6 +156,7 @@
                   </template>
                   <span>Tải xuống</span>
                 </v-tooltip>
+                <i>(Ngày bổ sung: {{ item2.NgayBoSung ? dateLocaleTime(item2.NgayBoSung) : '' }})</i>
               </span>
             </div>
           </div>

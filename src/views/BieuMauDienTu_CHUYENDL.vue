@@ -62,6 +62,7 @@
   const loaidlcnnhaycamRef = ref(null)
   const loaidlcncobanRef = ref(null)
   const dsLoaiDoiTuongBVDLCN = ref([])
+  const dsLoaiHinhDGTD = ref([])
   
   const dsDieuKienXuLyDLCN = ref([])
   const camKet = ref(false)
@@ -79,6 +80,27 @@
       dsLoaiDoiTuongBVDLCN.value = result.content
     }).catch(function(){
       dsLoaiDoiTuongBVDLCN.value = []
+    })
+    let filter2 = {
+      maDanhMuc: 'loaihinhdgtd'
+    }
+    hosoDvcStore.getDanhMucEform(filter2).then(function(result) {
+      dsLoaiHinhDGTD.value = result.content
+    }).catch(function(){
+      dsLoaiHinhDGTD.value = [
+        {
+          "MaMuc": "01",
+          "TenMuc": "Xử lý dữ liệu"
+        },
+        {
+          "MaMuc": "02",
+          "TenMuc": "Xử lý và chuyển dữ liệu ra nước ngoài"
+        },
+        {
+          "MaMuc": "03",
+          "TenMuc": "Chuyển dữ liệu ra nước ngoài"
+        }
+      ]
     })
   }
   getData()
@@ -390,7 +412,7 @@
       return
     }
     console.log('dataFormBieuMau', dataFormBieuMau.value)
-    let dataBm = Object.assign(dataFormBieuMau.value, {"BieuMauDienTu": {"MaMuc": "BM_CDLCN", "TenMuc": "Biểu mẫu DGTD_CDLCN"}})
+    let dataBm = Object.assign(dataFormBieuMau.value, {"BieuMauDienTu": {"MaMuc": "BM_DGTDDLCN", "TenMuc": "Biểu mẫu DGTD_CDLCN"}})
     let filter = {
       data: dataBm
     }
@@ -655,7 +677,7 @@
               <div class="triangle-header"></div>
               <div class="text-sub-header">THÔNG TIN CÁ NHÂN, TỔ CHỨC THỰC HIỆN ĐÁNH GIÁ TÁC ĐỘNG XỬ LÝ DỮ LIỆU CÁ NHÂN</div>
             </v-col>
-            <ThongTinChuHoSo ref="thongtinchuhoso"></ThongTinChuHoSo>
+            <ThongTinChuHoSo ref="thongtinchuhoso" :action="props.action"></ThongTinChuHoSo>
           </v-row>
           <v-row class="mx-0 my-2" justify="center">
             <v-btn
@@ -693,10 +715,17 @@
               <div class="triangle-header"></div>
               <div class="text-sub-header">TÓM TẮT NỘI DUNG ĐÁNH GIÁ TÁC ĐỘNG CHUYỂN DỮ LIỆU CÁ NHÂN RA NƯỚC NGOÀI</div>
             </v-col>
-            <v-col cols="12" class="py-0">
+            <v-col cols="12" md="6" class="py-0">
               <div class="text-label">Đối tượng bảo vệ DLCN <span style="color: red">(*)</span></div>
               <v-radio-group v-model="dataFormBieuMau['LoaiBenDGTD']">
                 <v-radio v-for="(item, index) in dsLoaiDoiTuongBVDLCN" :key="index" 
+                :label="item['TenMuc']" :value="item" color="#1E7D30"></v-radio>
+              </v-radio-group>
+            </v-col>
+            <v-col cols="12" md="6" class="py-0">
+              <div class="text-label">Loại đánh giá tác động <span style="color: red">(*)</span></div>
+              <v-radio-group v-model="dataFormBieuMau['LoaiHinhDGTD']">
+                <v-radio v-for="(item, index) in dsLoaiHinhDGTD" :key="index" 
                 :label="item['TenMuc']" :value="item" color="#1E7D30"></v-radio>
               </v-radio-group>
             </v-col>

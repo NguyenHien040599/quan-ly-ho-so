@@ -13,10 +13,16 @@
     action: {
       type: String,
       default: ''
+    },
+    thuTuc: {
+      type: String,
+      default: ''
     }
   })
   const appStore = useAppStore()
   const hosoDvcStore = useHosoDvcStore()
+  const dataFormBieuMauXLDL = computed(() => appStore.dataFormBieuMauXldl)
+  const dataFormBieuMauTBVP = computed(() => appStore.dataFormBieuMauTBVP)
   const thongTinNguoiDung = computed(() => appStore.userInfo)
   const doiTuongThucHien = reactive(
     {
@@ -85,7 +91,15 @@
     doiTuongThucHien.MaDinhDanh = thongTinNguoiDung.value.MaDinhDanh
     doiTuongThucHien.TenGoi = thongTinNguoiDung.value.TenGoi
     try {
-      doiTuongThucHien.GiayChungNhan = thongTinNguoiDung.value.GiayDangKyKinhDoanh
+      if (thongTinNguoiDung.value.GiayDangKyKinhDoanh) {
+        doiTuongThucHien.GiayChungNhan = {
+          SoGiay: thongTinNguoiDung.value.GiayDangKyKinhDoanh['SoGiay'],
+          NgayCap: thongTinNguoiDung.value.GiayDangKyKinhDoanh['NgayCap'] ? thongTinNguoiDung.value.GiayDangKyKinhDoanh['NgayCap'] : '',
+          NoiCap: thongTinNguoiDung.value.GiayDangKyKinhDoanh['NoiCap'] ? thongTinNguoiDung.value.GiayDangKyKinhDoanh['NoiCap']['TenGoi'] : ''
+        }
+      } else {
+        doiTuongThucHien.GiayChungNhan['SoGiay'] = thongTinNguoiDung.value.MaDinhDanh
+      }
     } catch (error) {
     }
     try {
@@ -121,6 +135,24 @@
       "Email": ""
     }
   )
+  if (props.action === 'update' && (dataFormBieuMauXLDL.value || dataFormBieuMauTBVP.value)) {
+    let dataBmDoiTuong = props.thuTuc == 'xldl' ? dataFormBieuMauXLDL.value['DoiTuongThucHien'] : dataFormBieuMauTBVP.value['DoiTuongThucHien']
+    let dataBmNguoiLienHe = props.thuTuc == 'xldl' ? dataFormBieuMauXLDL.value['NguoiLienHe'] : dataFormBieuMauTBVP.value['NguoiLienHe']
+    doiTuongThucHien.LoaiDoiTuongThucHien = dataBmDoiTuong.LoaiDoiTuongThucHien
+    doiTuongThucHien.MaDinhDanh = dataBmDoiTuong.MaDinhDanh
+    doiTuongThucHien.TenGoi = dataBmDoiTuong.TenGoi
+    doiTuongThucHien.GiayChungNhan = dataBmDoiTuong.GiayChungNhan
+    doiTuongThucHien.DiaChiHoatDong = dataBmDoiTuong.DiaChiHoatDong
+    doiTuongThucHien.DiaChiLienHe =  dataBmDoiTuong.DiaChiLienHe
+    doiTuongThucHien.SoDienThoai = dataBmDoiTuong.SoDienThoai
+    doiTuongThucHien.Email = dataBmDoiTuong.Email
+    doiTuongThucHien.Website = dataBmDoiTuong.Website
+
+    nguoiLienHe.HoVaTen = dataBmNguoiLienHe ? dataBmNguoiLienHe.HoVaTen : ''
+    nguoiLienHe.ChucDanh = dataBmNguoiLienHe ? dataBmNguoiLienHe.ChucDanh : ''
+    nguoiLienHe.SoDienThoai = dataBmNguoiLienHe ? dataBmNguoiLienHe.SoDienThoai : ''
+    nguoiLienHe.Email = dataBmNguoiLienHe ? dataBmNguoiLienHe.Email : ''
+  }
   const dsLoaiDoiTuongThucHien = ref([])
   const dsTinhThanh = ref([])
   const dsQuanHuyen = ref([])
@@ -130,9 +162,9 @@
   const formThongTinDoanhNghiepToChuc = ref(null)
   const emit = defineEmits(['submitForm'])
   // 
-  console.log('action', props.action)
-  console.log('thongTinNguoiDung', thongTinNguoiDung.value)
-  console.log('doiTuongThucHien', doiTuongThucHien)
+  // console.log('action', props.action)
+  // console.log('thongTinNguoiDung', thongTinNguoiDung.value)
+  // console.log('doiTuongThucHien', doiTuongThucHien)
   const initForm = function (type) {
     let filter = {
       maDanhMuc: 'tinhthanh'
@@ -202,7 +234,7 @@
 	}
   // 
   watch(
-    () => doiTuongThucHien.DiaChiHoatDong.TinhThanh,
+    () => doiTuongThucHien && doiTuongThucHien.DiaChiHoatDong.TinhThanh,
     (newValue, oldValue) => {
       if (newValue.MaMuc) {
         let filter = {
@@ -221,7 +253,7 @@
     { deep: true }
   )
   watch(
-    () => doiTuongThucHien.DiaChiHoatDong.HuyenQuan,
+    () => doiTuongThucHien && doiTuongThucHien.DiaChiHoatDong.HuyenQuan,
     (newValue, oldValue) => {
       if (newValue.MaMuc) {
         let filter = {
@@ -240,7 +272,7 @@
     { deep: true }
   )
   watch(
-    () => doiTuongThucHien.DiaChiLienHe.TinhThanh,
+    () => doiTuongThucHien && doiTuongThucHien.DiaChiLienHe.TinhThanh,
     (newValue, oldValue) => {
       if (newValue.MaMuc) {
         let filter = {
@@ -259,7 +291,7 @@
     { deep: true }
   )
   watch(
-    () => doiTuongThucHien.DiaChiLienHe.HuyenQuan,
+    () => doiTuongThucHien && doiTuongThucHien.DiaChiLienHe.HuyenQuan,
     (newValue, oldValue) => {
       if (newValue.MaMuc) {
         let filter = {
@@ -313,7 +345,7 @@
       <v-col cols="12" md="4" class="py-0 mb-10">
         <div class="text-label">Số giấy <span style="color: red">(*)</span></div>
         <v-text-field
-          class="flex input-form"
+          class="flex input-form madinhdanh-input"
           v-model="doiTuongThucHien['GiayChungNhan']['SoGiay']"
           solo
           dense

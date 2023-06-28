@@ -18,20 +18,21 @@ export const useAppStore = defineStore('appStore', {
     menuSelected: {},
     thongTinHoSo: {},
     dataFormBieuMauXldl: {
+      MaHoSo: '',
       DoiTuongThucHien: {
         LoaiDoiTuongThucHien: null
       },
       LoaiBenDGTD: null,
+      LoaiHinhDGTD: null,
       NguoiLienHe: null,
-      MucDichXLDLCN: '',
-      HoatDongXLDLCN: '',
+      MucDichDLCN: '',
+      HoatDongDLCN: '',
       LoaiDLCNCoBan: [],
       LoaiDLCNNhayCam: [],
       SoLuongDuLieu: '',
       DongYChuTheDLCN: false,
-      ChuyenDLCNRaNuocNgoai: false,
-      ThoiGianXuLy: '',
-      ThoiGianHuyXoa: '',
+      ThoiGianBatDau: '',
+      ThoiGianKetThuc: '',
       LoaiBienPhapBVDLCN: [],
       LoaiDanhGiaTacDong: [],
       LayYKienDanhGia: false,
@@ -40,20 +41,21 @@ export const useAppStore = defineStore('appStore', {
       LyDoThayDoi: ''
     },
     dataFormBieuMauXldlDefault: {
+      MaHoSo: '',
       DoiTuongThucHien: {
         LoaiDoiTuongThucHien: null
       },
       LoaiBenDGTD: null,
+      LoaiHinhDGTD: null,
       NguoiLienHe: null,
-      MucDichXLDLCN: '',
-      HoatDongXLDLCN: '',
+      MucDichDLCN: '',
+      HoatDongDLCN: '',
       LoaiDLCNCoBan: [],
       LoaiDLCNNhayCam: [],
       SoLuongDuLieu: '',
       DongYChuTheDLCN: false,
-      ChuyenDLCNRaNuocNgoai: false,
-      ThoiGianXuLy: '',
-      ThoiGianHuyXoa: '',
+      ThoiGianBatDau: '',
+      ThoiGianKetThuc: '',
       LoaiBienPhapBVDLCN: [],
       LoaiDanhGiaTacDong: [],
       LayYKienDanhGia: false,
@@ -62,10 +64,12 @@ export const useAppStore = defineStore('appStore', {
       LyDoThayDoi: ''
     },
     dataFormBieuMauCdlcnrnn: {
+      MaHoSo: '',
       DoiTuongThucHien: {
         LoaiDoiTuongThucHien: null
       },
       LoaiBenDGTD: null,
+      LoaiHinhDGTD: null,
       NguoiLienHe: null,
       MucDichCDLCNRNN: '',
       HoatDongCDLCNRNN: '',
@@ -74,8 +78,8 @@ export const useAppStore = defineStore('appStore', {
       SoLuongDuLieu: '',
       DongYChuTheDLCN: false,
       ChuyenDLCNRaNuocNgoai: false,
-      ThoiGianXuLy: '',
-      ThoiGianHuyXoa: '',
+      ThoiGianBatDau: '',
+      ThoiGianKetThuc: '',
       LoaiBienPhapBVDLCN: [],
       LoaiDanhGiaTacDong: [],
       LayYKienDanhGia: false,
@@ -84,10 +88,12 @@ export const useAppStore = defineStore('appStore', {
       LyDoThayDoi: ''
     },
     dataFormBieuMauCdlcnrnnDefault: {
+      MaHoSo: '',
       DoiTuongThucHien: {
         LoaiDoiTuongThucHien: null
       },
       LoaiBenDGTD: null,
+      LoaiHinhDGTD: null,
       NguoiLienHe: null,
       MucDichCDLCNRNN: '',
       HoatDongCDLCNRNN: '',
@@ -96,8 +102,8 @@ export const useAppStore = defineStore('appStore', {
       SoLuongDuLieu: '',
       DongYChuTheDLCN: false,
       ChuyenDLCNRaNuocNgoai: false,
-      ThoiGianXuLy: '',
-      ThoiGianHuyXoa: '',
+      ThoiGianBatDau: '',
+      ThoiGianKetThuc: '',
       LoaiBienPhapBVDLCN: [],
       LoaiDanhGiaTacDong: [],
       LayYKienDanhGia: false,

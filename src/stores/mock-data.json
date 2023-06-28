@@ -34,9 +34,9 @@
         },
         {
           "sortable": false,
-          "title": "Ngày tạo",
+          "title": "Ngày nộp",
           "align": "center",
-          "key": "ThoiGianTao",
+          "key": "NgayNopHoSo",
           "class": "td-left",
           "type": "datetime",
           "width": 150
@@ -46,7 +46,7 @@
           "title": "Tình trạng hồ sơ",
           "align": "center",
           "key": "TrangThaiHoSo",
-          "class": "td-center",
+          "class": "td-left",
           "type": "object",
           "mapping": "TenMuc",
           "width": 150
@@ -721,15 +721,22 @@
           "title": "Nội dung đánh giá tác động xử lý dữ liệu cá nhân",
           "content": [
             {
-              "title": "- Mục đích xử lý dữ liệu cá nhân",
-              "value": "MucDichXLDLCN",
+              "title": "- Loại đánh giá tác động",
+              "value": "LoaiHinhDGTD",
+              "mapping": "TenMuc",
+              "type": "object",
+              "class": "v-col-12 py-0 pt-2 px-0"
+            },
+            {
+              "title": "- Mục đích xử lý hoặc chuyển dữ liệu cá nhân",
+              "value": "MucDichDLCN",
               "mapping": "",
               "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "- Hoạt động xử lý dữ liệu cá nhân",
-              "value": "HoatDongXLDLCN",
+              "title": "- Hoạt động xử lý hoặc chuyển dữ liệu cá nhân",
+              "value": "HoatDongDLCN",
               "mapping": "",
               "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
@@ -763,22 +770,15 @@
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "- Có liên quan chuyển dữ liệu cá nhân ra nước ngoài không?",
-              "value": "ChuyenDLCNRaNuocNgoai",
-              "mapping": "",
-              "type": "boolean",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
               "title": "- Thời gian bắt đầu",
-              "value": "ThoiGianXuLy",
+              "value": "ThoiGianBatDau",
               "mapping": "",
               "type": "date",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
               "title": "- Thời gian kết thúc",
-              "value": "ThoiGianHuyXoa",
+              "value": "ThoiGianKetThuc",
               "mapping": "",
               "type": "date",
               "class": "v-col-12 py-0 pt-2 px-0"
@@ -907,7 +907,7 @@
         "HoSoCoThanhPhanSoHoa": true,
         "ThanhPhanHoSo": [
           {
-            "IDGiayTo": "BMDT_DGTD_XLDLCN",
+            "IDGiayTo": "BM_DGTDDLCN",
             "TenGiayTo": "Biểu mẫu điện tử",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
@@ -1266,14 +1266,14 @@
           "content": [
             {
               "title": "- Mục đích chuyển dữ liệu cá nhân ra nước ngoài",
-              "value": "MucDichCDLCNRNN",
+              "value": "MucDichDLCN",
               "mapping": "",
               "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
               "title": "- Hoạt động chuyển dữ liệu cá nhân ra nước ngoài",
-              "value": "HoatDongCDLCNRNN",
+              "value": "HoatDongDLCN",
               "mapping": "",
               "type": "",
               "class": "v-col-12 py-0 pt-2 px-0"
@@ -1307,22 +1307,15 @@
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
-              "title": "- Có liên quan chuyển dữ liệu cá nhân ra nước ngoài không?",
-              "value": "ChuyenDLCNRaNuocNgoai",
-              "mapping": "",
-              "type": "boolean",
-              "class": "v-col-12 py-0 pt-2 px-0"
-            },
-            {
               "title": "- Thời gian bắt đầu",
-              "value": "ThoiGianXuLy",
+              "value": "ThoiGianBatDau",
               "mapping": "",
               "type": "date",
               "class": "v-col-12 py-0 pt-2 px-0"
             },
             {
               "title": "- Thời gian kết thúc",
-              "value": "ThoiGianHuyXoa",
+              "value": "ThoiGianKetThuc",
               "mapping": "",
               "type": "date",
               "class": "v-col-12 py-0 pt-2 px-0"
@@ -1451,7 +1444,7 @@
         "HoSoCoThanhPhanSoHoa": true,
         "ThanhPhanHoSo": [
           {
-            "IDGiayTo": "BMDT_DGTD_CDLCN",
+            "IDGiayTo": "BM_DGTDDLCN",
             "TenGiayTo": "Biểu mẫu điện tử",
             "SoBanGiay": 0,
             "HinhThucGiayTo": {
@@ -2015,7 +2008,7 @@
         "NgayKetThucTheoQuyDinh": "2023-06-14T01:43:48.577Z"
       }
     ],
-    "ThoiGianXuLy": "2023-06-14T01:43:48.577Z",
-    "ThoiGianHuyXoa": "2023-06-14T01:43:48.577Z"
+    "ThoiGianBatDau": "2023-06-14T01:43:48.577Z",
+    "ThoiGianKetThuc": "2023-06-14T01:43:48.577Z"
   }
 }
