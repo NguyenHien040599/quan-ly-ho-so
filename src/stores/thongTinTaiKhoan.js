@@ -23,7 +23,7 @@ export const thongTinTaiKhoanStore = defineStore("thongTinTaiKhoan", {
             params = null
         }) {
             const {  
-                data
+                data 
             } = await fetchGetApi("get", type, params);
             this.thongTinTaiKhoan = data;
         },
