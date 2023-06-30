@@ -151,34 +151,34 @@
 
 
 <style lang="scss">
-  .v-navigation-drawer {
-    background-color: #002715fa !important;
-    max-height: none !important
-  }
-  .v-avatar {
-    margin-top: 3px !important
-  }
-  .text-drawer {
-    color: #ffffff !important
-  }
-  .item-active {
-    background: #003D1A;
-    border-left: 6px solid #2B8700;
-    padding: 0 8px !important
-  }
-  .item-active .v-icon {
-    color: #ffffff !important
-  }
-  .icon-draw {
-    color: #2B8700 !important
-  }
-  .text-list {
-    font-size: 14px !important;
-    text-transform: uppercase;
-    line-height: 24px !important;
-    font-weight: 400 !important
-  }
-  .list-menu {
-    cursor: pointer
-  }
+  // .v-navigation-drawer {
+  //   background-color: #002715fa !important;
+  //   max-height: none !important
+  // }
+  // .v-avatar {
+  //   margin-top: 3px !important
+  // }
+  // .text-drawer {
+  //   color: #ffffff !important
+  // }
+  // .item-active {
+  //   background: #003D1A;
+  //   border-left: 6px solid #2B8700;
+  //   padding: 0 8px !important
+  // }
+  // .item-active .v-icon {
+  //   color: #ffffff !important
+  // }
+  // .icon-draw {
+  //   color: #2B8700 !important
+  // }
+  // .text-list {
+  //   font-size: 14px !important;
+  //   text-transform: uppercase;
+  //   line-height: 24px !important;
+  //   font-weight: 400 !important
+  // }
+  // .list-menu {
+  //   cursor: pointer
+  // }
 </style>

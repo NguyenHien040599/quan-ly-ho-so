@@ -13,18 +13,18 @@
   const publicPath = ref(import.meta.env.VITE_APP_PULIC_PATH)
   const items = reactive([
     {
-      icon: 'mdi:mdi-file-document-outline',
-      title: 'Thủ tục hành chính',
-      class: 'hoso-tab',
-      id: 'hoso-tab-id',
-      to: '/thu-tuc-hanh-chinh'
-    },
-    {
       icon: 'mdi:mdi-chart-box-outline',
       title: 'Quản lý hồ sơ',
       class: 'baocao-tab',
       id: 'baocao-tab-id',
-      to: '/quan-ly-ho-so'
+      to: '/'
+    },
+    {
+      icon: 'mdi:mdi-chart-box-outline',
+      title: 'Tra cứu hồ sơ',
+      class: 'tra-cuu-tab',
+      id: 'tracuu-tab-id',
+      to: '/tra-cuu-ho-so'
     },
     {
       icon: 'mdi:mdi-bank',
@@ -75,8 +75,7 @@
           </div>
           <div class="d-inline-flex py-0">
             <div class="title-banner">
-              <div class="title-banner-vi mb-1">CỔNG THÔNG TIN QUỐC GIA VỀ</div>
-              <div class="title-banner-vi">BẢO VỆ DỮ LIỆU CÁ NHÂN</div>
+              <div class="title-banner-vi mb-1">CỔNG THÔNG TIN QUỐC GIA VỀ BẢO VỆ DỮ LIỆU CÁ NHÂN</div>
             </div>
           </div>
           <v-menu v-if="isSigned && breakpointName !== 'xs' && breakpointName !== 'sm'" transition="scale-transition">
@@ -206,8 +205,9 @@
     font-size: 12px;
   }
   .logo-banner {
-    width: 64px;
+    // width: 64px;
     margin-right: 20px;
+    margin-left: 15px;
   }
   .title-banner {
     display: flex;

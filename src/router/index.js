@@ -9,21 +9,33 @@ const router = createRouter({
       component: () => import('@/views/Home.vue'),
       children: [
         {
-          path: 'thu-tuc-hanh-chinh',
-          name: 'ThuTucHanhChinh',
-          component: () => import('@/views/ThuTucHanhChinh.vue'),
-          props: true
-        },
-        {
-          path: 'quan-ly-ho-so',
+          path: '/',
           name: 'QuanLyHoSo',
           component: () => import('@/views/QuanLyHoSo.vue'),
           props: true
         },
         {
-          path: 'hoi-dap',
-          name: 'HoiDap',
-          component: () => import('@/views/HoiDap.vue'),
+          path: '/:thutuc',
+          name: 'QuanLyHoSoDanhSach',
+          component: () => import('@/views/QuanLyHoSo.vue'),
+          props: true
+        },
+        {
+          path: '/thong-tin-ho-so/:id',
+          name: 'ThongTinHoSo',
+          component: () => import('@/views/ThongTinHoSo.vue'),
+          props: true
+        },
+        {
+          path: '/nop-ho-so/:thutuc/:id',
+          name: 'BieuMauDienTu',
+          component: () => import('@/views/BieuMauDienTu.vue'),
+          props: true
+        },
+        {
+          path: 'thong-bao',
+          name: 'ThongBao',
+          component: () => import('@/views/TinNhanThongBao.vue'),
           props: true
         },
         {
@@ -38,6 +50,11 @@ const router = createRouter({
       name: 'Login',
       path: '/login',
       component: () => import('@/views/Login.vue')
+    },
+    {
+      path: '/tra-cuu-ho-so',
+      name: 'TraCuuHoSo',
+      component: () => import('@/views/TraCuuHoSo.vue')
     }
   ]
 })

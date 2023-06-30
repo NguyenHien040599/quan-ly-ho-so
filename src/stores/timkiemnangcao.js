@@ -1,6 +1,4 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
 import $ from 'jquery'
 import { useCookies } from 'vue3-cookies'
 const { cookies } = useCookies()
