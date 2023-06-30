@@ -584,11 +584,12 @@
               <v-col cols="12" class="py-0 mb-10">
                 <div class="text-label">Mã hồ sơ bổ sung nội dung <span style="color: red">(*)</span></div>
                 <v-text-field
-                  class="flex input-form"
+                  class="flex input-form madinhdanh-input"
                   v-model="dataFormBieuMau.MaHoSoThayDoi"
                   solo
                   dense
                   hide-details="auto"
+                  readonly
                   required
                   :rules="[v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc']"
                 ></v-text-field>

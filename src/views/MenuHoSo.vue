@@ -10,21 +10,21 @@
   const routes = router.currentRoute.value
   const appStore = useAppStore()
 
-  const menuItems = reactive(jsondata.menuHoSo)
+  const menuItems = ref(jsondata.menuHoSo)
   const menuSelected = computed(() => appStore.getMenuSelected)
   if (routes && routes.params.hasOwnProperty('thutuc') && routes.params.thutuc) {
-    let menu = menuItems.find(function (item) {
+    let menu = menuItems.value.find(function (item) {
       return item.to.split('/')[1] === routes.params.thutuc
     })
     appStore.SET_MENU_SELECTED(menu)
   } else {
     if (routes.name == 'ThongBao') {
-      let menu = menuItems.find(function (item) {
+      let menu = menuItems.value.find(function (item) {
         return item.id === 'thongbao'
       })
       appStore.SET_MENU_SELECTED(menu)
     } else {
-      appStore.SET_MENU_SELECTED(menuItems[0])
+      appStore.SET_MENU_SELECTED(menuItems.value[0])
     }
   }
   // console.log('menuSelected', menuSelected)
@@ -40,15 +40,15 @@
       }
     }
     hosoDvcStore.thongKeHoSo(filter).then(function(result) {
-      menuItems[0].counter = 0
-      menuItems[1].counter = 0
-      menuItems[2].counter = 0
+      menuItems.value[0].counter = 0
+      menuItems.value[1].counter = 0
+      menuItems.value[2].counter = 0
       let data = result.resp
       let tbvp = data.find(function(item) {
         return item.MaMuc == 'TBVP'
       })
       if (tbvp) {
-        menuItems[2].counter = tbvp.SoLuong
+        menuItems.value[2].counter = tbvp.SoLuong
       }
       let xldl = data.find(function(item) {
         return item.MaMuc == 'DGTD_XLDLCN'
@@ -57,10 +57,10 @@
         return item.MaMuc == 'TDND_DGTD_XLDLCN'
       })
       if (xldl) {
-        menuItems[0].counter += xldl.SoLuong
+        menuItems.value[0].counter += xldl.SoLuong
       }
       if (tdndxldl) {
-        menuItems[0].counter += tdndxldl.SoLuong
+        menuItems.value[0].counter += tdndxldl.SoLuong
       }
       let cdl = data.find(function(item) {
         return item.MaMuc == 'DGTD_CDLCN'
@@ -69,10 +69,10 @@
         return item.MaMuc == 'TDND_DGTD_CDLCN'
       })
       if (cdl) {
-        menuItems[1].counter += cdl.SoLuong
+        menuItems.value[1].counter += cdl.SoLuong
       }
       if (tdndcdl) {
-        menuItems[1].counter += tdndcdl.SoLuong
+        menuItems.value[1].counter += tdndcdl.SoLuong
       }
     }).catch(function(){
     })
@@ -87,18 +87,18 @@
     if (val.name !== 'ThongTinHoSo' && val.name !== 'BieuMauDienTu') {
       // console.log('run watch-routes2:', val.name, val.params)
       if (val && val.params.hasOwnProperty('thutuc') && val.params.thutuc) {
-        let menu = menuItems.find(function (item) {
+        let menu = menuItems.value.find(function (item) {
           return item.to.split('/')[1] === val.params.thutuc
         })
         appStore.SET_MENU_SELECTED(menu)
       } else {
         if (val.name == 'ThongBao') {
-          let menu = menuItems.find(function (item) {
+          let menu = menuItems.value.find(function (item) {
             return item.id === 'thongbao'
           })
           appStore.SET_MENU_SELECTED(menu)
         } else {
-          appStore.SET_MENU_SELECTED(menuItems[0])
+          appStore.SET_MENU_SELECTED(menuItems.value[0])
         }
       }
     }

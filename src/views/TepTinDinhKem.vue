@@ -31,6 +31,7 @@
     return appStore.thongTinHoSo
   })
   const thanhPhanHoSo = computed(function () {
+    console.log('appStore.thongTinHoSo', appStore.thongTinHoSo)
     let tp = appStore.thongTinHoSo.ThanhPhanHoSo.filter(function (item) {
       return !item.MaThanhPhanHoSo || (item.MaThanhPhanHoSo && item.MaThanhPhanHoSo.MaMuc.split('_')[0] !== 'BMDT')
     })
@@ -51,7 +52,6 @@
         }
       })
     }
-    
     // console.log('tp', tp)
     return tp.filter(function (item) {
       return String(item.IDGiayTo).split('-')[0] !== 'GTK' && String(item.IDGiayTo).split('-')[0] !== 'GTBS'
@@ -412,7 +412,7 @@
             </template>
             <span>Tải xuống</span>
           </v-tooltip>
-          <v-tooltip location="top" v-if="(thongTinHoSo && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '') ||
+          <v-tooltip location="top" v-if="!thongTinHoSo['TrangThaiHoSo'] || (thongTinHoSo && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '') ||
           item.hasOwnProperty('editting')">
             <template v-slot:activator="{ props }">
               <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteFileAttack(item, index)">
@@ -442,7 +442,7 @@
                   </template>
                   <span>Tải xuống</span>
                 </v-tooltip>
-                <v-tooltip location="top" v-if="(thongTinHoSo && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '') || item2.hasOwnProperty('editting')">
+                <v-tooltip location="top" v-if="!thongTinHoSo['TrangThaiHoSo'] || (thongTinHoSo && thongTinHoSo['TrangThaiHoSo']['MaMuc'] == '') || item2.hasOwnProperty('editting')">
                   <template v-slot:activator="{ props }">
                     <v-btn icon variant="flat" size="small" v-bind="props" class="mr-2" @click.stop="deleteGiayToKhac(index2, index)">
                       <v-icon size="18" color="red">mdi-close</v-icon>
@@ -450,7 +450,7 @@
                   </template>
                   <span>Xóa</span>
                 </v-tooltip>
-                <i>(Ngày bổ sung: {{ item2.NgayBoSung ? dateLocaleTime(item2.NgayBoSung) : '' }})</i>
+                <i v-if="item2.NgayBoSung">(Ngày bổ sung: {{ dateLocaleTime(item2.NgayBoSung) }})</i>
               </span>
             </div>
           </div>
@@ -465,6 +465,8 @@
             color="#1E7D30"
             @click.stop="pickFileUpload(item, index )"
             height="28px"
+            :loading="loadingData"
+            :disabled="loadingData"
           >
             <v-icon size="22" color="#1E7D30" class="mr-2">mdi-cloud-upload-outline</v-icon>
             <span style="font-size: 14px; text-transform: none;">

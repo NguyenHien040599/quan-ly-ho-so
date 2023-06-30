@@ -35,7 +35,7 @@ const router = createRouter({
         {
           path: 'thong-bao',
           name: 'ThongBao',
-          component: () => import('@/views/ThongBao.vue'),
+          component: () => import('@/views/TinNhanThongBao.vue'),
           props: true
         },
         {

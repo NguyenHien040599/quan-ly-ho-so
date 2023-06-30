@@ -156,7 +156,7 @@
                   </template>
                   <span>Tải xuống</span>
                 </v-tooltip>
-                <i>(Ngày bổ sung: {{ item2.NgayBoSung ? dateLocaleTime(item2.NgayBoSung) : '' }})</i>
+                <i v-if="item2.NgayBoSung">(Ngày bổ sung: {{ dateLocaleTime(item2.NgayBoSung)}})</i>
               </span>
             </div>
           </div>

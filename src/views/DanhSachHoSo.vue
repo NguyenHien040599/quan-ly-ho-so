@@ -206,7 +206,7 @@
     router.push({ path: `/nop-ho-so${menuSelected.value.to}/${item.primKey}`,  query: { action: 'bosung' } })
   }
   const lapHoSoThayDoi = function (item) {
-    router.push({ path: `/nop-ho-so${menuSelected.value.to}/${item.primKey}`, query: { id_update: item.primKey } })
+    router.push({ path: `/nop-ho-so${menuSelected.value.to}/0`, query: { id_update: item.primKey } })
     // let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
     //   return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
     // })
@@ -417,11 +417,11 @@
                 <div>{{ (page+1) * itemsPerPage - itemsPerPage + index + 1 }}</div>
               </td>
               <td class="pt-2">
-                <div class="mb-1" style="color: #1E7D30">{{ item.raw.MaDinhDanh }}</div>
+                <div class="mb-1" style="color: #1E7D30">{{ item.raw.TrichYeuHoSo }}</div>
                 <div class="mb-1"><span>Mã hồ sơ: </span>{{ item.raw.MaDinhDanh }}</div>
                 <div class="mb-1">
-                  <span>Ngày tạo: </span>
-                  <span style="color: #1E7D30">{{ dateLocaleTime(item.raw.ThoiGianTao) }}</span>
+                  <span>Ngày nộp: </span>
+                  <span style="color: #1E7D30">{{ item.raw.NgayNopHoSo ? dateLocaleTime(item.raw.NgayNopHoSo) : '' }}</span>
                 </div>
                 <div class="mb-1">
                   <span>Trạng thái: </span>

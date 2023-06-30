@@ -135,7 +135,7 @@
       "Email": ""
     }
   )
-  if (props.action === 'update' && (dataFormBieuMauXLDL.value || dataFormBieuMauTBVP.value)) {
+  if ((props.action === 'update' || props.action === 'hosothaydoi') && (dataFormBieuMauXLDL.value || dataFormBieuMauTBVP.value)) {
     let dataBmDoiTuong = props.thuTuc == 'xldl' ? dataFormBieuMauXLDL.value['DoiTuongThucHien'] : dataFormBieuMauTBVP.value['DoiTuongThucHien']
     let dataBmNguoiLienHe = props.thuTuc == 'xldl' ? dataFormBieuMauXLDL.value['NguoiLienHe'] : dataFormBieuMauTBVP.value['NguoiLienHe']
     doiTuongThucHien.LoaiDoiTuongThucHien = dataBmDoiTuong.LoaiDoiTuongThucHien

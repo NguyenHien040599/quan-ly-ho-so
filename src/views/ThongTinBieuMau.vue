@@ -27,7 +27,7 @@
       return appStore.dataFormBieuMauXldl
     }
     if (hs['ThuTucHanhChinh']['MaMuc'] == 'DGTD_CDLCN' || hs['ThuTucHanhChinh']['MaMuc'] == 'TDND_DGTD_CDLCN') {
-      return appStore.dataFormBieuMauCdlcnrnn
+      return appStore.dataFormBieuMauXldl
     }
     if (hs['ThuTucHanhChinh']['MaMuc'] == 'TBVP') {
       return appStore.dataFormBieuMauTbvp

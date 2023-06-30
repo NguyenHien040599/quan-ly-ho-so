@@ -32,22 +32,49 @@
     import('./BieuMauDienTu_TBVP.vue')
   )
 
-  const getThongTinHoSo = function () {
+  const getThongTinHoSo = function (id) {
     let filter = {
-      primKey: props.id
+      primKey: id
     }
     hosoDvcStore.getChiTietHoSo(filter).then(function(result) {
       if (result.resp) {
-        if (result.resp && result.resp.TrangThaiHoSo['MaMuc'] !== '' && result.resp.TrangThaiHoSo['MaMuc'] !== '05') {
+        if (typeAction.value !== 'hosothaydoi' && result.resp && result.resp.TrangThaiHoSo['MaMuc'] !== '' && result.resp.TrangThaiHoSo['MaMuc'] !== '05') {
           router.push({ path: '/thong-tin-ho-so/' + result.resp.primKey })
           return
         }
-        appStore.SET_THONGTINHOSO(result.resp)
+        
+        let dataHoSo = Object.assign({}, result.resp)
+        if (typeAction.value === 'hosothaydoi') {
+          let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
+            return item.maThuTuc == menuSelected.value.thuTucThayDoi.maThuTuc
+          })
+          dataHoSo = Object.assign(dataHoSo, {
+            primKey: '',
+            MaDinhDanh: '',
+            TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
+            TrangThaiHoSo: {MaMuc: '', TenMuc: 'Chưa gửi'},
+            DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
+            TrichYeuHoSo: 'Thay đổi nội dung ' + result.resp.TrichYeuHoSo,
+            ThanhPhanHoSo: thuTucTaoMoi.thongTinHoSo['ThanhPhanHoSo'],
+            ThuTucHanhChinh: {
+              MaMuc: menuSelected.value.thuTucThayDoi.maThuTuc,
+              TenMuc: menuSelected.value.thuTucThayDoi.tenThuTuc
+            },
+            NhatKiSuaDoi: [],
+            uuid: '',
+            MaHoSoThayDoi: result.resp.MaDinhDanh,
+            NgayNopHoSo: '',
+            ThoiGianTao: '',
+            ThoiGianCapNhat: ''
+          })
+        }
+        console.log('dataHoSo', dataHoSo)
+        appStore.SET_THONGTINHOSO(dataHoSo)
         let tpbm = result.resp.ThanhPhanHoSo.find(function (item) {
           return item.DuLieuDienTu.hasOwnProperty('MaDinhDanh') && item.DuLieuDienTu['MaDinhDanh']
         })
         if (tpbm) {
-          getDLDT(tpbm.DuLieuDienTu['MaDinhDanh'])
+          getDLDT(tpbm.DuLieuDienTu['MaDinhDanh'], result.resp.MaDinhDanh)
         }
       } else {
         appStore.SET_THONGTINHOSO(null)
@@ -56,17 +83,25 @@
     }).catch(function(){
     })
   }
-  const getDLDT = function (id) {
+  const getDLDT = function (id, maHoSoThayDoi) {
     let filter = {
       maDinhDanh: id
     }
     hosoDvcStore.getChiTietBieuMauDienTu(filter).then(function(result) {
       if (result.resp) {
         if (result.resp['BieuMauDienTu']['MaMuc'] == 'BM_DGTDDLCN') {
-          appStore.SET_DATA_FORM_BIEUMAU_XLDL(result.resp)
-          appStore.SET_DATA_FORM_BIEUMAU_CDL(result.resp)
+          let dataBm = Object.assign({}, result.resp)
+          if (typeAction.value == 'hosothaydoi') {
+            dataBm = Object.assign(dataBm, {MaHoSoThayDoi: maHoSoThayDoi})
+          }
+          appStore.SET_DATA_FORM_BIEUMAU_XLDL(dataBm)
+          appStore.SET_DATA_FORM_BIEUMAU_CDL(dataBm)
         } else if (result.resp['BieuMauDienTu']['MaMuc'] == 'BM_TBVP') {
-          appStore.SET_DATA_FORM_BIEUMAU_TBVP(result.resp)
+          let dataBm = Object.assign({}, result.resp)
+          if (typeAction.value == 'hosothaydoi') {
+            dataBm = Object.assign(dataBm, {MaHoSoThayDoi: maHoSoThayDoi})
+          }
+          appStore.SET_DATA_FORM_BIEUMAU_TBVP(dataBm)
         } else {
         }
       }
@@ -75,33 +110,15 @@
   }
   if (props.id && props.id != '0') {
     typeAction.value = 'update'
-    getThongTinHoSo()
+    getThongTinHoSo(props.id)
   } else {
-    typeAction.value = 'create'
-    // console.log('menuSelected.value:', menuSelected.value)
-    if (menuSelected.value.thuTuc) {
-      let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
-        return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
-      })
-      if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
-        appStore.$patch((state) => {
-          state.thongTinHoSo = Object.assign(thuTucTaoMoi.thongTinHoSo, {
-            TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
-            DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
-            TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
-          })
-        })
-      }
-    }
-  }
-  watch(route, async (val) => {
-    // console.log('run watch-routes BMDT:', val.name)
-    if (props.id && props.id != '0') {
-      typeAction.value = 'update'
-      getThongTinHoSo()
+    if (route.query && route.query.hasOwnProperty('id_update') && route.query.id_update) {
+      typeAction.value = 'hosothaydoi'
+      getThongTinHoSo(route.query.id_update)
     } else {
       typeAction.value = 'create'
-      if (menuSelected.value) {
+      if (menuSelected.value.thuTuc) {
+        console.log('menuSelected', menuSelected)
         let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
           return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
         })
@@ -113,6 +130,62 @@
               TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
             })
           })
+        }
+      }
+    }
+  }
+  watch(route, async (val) => {
+    // console.log('run watch-routes BMDT:', val.name)
+    if (props.id && props.id != '0') {
+      typeAction.value = 'update'
+      getThongTinHoSo()
+    } else {
+      if (route.query && route.query.hasOwnProperty('id_update') && route.query.id_update) {
+        typeAction.value = 'hosothaydoi'
+        getThongTinHoSo(route.query.id_update)
+      } else {
+        typeAction.value = 'create'
+        if (menuSelected.value) {
+          let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
+            return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+          })
+          if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
+            appStore.$patch((state) => {
+              state.thongTinHoSo = Object.assign(thuTucTaoMoi.thongTinHoSo, {
+                TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
+                DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
+                TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
+              })
+            })
+          }
+        }
+      }
+    }
+  })
+  watch(menuSelected, async (val) => {
+    console.log('watch menuSelected', val)
+    if (props.id && props.id != '0') {
+      typeAction.value = 'update'
+      getThongTinHoSo()
+    } else {
+      if (route.query && route.query.hasOwnProperty('id_update') && route.query.id_update) {
+        typeAction.value = 'hosothaydoi'
+        getThongTinHoSo(route.query.id_update)
+      } else {
+        typeAction.value = 'create'
+        if (menuSelected.value) {
+          let thuTucTaoMoi = jsondata.thuTucHanhChinh.find(function (item) {
+            return item.maThuTuc == menuSelected.value.thuTuc.maThuTuc
+          })
+          if (thuTucTaoMoi && thuTucTaoMoi.thongTinHoSo) {
+            appStore.$patch((state) => {
+              state.thongTinHoSo = Object.assign(thuTucTaoMoi.thongTinHoSo, {
+                TrangThaiDuLieu: {MaMuc: '01', TenMuc: 'Sơ bộ'},
+                DonViXuLy: {"MaDinhDanh": "G01.105", "TenGoi": "Cục An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao"},
+                TrichYeuHoSo: thuTucTaoMoi.tenThuTuc
+              })
+            })
+          }
         }
       }
     }
