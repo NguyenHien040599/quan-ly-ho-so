@@ -7,6 +7,12 @@ import axios from 'axios'
 import toastr from 'toastr'
 import vuetify from './plugins/vuetify'
 import 'toastr/build/toastr.css'
+import VueAwesomePaginate from "vue-awesome-paginate";
+import "vue-awesome-paginate/dist/style.css";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
+
 toastr.options = {
   'closeButton': true,
   'timeOut': '5000',
@@ -43,5 +49,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(vuetify)
 app.use(router)
+app.use(VueAwesomePaginate)
+app.component('VueDatePicker', VueDatePicker);
 
 app.mount('#app')

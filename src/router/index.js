@@ -15,6 +15,12 @@ const router = createRouter({
           props: true
         },
         {
+          path: 'chi-tiet-thu-tuc-hanh-chinh/:id',
+          name: 'ChiTietThuTucHanhChinh',
+          component: () => import('@/views/ChiTietThuTucHanhChinh.vue'),
+          props: true
+        },
+        {
           path: 'quan-ly-ho-so',
           name: 'QuanLyHoSo',
           component: () => import('@/views/QuanLyHoSo.vue'),
@@ -24,6 +30,18 @@ const router = createRouter({
           path: 'hoi-dap',
           name: 'HoiDap',
           component: () => import('@/views/HoiDap.vue'),
+          props: true
+        },
+        {
+          path: 'chi-tiet-hoi-dap',
+          name: 'ChiTietHoiDap',
+          component: () => import('@/views/ChiTietHoiDap.vue'),
+          props: true
+        },
+        {
+          path: 'thong-tin-tai-khoan',
+          name: 'ThongTinTaiKhoan',
+          component: () => import('@/views/ThongTinTaiKhoan.vue'),
           props: true
         },
         {

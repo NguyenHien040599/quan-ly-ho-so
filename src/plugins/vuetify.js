@@ -14,7 +14,8 @@ const vuetify = createVuetify({
   // directives,
   icons: {
     defaultSet: 'mdi'
-  }
+  },
+  theme: { defaultTheme: 'light' },
 })
 import '../assets/main.scss'
 import '../assets/overrides.scss'
